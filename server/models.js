@@ -31,7 +31,7 @@ const Item = sequelize.define('item', {
     name : {type: DataTypes.STRING, allowNull: false},
     price : {type: DataTypes.REAL, allowNull: false},
     discount : {type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
-    img : {type: DataTypes.STRING},
+    images : {type: DataTypes.JSON},
 });
 const Comparison = sequelize.define('comparison', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},

@@ -6,16 +6,27 @@ import { v4 as uuidv4 } from 'uuid';
 class ItemController {
     async create(req, res) {
         let {name, price, discount, categoryId, info} = req.body;
-        info ? info = JSON.parse(info) : {};
-        const imgName = uuidv4() + '.jpg';
-        await req.files.img.mv(`${path.resolve(__dirname, 'static', imgName)}`);
+        let imgNames = null;
+        if (req?.files) {
+            try {
+                for (let key in req.files) {
+                    if (!imgNames) {
+                        imgNames = [];
+                    }
+                    const imgName = uuidv4() + '.jpg';
+                    imgNames.push(imgName);
+                    await req.files[key].mv(`${path.resolve(__dirname, 'static', imgName)}`)
+                }
+            } catch (error) {}
+        }
         try {
             const newItem = await models.Item.create(
-                {name, price, discount, img: imgName, categoryId},
-                {fields: ['name', 'price', 'discount', 'img', 'categoryId']});
-            for (let key in info) {
+                {name, price: Number(price), discount: Number(discount),
+                    images: imgNames !== null ? JSON.stringify(imgNames) : null, categoryId},
+                {fields: ['name', 'price', 'discount', 'images', 'categoryId']});
+            for (let obj of JSON.parse(info)) {
                 const newItemInfo = await models.ItemInfo.create(
-                    {title: key, description: info[key], itemId: newItem.dataValues.id},
+                    {title: obj.title, description: obj.description, itemId: newItem.dataValues.id},
                     {fields: ['title', 'description', 'itemId']}
                 )
             }
@@ -33,9 +44,17 @@ class ItemController {
             let where = {};
             catId ? where = {'categoryId': catId} : {};
             const allItems = await models.Item.findAndCountAll({
-                attributes: ['id', 'name', 'price', 'discount', 'img', 'categoryId'],
+                attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
                 where, limit, offset
-            });
+            })
+            allItems.rows.map(item => {
+                if (item.dataValues.images === null) {
+                    item.dataValues.images = [];
+                }
+                else {
+                    item.dataValues.images = JSON.parse(item.dataValues.images);
+                }
+            })
             res.json(allItems);
         } catch (error) {
             ErrorTemp.badRequest(res)
@@ -44,7 +63,7 @@ class ItemController {
     async getOne(req, res) {
         try {
             const oneItem = await models.Item.findOne({
-                attributes: ['id', 'name', 'price', 'discount', 'img', 'categoryId'],
+                attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
                 where: {
                     id: req.params.id
                 }
@@ -56,7 +75,9 @@ class ItemController {
                 }
             })
             const frontResponse = {
-                ...oneItem.dataValues, info: itemInfos.map(itemInfo => itemInfo.dataValues)
+                ...oneItem.dataValues,
+                images: oneItem.images? JSON.parse(oneItem.images) : [],
+                info: itemInfos.map(itemInfo => itemInfo.dataValues)
             };
             res.json(frontResponse);
         } catch (error) {

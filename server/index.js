@@ -11,6 +11,7 @@ import cors from 'cors';
 const port = process.env.PORT || 6000;
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')));
 app.use(fileUpload({}));

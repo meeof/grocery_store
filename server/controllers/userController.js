@@ -8,7 +8,7 @@ const generateToken = (data) => {
     return jwt.sign(
         {'id': data.id, 'email': data.email, 'role': data.role},
         process.env.JWT_PRIVATE_KEY,
-        { algorithm: 'HS256', expiresIn: '24h'});
+        { algorithm: 'HS256', expiresIn: '12h'});
 }
 class UserController {
     async registration(req, res) {
