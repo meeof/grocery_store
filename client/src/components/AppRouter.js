@@ -8,6 +8,7 @@ import Profile from "../pages/Profile";
 import RestorePassword from "../pages/RestorePassword";
 import Registration from "../pages/Registration";
 import Category from "../pages/Category";
+import Basket from "../pages/Basket";
 
 const AppRouter = () => {
     return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
             <Route path="/profile/restore" element={<RestorePassword/>} />
             <Route path="/profile/registration" element={<Registration/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/basket" element={<Basket/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );

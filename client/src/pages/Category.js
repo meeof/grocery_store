@@ -1,6 +1,6 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
-import {fetchAllItems} from "../http/itemApi";
+import {deleteItem, fetchAllItems} from "../http/itemApi";
 import {useParams} from "react-router-dom";
 import CatalogItemCard from "../components/CatalogItemCard";
 import * as uf from "../usefulFunctions";
@@ -8,6 +8,7 @@ import styled from "styled-components";
 import {observer} from "mobx-react-lite";
 import Pgn from "../components/miniComponents/Pgn";
 import {Button} from "react-bootstrap";
+import {authAPI} from "../http/userAPI";
 
 const Styled = styled.div`
   display: flex;
@@ -38,39 +39,61 @@ const Styled = styled.div`
 
 const Category = observer( () => {
     const {item} = useContext(Context);
+    const {user} = useContext(Context);
+    const [page, setPage] = useState(1);
     let {categoryId} = useParams();
-    let cards = item.items?.map(product => {
-        return <CatalogItemCard key={uf.routePrefix('item', product.id)}
-                                name={product.name} price={product.price} discount={product.discount}
-                                img={product.images?.[0]} id={product.id}/>
-    });
-    useEffect(() => {
+    const fetchItems = () => {
         if (categoryId === 'all') {
-            fetchAllItems(null, item.limit).then(data => {
+            fetchAllItems(null, item.limit, page).then(data => {
                 item.setItems(data.rows);
                 item.setCount(data.count);
             });
         }
         else if (categoryId) {
-            fetchAllItems(uf.routeUnPrefix(categoryId), item.limit).then(data => {
+            fetchAllItems(uf.routeUnPrefix(categoryId), item.limit, page).then(data => {
                 item.setItems(data.rows);
                 item.setCount(data.count);
             });
         }
-    }, [item, categoryId, item.limit]);
+    }
+    const delItem = (id) => {
+        deleteItem(id).then((data) => {
+            fetchItems();
+        }).catch(err => {
+            console.log(err.response.data);
+        })
+    }
+    let cards = item.items?.map(product => {
+        return <CatalogItemCard key={uf.routePrefix('item', product.id)} delItem={delItem} isAuth={user.isAuth}
+                                product={product} fetchItems={fetchItems}/>
+    });
+    const pagesAmount = Math.ceil(item.count/item.limit);
+    const clickPage = (num) => {
+        setPage(num)
+    }
+    useEffect(fetchItems, [item, categoryId, item?.limit, page]);
+    useEffect(() => {
+        authAPI().then(data => {
+            user.setAuth(data);
+        }).catch(err => {
+            user.setAuth(false);
+        })
+    }, [user]);
     return (
         <Styled>
             <div className={'card_container'}>
                 {cards}
             </div>
-            {item.count > item.limit &&
+            {(item.count > item.limit && page === 1) &&
                 <div className={'show-more'}>
                     <Button variant={"success"} onClick={() => {
-                        item.setLimit(item.limit + 3);
-                    }}>Показать больше</Button>
+                        item.setLimit(item.limit + item.limit);
+                    }}>Показывать больше</Button>
                 </div>
             }
-            <Pgn/>
+            {pagesAmount > 1 &&
+                <Pgn pagesAmount={pagesAmount} page={page} clickPage={clickPage}/>
+            }
         </Styled>
     );
 });

@@ -12,7 +12,8 @@ class HttpMiddleware {
             req.user = decoded;
             next();
         } catch (error) {
-            ErrorTemp.forbidden(res);
+            res.json('Unauthorized')
+            /*ErrorTemp.forbidden(res);*/
         }
     }
     isAdmin(req, res, next) {

@@ -1,8 +1,8 @@
 import {makeAutoObservable} from "mobx";
 
 class UserStore {
-    _isAuth = false;
     constructor() {
+        this._isAuth = false;
         makeAutoObservable(this)
     }
     setAuth(data) {

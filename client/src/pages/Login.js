@@ -1,10 +1,12 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import styled from "styled-components";
 import {Button, Form} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {loginAPI} from "../http/userAPI";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import Ovr from "../components/miniComponents/Ovr";
+import useWindowSize from "../hooks/useWindowSize";
 const Styled = styled.div`
   margin-left: 24px;
   margin-right: 24px;
@@ -78,16 +80,31 @@ const Login = observer (() => {
     const navigate = useNavigate();
     const [phoneEmail, setPhoneEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleLogin = () => {
+
+    const [showOverlay, setShowOverlay] = useState(false);
+    const target = useRef(null);
+    const [overlayMessage, setOverlayMessage] = useState('-');
+    let width = useWindowSize();
+    const overlayHandle = () => {
+        setShowOverlay(true);
+        setTimeout(() => {
+            setShowOverlay(false);
+        }, 2000);
+    }
+    const handleLogin = (e) => {
+        e.preventDefault();
         loginAPI({phoneEmail, password}).then((data) => {
             user.setAuth(data);
             navigate('/profile');
+        }).catch(err => {
+            setOverlayMessage(err.response.data);
+            overlayHandle();
         });
     }
     return (
         <Styled>
             <h2>Вход в кабинет покупателя</h2>
-            <Form>
+            <Form onSubmit={(e) => handleLogin(e)}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label className={'email-label'}>Телефон или Email</Form.Label>
                     <Form.Control type="text" value={phoneEmail} onChange={(e) => setPhoneEmail(e.target.value)}/>
@@ -98,7 +115,9 @@ const Login = observer (() => {
                                   onChange={(e) => setPassword(e.target.value)}/>
                 </Form.Group>
                 <div className={'button-container'}>
-                    <Button variant="success" onClick={handleLogin}>Войти</Button>
+                    <Button ref={target} variant="success" type={"submit"}>Войти</Button>
+                    <Ovr show={showOverlay} color={'rgba(255, 100, 100, 0.85)'} message={overlayMessage}
+                         target={target} placement={width > 576 ? "right" : "bottom-start"}/>
                     <div role={"button"} className={'link-restore'}
                          onClick={() => navigate('/profile/restore')}>Восстановить пароль</div>
                     <div role={"button"} className={'link-register'}

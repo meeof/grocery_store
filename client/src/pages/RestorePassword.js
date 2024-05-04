@@ -46,10 +46,10 @@ const RestorePassword = () => {
     return (
         <Styled>
             <h2>Восстановление пароля</h2>
-            <Form>
+            <Form onSubmit={(e) => {e.preventDefault()}}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label className={'email-label'}>Телефон или Email</Form.Label>
-                    <Form.Control type="email"/>
+                    <Form.Control type="text"/>
                 </Form.Group>
                 <div className={'button-container'}>
                     <Button variant="success" type="submit">Восстановить пароль</Button>

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
@@ -11,16 +11,29 @@ import AddProduct from "../components/AddProduct";
 const Styled = styled.div`
   margin-left: 24px;
   margin-right: 24px;
+  button {
+    width: 300px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .profile-buttons-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   @media (max-width: 575.5px) {
     margin-left: 8px;
     margin-right: 8px;
-  }
-  button {
-    width: 300px;
+    button {
+      width: 100%;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
   }
 `
 const Profile = observer( () => {
     const {user} = useContext(Context);
+    const [changeCategories, setChangeCategories] = useState(false);
     const navigate = useNavigate();
     const roles = {
         ADMIN : 'Администратор',
@@ -30,20 +43,24 @@ const Profile = observer( () => {
         authAPI().then(data => {
             user.setAuth(data);
         }).catch(() => {
+            user.setAuth(false);
             navigate(`login`);
         })
     }, [navigate, user]);
     function handleExit() {
         localStorage.setItem('token', '');
+        user.setAuth(false);
         navigate('/');
     }
     return (
         <Styled>
             <h2>Личный кабинет</h2>
             <h4>{roles[user.isAuth.role]} {user.isAuth.email}</h4>
-            <AddCategory/>
-            <AddProduct/>
-            <Button variant="secondary" onClick={handleExit}>Выйти</Button>
+            <div className={'profile-buttons-block'}>
+                <AddCategory setChangeCategories={setChangeCategories}/>
+                <AddProduct changeCategories={changeCategories} setChangeCategories={setChangeCategories}/>
+                <Button variant="secondary" onClick={handleExit}>Выйти</Button>
+            </div>
         </Styled>
     );
 });

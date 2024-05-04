@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import styled from "styled-components";
 import Rating from "./miniComponents/Rating";
 import fillComparisonImg from "../assets/green_free-icon-font-chart-histogram-5528038.svg";
@@ -9,6 +9,11 @@ import DeliveryVariant from "./miniComponents/DeliveryVariant";
 import useWindowSize from "../hooks/useWindowSize";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import {useNavigate} from "react-router-dom";
+import {deleteItem} from "../http/itemApi";
+import DelButton from "./miniComponents/DelButton";
+import {authAPI} from "../http/userAPI";
+import UpdateProduct from "./UpdateProduct";
 
 const Styled = styled.div`
   @keyframes shopButtonAnim {
@@ -136,7 +141,16 @@ const Styled = styled.div`
 
 const ProductInterface = observer(({product}) => {
     const {item} = useContext(Context);
+    const {user} = useContext(Context);
     let width = useWindowSize();
+    const navigate = useNavigate();
+    const delItem = (id) => {
+        deleteItem(id).then((data) => {
+            navigate(-1);
+        }).catch(err => {
+            console.log(err.response.data);
+        })
+    }
     let city = 'Москва';
     let rating = item.rating.find(rate => {
         if (rate.itemId === product.id) {
@@ -144,10 +158,21 @@ const ProductInterface = observer(({product}) => {
         }
         else return false
     });
+    useEffect(() => {
+        authAPI().then(data => {
+            user.setAuth(data);
+        }).catch(err => {
+            user.setAuth(false);
+        })
+    }, [user]);
     return (
         <Styled>
             <div className={'product-head'}>
-                <h1>{product.name}</h1>
+                <h1>
+                    {product.name}
+                    {user.isAuth && <UpdateProduct product={product} page={true}/>}
+                    {user.isAuth && <DelButton delFun={delItem} id={product.id} name={product.name}/>}
+                </h1>
                 <div className={'rating-comparison'}>
                     <Rating rating={rating?.rate}/>
                     <div role={"button"} className={'comparison-button'}>

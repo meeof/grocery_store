@@ -6,6 +6,11 @@ export const loginAPI = async (body) => {
     localStorage.setItem('token', data);
     return jwtDecode(data);
 }
+export const registrationAPI = async (body) => {
+    const {data} = await $host.post('/api/user/registration', body);
+    localStorage.setItem('token', data);
+    return jwtDecode(data);
+}
 export const authAPI = async () => {
     const response = await $authHost.get('/api/user/auth');
     localStorage.setItem('token', response.data);

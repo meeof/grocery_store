@@ -3,6 +3,8 @@ import {Card} from "react-bootstrap";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import noImage from '../assets/free-icon-font-copy-image-9291618.svg';
+import DelButton from "./miniComponents/DelButton";
+import UpdateCategory from "./UpdateCategory";
 
 const Styled = styled.div`
   .card {
@@ -37,6 +39,8 @@ const CatalogCategoryCard = ({...props}) => {
                 <Card.Body>
                     <Card.Title>{props.name}</Card.Title>
                 </Card.Body>
+                {props.isAuth && <DelButton delFun={props.delCategory} id={props.id} name={props.name}/>}
+                {props.isAuth && <UpdateCategory id={props.id} name={props.name}/>}
             </Card>
         </Styled>
     );

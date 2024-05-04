@@ -59,13 +59,12 @@ const NavBar = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" className={`ms-2 me-auto`}/>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className={`${width < 576 ? 'ms-3' : 'ms-4'} me-auto`}>
-                            <Nav.Link href="/catalog">Каталог</Nav.Link>
                             <Nav.Link href="/about">О<span className={'hide_symbol'}>.</span>компании</Nav.Link>
                             <Nav.Link href="/contacts">Контакты</Nav.Link>
                             <Nav.Link href="/shipping">Доставка</Nav.Link>
                             <Nav.Link href="/pay">Оплата</Nav.Link>
-                            <Nav.Link href="/profile">Личный кабинет</Nav.Link>
                             <Nav.Link href="/blog">Блог</Nav.Link>
+                            <Nav.Link href="/profile">Личный кабинет</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

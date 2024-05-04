@@ -2,11 +2,11 @@ import React, {useContext, useEffect} from 'react';
 import styled from "styled-components";
 import {useNavigate, useParams} from "react-router-dom";
 import CatalogCategoryCard from "../components/CatalogCategoryCard";
-import * as uf from '../usefulFunctions';
 import {Button} from "react-bootstrap";
 import {Context} from "../index";
-import {fetchCategories} from "../http/itemApi";
+import {deleteCategory, fetchCategories, updateCategory} from "../http/itemApi";
 import {observer} from "mobx-react-lite";
+import {authAPI} from "../http/userAPI";
 
 const Styled = styled.div`
   display: flex;
@@ -38,16 +38,31 @@ const Styled = styled.div`
 
 const Catalog = observer( () => {
     const {item} = useContext(Context);
+    const {user} = useContext(Context);
     useEffect(() => {
         fetchCategories().then(data => {
             item.setCategories(data);
+        });
+        authAPI().then(data => {
+            user.setAuth(data);
+        }).catch(err => {
+            user.setAuth(false);
         })
-    }, [item]);
+    }, [item, user]);
+    const delCategory = (id) => {
+        deleteCategory(id).then((data) => {
+            fetchCategories().then(data => {
+                item.setCategories(data);
+            });
+        }).catch(err => {
+            console.log(err.response.data);
+        })
+    }
     const navigate = useNavigate();
     let {categoryId} = useParams();
     let cards  = item.categories?.map(category => {
-            return <CatalogCategoryCard key={uf.routePrefix('category', category.id)}
-                                        img={category.image} name={category.name} id={category.id}/>
+            return <CatalogCategoryCard key={category.id} delCategory={delCategory}
+                                        img={category.image} name={category.name} id={category.id} isAuth={user.isAuth} />
         });
     return (
         <Styled>

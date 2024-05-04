@@ -1,13 +1,27 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {createItem, fetchCategories} from "../http/itemApi";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import ProductInfoField from "./miniComponents/ProductInfoField";
+import Ovr from "./miniComponents/Ovr";
+import useWindowSize from "../hooks/useWindowSize";
 
-const AddProduct = observer( () => {
+const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
     const {item} = useContext(Context);
     const [show, setShow] = useState(false);
+
+    let width = useWindowSize();
+    const [showOverlay, setShowOverlay] = useState(false);
+    const target = useRef(null);
+    const [overlayMessage, setOverlayMessage] = useState('-');
+    const [overlayColor, setOverlayColor] = useState('rgba(13, 110, 253, 0.85)');
+    const overlayHandle = () => {
+        setShowOverlay(true);
+        setTimeout(() => {
+            setShowOverlay(false);
+        }, 2000);
+    }
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -35,9 +49,21 @@ const AddProduct = observer( () => {
             formData.append(`${key}_${value.name}`, value)
         }
         createItem(formData).then(data => {
-            handleCancel();
-            console.log(data);
+            if (data?.name === name && data?.price === Number(price) && data?.discount === Number(discount)) {
+                setOverlayMessage(`Товар "${data.name}" успешно добавлен`);
+                setOverlayColor('rgba(13, 110, 253, 0.85)');
+                handleCancel();
+            }
+            else {
+                setOverlayMessage(data);
+                setOverlayColor('rgba(255, 100, 100, 0.85)');
+                setShow(false);
+            }
+        }).catch(err => {
+            setOverlayMessage('Непредвиденная ошибка');
+            setOverlayColor('rgba(255, 100, 100, 0.85)');
         })
+        overlayHandle();
     }
     const deleteInfo = (findIndex) => {
         let newInfo = Object.assign([], info);
@@ -60,16 +86,19 @@ const AddProduct = observer( () => {
         setSelected(item?.categories?.[key]);
     };
     useEffect(() => {
+        setChangeCategories(false);
         fetchCategories().then(data => {
             item.setCategories(data);
             setSelected(item?.categories?.[0]);
         })
-    }, [item, item.categories]);
+    }, [item, changeCategories, setChangeCategories]);
     return (
         <>
-            <Button variant="success" onClick={() => setShow(true)}>
+            <Button variant="success" ref={target} onClick={() => setShow(true)}>
                 Добавить товар
             </Button>
+            <Ovr show={showOverlay} color={overlayColor} message={overlayMessage}
+                 target={target} placement={width > 576 ? "right" : "bottom-start"}/>
             <Modal
                 show={show}
                 onHide={() => setShow(false)}
@@ -87,7 +116,7 @@ const AddProduct = observer( () => {
                                           onChange={(e) => setName(e.target.value)}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicProductCategory">
-                            <Form.Label>Категория товара</Form.Label>
+                            <div className={'mb-2'}>Категория товара</div>
                             <DropdownButton
                                 onSelect={handleSelect}
                                 id={`categories-group`}
@@ -116,7 +145,7 @@ const AddProduct = observer( () => {
                             }}/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicProductChar" style={{display: "flex", flexDirection: "column"}}>
-                            <Form.Label className={'product-label me-3'}>Характеристики</Form.Label>
+                            <div className={'mb-2'}>Характеристики</div>
                             {info.map((infoObj, index) => {
                                 return <ProductInfoField
                                     key={index} index={index}

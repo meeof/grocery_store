@@ -4,6 +4,7 @@ import {Button, Form} from "react-bootstrap";
 import deleteCross from '../../assets/free-icon-font-cross-3917759.svg';
 const Styled = styled.div`
   width: 100%;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   :first-child {

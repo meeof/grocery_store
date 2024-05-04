@@ -21,7 +21,7 @@ const Styled = styled.div`
     height: 54px;
   }
   form {
-    min-width: 250px;
+    min-width: 240px;
     max-width: 750px;
     width: 100%;
   }
@@ -30,6 +30,7 @@ const Styled = styled.div`
       max-width: 270px;
       margin-right: 10px;
     }
+    max-width: 200px !important;
     width: 100%;
   }
   .logo {
@@ -98,7 +99,8 @@ const CommonBar = () => {
     let width = useWindowSize();
     const navigate = useNavigate();
     const logoElement = <Image src={logo} role={"button"} className={'logo'} onClick={() => navigate('/')}/>
-    const catalogButtonElement = <Button variant="success" className={"catalog-button"}>Каталог</Button>
+    const catalogButtonElement = <Button variant="success" className={"catalog-button"}
+                                         onClick={() => navigate('/catalog')}>Каталог</Button>
     return (
         <Styled>
             {width >= 576 ?
@@ -116,13 +118,14 @@ const CommonBar = () => {
                     placeholder="Поиск"
                     className="ms-2"
                     aria-label="Search"
+                    id={'commonFind'}
                 />
                 <Button variant="success"><Image src={searchImg} role={"button"} className={'search'}/></Button>
             </Form>
             <div className={"controls"}>
                 <Image src={userImg} role={"button"} onClick={() => navigate('/profile')}/>
                 <Image src={comparisonImg} role={"button"}/>
-                <Image src={cartImg} role={"button"}/>
+                <Image src={cartImg} role={"button"} onClick={() => navigate('/basket')}/>
             </div>
         </Styled>
     );
