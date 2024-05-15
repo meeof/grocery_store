@@ -10,7 +10,7 @@ import Characteristics from "../components/Characteristics";
 import Reviews from "../components/Reviews";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {fetchOneItem} from "../http/itemApi";
+import {fetchOneItem} from "../http/itemAPI";
 
 const Styled = styled.div`
   position: relative;
@@ -78,7 +78,7 @@ const Product = observer (() => {
             </div>
             <Characteristics info={item.oneItem?.info || []}/>
             <Reviews/>
-            {width < 576 && <ButtonBuy fixed={true}/>}
+            {width < 576 && <ButtonBuy product={item.oneItem} fixed={true}/>}
         </Styled>
     );
 });

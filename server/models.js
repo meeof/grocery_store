@@ -45,6 +45,21 @@ const Categories = sequelize.define('categories', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name : {type: DataTypes.STRING, allowNull: false},
 });
+const Orders = sequelize.define('orders', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name : {type: DataTypes.STRING, allowNull: false},
+    surname : {type: DataTypes.STRING, allowNull: false},
+    phone : {type: DataTypes.STRING, allowNull: false},
+    point : {type: DataTypes.STRING, allowNull: false},
+    delivery: {type: DataTypes.STRING, allowNull: false},
+    address: {type: DataTypes.STRING, allowNull: false},
+    comment: {type: DataTypes.STRING},
+    sms: {type: DataTypes.BOOLEAN, allowNull: false},
+    full_price: {type: DataTypes.REAL, allowNull: false},
+    items:  {type: DataTypes.JSON, allowNull: false},
+    status: {type: DataTypes.STRING, allowNull: false},
+    delivery_date: {type: DataTypes.DATE, allowNull: false}
+});
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -73,4 +88,7 @@ ItemInfo.belongsTo(Item);
 Categories.hasMany(Item);
 Item.belongsTo(Categories);
 
-export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, Basket, UserInfo, User};
+Basket.hasMany(Orders);
+Orders.belongsTo(Basket);
+
+export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, Basket, UserInfo, User, Orders};

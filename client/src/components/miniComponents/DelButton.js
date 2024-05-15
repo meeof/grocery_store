@@ -4,8 +4,9 @@ import {Alert, Button} from "react-bootstrap";
 
 const Styled = styled.div`
   position: absolute;
-    top: 5px;
-  right: 5px;
+  top: 5px;
+  right: ${props => (props.$productInterface ? '24px' : '5px')};
+  z-index: 999;
   button {
     padding: 0;
     display: flex;
@@ -27,7 +28,7 @@ const Styled = styled.div`
   }
 `
 
-const DelButton = ({delFun, id, name}) => {
+const DelButton = ({delFun, id, name, productInterface}) => {
     const [show, setShow] = useState(false);
     if (show) {
         if (name.length > 18) {
@@ -35,7 +36,7 @@ const DelButton = ({delFun, id, name}) => {
         }
         name = `"${name}"`
         return (
-            <Styled>
+            <Styled $productInterface={productInterface}>
                 <Alert style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
                        onClick={(e) => e.stopPropagation()}>
                     <Alert.Heading>Удалить {name}?</Alert.Heading>
@@ -44,7 +45,7 @@ const DelButton = ({delFun, id, name}) => {
             </Styled>
         );
     }
-    return <Styled>
+    return <Styled $productInterface={productInterface}>
         <Button variant={"outline-danger"} onClick={(e) => {
             e.stopPropagation();
             setShow(!show)

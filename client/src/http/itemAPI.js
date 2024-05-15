@@ -1,13 +1,5 @@
 import {$authHost, $host} from "./http";
-
-const divideQueryString = (str) => {
-    if (str.length === 0) {
-        return str + '?'
-    }
-    else {
-        return str + '&'
-    }
-}
+import {divideQueryString} from "../usefulFunctions";
 
 export const createCategory = async (body) => {
     const {data} = await $authHost.post('/api/categories', body);

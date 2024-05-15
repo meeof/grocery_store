@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
-import {deleteItem, fetchAllItems} from "../http/itemApi";
+import {deleteItem, fetchAllItems} from "../http/itemAPI";
 import {useParams} from "react-router-dom";
 import CatalogItemCard from "../components/CatalogItemCard";
 import * as uf from "../usefulFunctions";

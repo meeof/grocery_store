@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createCategory} from "../http/itemApi";
+import {createCategory} from "../http/itemAPI";
 import Ovr from "./miniComponents/Ovr";
 import useWindowSize from "../hooks/useWindowSize";
 

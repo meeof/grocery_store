@@ -6,9 +6,9 @@ import UpdateButton from "./miniComponents/UpdateButton";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import ProductInfoField from "./miniComponents/ProductInfoField";
 import Ovr from "./miniComponents/Ovr";
-import {fetchCategories, fetchOneItem, updateItem} from "../http/itemApi";
+import {fetchCategories, fetchOneItem, updateItem} from "../http/itemAPI";
 
-const UpdateProduct = observer(  ({product, page, fetchItems}) => {
+const UpdateProduct = observer(  ({product, page, fetchItems, productInterface}) => {
     const {item} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
 
@@ -105,7 +105,7 @@ const UpdateProduct = observer(  ({product, page, fetchItems}) => {
     }, [product.categoryId, item?.categories, product.discount, product?.info, product.name, product.price]);
     return (
         <div onClick={(e) => e.stopPropagation()}>
-            <UpdateButton handleModal={handleModal}/>
+            <UpdateButton handleModal={handleModal} productInterface={productInterface}/>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}

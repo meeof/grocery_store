@@ -68,7 +68,7 @@ const CatalogItemCard = ({...props}) => {
                         </Card.Title>
                     </Card.Body>
                 </div>
-                <ButtonBuy/>
+                <ButtonBuy productId={props.product.id}/>
                 {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
                 {props.isAuth && <DelButton delFun={props.delItem} id={props.product.id} name={props.product.name}/>}
                 {props.isAuth && <UpdateProduct product={props.product} fetchItems={props.fetchItems}/>}

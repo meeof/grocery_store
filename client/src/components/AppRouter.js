@@ -9,6 +9,8 @@ import RestorePassword from "../pages/RestorePassword";
 import Registration from "../pages/Registration";
 import Category from "../pages/Category";
 import Basket from "../pages/Basket";
+import Order from "../pages/Order";
+import MyOrders from "../pages/MyOrders";
 
 const AppRouter = () => {
     return (
@@ -21,7 +23,9 @@ const AppRouter = () => {
             <Route path="/profile/restore" element={<RestorePassword/>} />
             <Route path="/profile/registration" element={<Registration/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/profile/orders" element={<MyOrders/>} />
             <Route path="/basket" element={<Basket/>} />
+            <Route path="/basket/order" element={<Order/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );

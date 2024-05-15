@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import CatalogCategoryCard from "../components/CatalogCategoryCard";
 import {Button} from "react-bootstrap";
 import {Context} from "../index";
-import {deleteCategory, fetchCategories, updateCategory} from "../http/itemApi";
+import {deleteCategory, fetchCategories} from "../http/itemAPI";
 import {observer} from "mobx-react-lite";
 import {authAPI} from "../http/userAPI";
 

@@ -59,6 +59,7 @@ const Profile = observer( () => {
             <div className={'profile-buttons-block'}>
                 <AddCategory setChangeCategories={setChangeCategories}/>
                 <AddProduct changeCategories={changeCategories} setChangeCategories={setChangeCategories}/>
+                <Button variant={"success"} onClick={() => navigate('orders')}>Мои заказы</Button>
                 <Button variant="secondary" onClick={handleExit}>Выйти</Button>
             </div>
         </Styled>

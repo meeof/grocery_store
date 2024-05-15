@@ -74,6 +74,9 @@ class UserController {
                 const newUserInfo = await models.UserInfo.create(
                     {name, surname, language, phone, 'userId': newUser.dataValues.id},
                     {fields: ['name', 'surname', 'language', 'phone', 'userId']});
+                const newUserBasket = await models.Basket.create(
+                    {"userId": newUser.dataValues.id}
+                )
                 const token = generateToken(newUser.dataValues);
                 res.json(token);
             }

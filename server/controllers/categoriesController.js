@@ -1,6 +1,6 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {json, Op} from 'sequelize';
+import {Op} from 'sequelize';
 import {deleteSpace} from "../usefulFunctions.js";
 
 class CategoriesController {

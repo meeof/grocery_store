@@ -8,3 +8,11 @@ export const routeUnPrefix = (route) => {
 export const getPriceDiscount = (price, discount) => {
     return Math.round(price / 100 * (100 - discount)).toFixed(0)
 }
+export const divideQueryString = (str) => {
+    if (str.length === 0) {
+        return str + '?'
+    }
+    else {
+        return str + '&'
+    }
+}

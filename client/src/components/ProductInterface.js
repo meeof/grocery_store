@@ -10,7 +10,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
-import {deleteItem} from "../http/itemApi";
+import {deleteItem} from "../http/itemAPI";
 import DelButton from "./miniComponents/DelButton";
 import {authAPI} from "../http/userAPI";
 import UpdateProduct from "./UpdateProduct";
@@ -91,7 +91,15 @@ const Styled = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      margin-left: 10px;
+      @media (min-width: 767.5px) {
+        width: 300px;
+        > button {
+          width: 100%;
+        }
+      }
       .one-click-buy {
+        width: 100%;
         color: #1f7d63;
         font-weight: bold;
         margin-bottom: 10px;
@@ -106,11 +114,6 @@ const Styled = styled.div`
         animation-timing-function: ease-in-out;
         animation-fill-mode: forwards;
         color: white;
-      }
-      button {
-        @media (min-width: 767.5px) {
-          width: 220px;
-        }
       }
     }
     .prices {
@@ -170,11 +173,11 @@ const ProductInterface = observer(({product}) => {
             <div className={'product-head'}>
                 <h1>
                     {product.name}
-                    {user.isAuth && <UpdateProduct product={product} page={true}/>}
-                    {user.isAuth && <DelButton delFun={delItem} id={product.id} name={product.name}/>}
+                    {user.isAuth && <UpdateProduct productInterface={true} product={product} page={true}/>}
+                    {user.isAuth && <DelButton productInterface={true} delFun={delItem} id={product.id} name={product.name}/>}
                 </h1>
                 <div className={'rating-comparison'}>
-                    <Rating rating={rating?.rate}/>
+                    <Rating rating={rating?.rate} digit={true}/>
                     <div role={"button"} className={'comparison-button'}>
                         <img alt={''} src={fillComparisonImg}/>
                         <span>Добавить в сравнение</span>
@@ -189,7 +192,7 @@ const ProductInterface = observer(({product}) => {
                 </div>
                 <div className={'buy'}>
                     <div role={"button"} className={'one-click-buy'}>Купить в 1 клик</div>
-                    {width > 575.5 && <ButtonBuy/>}
+                    {width > 575.5 && <ButtonBuy productId={product.id}/>}
                 </div>
             </div>
             <div className={'delivery'}>

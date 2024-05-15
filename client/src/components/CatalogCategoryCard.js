@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import noImage from '../assets/free-icon-font-copy-image-9291618.svg';
 import DelButton from "./miniComponents/DelButton";
 import UpdateCategory from "./UpdateCategory";
+import * as uf from "../usefulFunctions";
 
 const Styled = styled.div`
   .card {
@@ -34,7 +35,7 @@ const CatalogCategoryCard = ({...props}) => {
     const navigate = useNavigate();
     return (
         <Styled>
-            <Card onClick={() => navigate(`category_${props.id}`)}>
+            <Card onClick={() => navigate(uf.routePrefix('category', props.id))}>
                 <Card.Img variant="top" src={props.img ? process.env.REACT_APP_API_URL + props.img : noImage} />
                 <Card.Body>
                     <Card.Title>{props.name}</Card.Title>

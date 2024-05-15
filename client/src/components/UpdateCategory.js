@@ -3,7 +3,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import UpdateButton from "./miniComponents/UpdateButton";
 import useWindowSize from "../hooks/useWindowSize";
 import Ovr from "./miniComponents/Ovr";
-import {fetchCategories, updateCategory} from "../http/itemApi";
+import {fetchCategories, updateCategory} from "../http/itemAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 

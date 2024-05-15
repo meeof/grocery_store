@@ -6,27 +6,27 @@ const Styled = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  width: min-content;
+  width: ${(props) => (props.$digit ? "min-content" : "100%")};
+  justify-content: ${(props) => (props.$digit ? "flex-start" : "space-evenly")};
   span {
     vertical-align: center;
     font-weight: bold;
   }
   img {
-    width: 16px;
-    height: 16px;
+    width: ${(props) => (props.$big ? "32px" : "16px")};
     margin-right: 4px;
   }
 `
 
-const Rating = ({rating}) => {
+const Rating = ({rating, digit, big}) => {
     let imgStars = [];
     for (let i=0; i < 5; i++) {
         imgStars.push(<img key={i} alt={'star'} src={i < rating ? starImgFill : starImg}/>)
     }
     return (
-        <Styled>
+        <Styled $digit={digit} $big={big}>
             {imgStars}
-            <span>({rating})</span>
+            {digit && <span>({rating})</span>}
         </Styled>
     );
 };
