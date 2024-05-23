@@ -5,11 +5,21 @@ import dotenv from 'dotenv';
 dotenv.config();
 import bcrypt from "bcrypt";
 import {deleteSpace} from "../usefulFunctions.js";
+import {v4 as uuidv4} from "uuid";
+import path from "path";
+import __dirname from "../__dirname.js";
 const generateToken = (data) => {
     return jwt.sign(
         {'id': data.id, 'email': data.email, 'role': data.role},
         process.env.JWT_PRIVATE_KEY,
         { algorithm: 'HS256', expiresIn: '12h'});
+}
+export const getUserInfo = async (userId) => {
+    return  await models.UserInfo.findOne({
+        where: {
+            userId,
+        },
+    });
 }
 const findEmailPassword = async (arr) => {
     let findEmail = null;
@@ -113,6 +123,78 @@ class UserController {
             ErrorTemp.err();
         }
 
+    }
+    async getInfo(req, res) {
+        try {
+            const {userId} = req.query
+            const info = await getUserInfo(userId);
+            res.json(info.dataValues)
+        } catch (error) {
+            ErrorTemp.err();
+        }
+    }
+    async updateInfo(req, res) {
+        try {
+            const {userId, name, surname, status, about} = req.body;
+            let itemFields = {};
+            const info = await getUserInfo(userId);
+            if (name && name !== info.dataValues.name) {
+                itemFields.name = name
+            }
+            if (surname && surname !== info.dataValues.surname) {
+                itemFields.surname = surname
+            }
+            if (status && status !== info.dataValues.status) {
+                itemFields.status = status
+            }
+            if (about && about !== info.dataValues.about) {
+                itemFields.about = about
+            }
+            if (req?.files) {
+                let imgName = ''
+                for (let key in req.files) {
+                    imgName = uuidv4() + '.jpg';
+                    await req.files[key].mv(`${path.resolve(__dirname, 'static', imgName)}`)
+                }
+                itemFields.img = imgName;
+            }
+            if (Object.keys(itemFields).length === 0) {
+                res.json('success');
+            }
+            else {
+                await models.UserInfo.update(
+                    itemFields,
+                    {
+                        where: {
+                            userId,
+                        },
+                    }
+                );
+                res.json('success');
+            }
+
+        } catch (error) {
+            ErrorTemp.badRequest(res)
+        }
+    }
+    async deleteUser(req, res){
+        try {
+            const {userId} = req.query
+            await models.UserInfo.destroy({
+                where: {
+                    userId,
+                },
+            });
+            await models.User.destroy({
+                where: {
+                    id: userId,
+                },
+            });
+            res.json('delete success');
+
+        } catch (error) {
+            ErrorTemp.err();
+        }
     }
 }
 export default new UserController();

@@ -131,9 +131,10 @@ const OrderCard = ({order, months}) => {
                         {order.status}
                     </div>
                 </div>
-                <b>Доставка {deliveryRUS[order.delivery]} ({order.point})</b>
+                <b>Доставка {deliveryRUS[order.delivery]} {order.point && <i> - {order.point}</i>}</b>
+                <div>{order.address}</div>
                 <div>Дата доставки: {dataDelivery.getDate()} {months[dataDelivery.getMonth()]}</div>
-                <div className={'comm-block'}>
+                {order.comment && <div className={'comm-block'}>
                     <Accordion>
                         <Accordion.Item eventKey="0">
                             <Accordion.Header>Комментарий</Accordion.Header>
@@ -142,7 +143,7 @@ const OrderCard = ({order, months}) => {
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
-                </div>
+                </div>}
                 <div className={'orders-grade-block'}>
                     <Button variant={"success"} onClick={() => setShowModalAll(true)}>Оценить заказ</Button>
                     <Button variant={"success"} onClick={() => setShowModalOne(true)}>Оценить товар</Button>
@@ -173,7 +174,7 @@ const OrderCard = ({order, months}) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Rating big={true}/>
+                    <Rating big={true} itemsId={JSON.parse(order.items).map(item => item.itemId)}/>
                 </Modal.Body>
             </Modal>
             <Modal
@@ -189,7 +190,7 @@ const OrderCard = ({order, months}) => {
                 </Modal.Header>
                 <Modal.Body>
                     {JSON.parse(order.items).map(item => {
-                        return <SetProductRatingCard item={item}/>
+                        return <SetProductRatingCard key={item.itemId} item={item}/>
                     })}
                 </Modal.Body>
             </Modal>

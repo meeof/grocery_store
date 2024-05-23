@@ -7,20 +7,12 @@ class ItemStore {
         this._showItem = {};
         this._count = 0;
         this._limit = 4;
-        this._rating = [
-            {id: 1, itemId: 1, userId: 1, rate: 4},
-            {id: 2, itemId: 2, userId: 1, rate: 4},
-            {id: 3, itemId: 3, userId: 1, rate: 4},
-            {id: 4, itemId: 4, userId: 1, rate: 4},
-            {id: 5, itemId: 5, userId: 1, rate: 4},
-            {id: 6, itemId: 6, userId: 1, rate: 4},
-        ];
         this._itemInfo = [
             {id: 1, itemId: 1, title: 'Страна', description: 'Уругвай'},
             {id: 2, itemId: 1, title: 'Цвет', description: 'Зеленый'},
             {id: 3, itemId: 2, title: 'Страна', description: 'Эквадор'},
             {id: 4, itemId: 2, title: 'Масса', description: '1кг.'},
-        ]
+        ];
         makeAutoObservable(this)
     }
     setCategories(data) {
@@ -54,13 +46,6 @@ class ItemStore {
     }
     get oneItem() {
         return this._showItem;
-    }
-
-
-
-
-    get rating() {
-        return this._rating;
     }
 }
 export default ItemStore;

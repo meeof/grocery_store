@@ -14,6 +14,9 @@ const UserInfo = sequelize.define('user_info', {
     surname : {type: DataTypes.STRING, allowNull: false},
     language : {type: DataTypes.STRING, defaultValue: 'RU'},
     phone : {type: DataTypes.STRING, allowNull: false},
+    img: {type: DataTypes.STRING},
+    status: {type: DataTypes.STRING},
+    about: {type: DataTypes.STRING},
 });
 const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -60,6 +63,19 @@ const Orders = sequelize.define('orders', {
     status: {type: DataTypes.STRING, allowNull: false},
     delivery_date: {type: DataTypes.DATE, allowNull: false}
 });
+const WasBought = sequelize.define('was_bought', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    userId: {type: DataTypes.INTEGER, allowNull: false},
+    itemId: {type: DataTypes.INTEGER, allowNull: false},
+});
+const Reviews = sequelize.define('reviews' , {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    userId: {type: DataTypes.INTEGER, allowNull: false},
+    itemId: {type: DataTypes.INTEGER, allowNull: false},
+    images: {type: DataTypes.JSON},
+    review: {type: DataTypes.STRING, allowNull: false},
+})
+
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -91,4 +107,4 @@ Item.belongsTo(Categories);
 Basket.hasMany(Orders);
 Orders.belongsTo(Basket);
 
-export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, Basket, UserInfo, User, Orders};
+export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, Basket, UserInfo, User, Orders, WasBought, Reviews};

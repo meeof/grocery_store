@@ -6,8 +6,8 @@ import whitePencilImg from "../../assets/white-pencil-3917376.svg";
 
 const Styled = styled.div`
   position: absolute;
-  top: 5px;
-  right: ${props => (props.$productInterface ? '64px' : '40px')};
+  top: ${props => (props.$top ? props.$top : '5px')};
+  right: ${props => (props.$right ? props.$right : '40px')};
   button {
     padding: 4px;
     display: flex;
@@ -21,11 +21,11 @@ const Styled = styled.div`
   }
 `
 
-const UpdateButton = ({handleModal, productInterface}) => {
+const UpdateButton = ({handleModal, isActive, top, right}) => {
     const [hover, setHover] = useState(false)
     return (
-        <Styled $productInterface={productInterface}>
-            <Button variant={"outline-primary"}
+        <Styled $top={top} $right={right}>
+            <Button variant={"outline-primary"} disabled={isActive}
                     onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}
                     onClick={(e) => {
                         e.stopPropagation();

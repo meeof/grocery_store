@@ -77,7 +77,7 @@ const Product = observer (() => {
                 <ProductInterface product={item.oneItem}/>
             </div>
             <Characteristics info={item.oneItem?.info || []}/>
-            <Reviews/>
+            <Reviews itemId={item.oneItem.id}/>
             {width < 576 && <ButtonBuy product={item.oneItem} fixed={true}/>}
         </Styled>
     );

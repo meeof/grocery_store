@@ -60,4 +60,42 @@ export const fetchOneItem = async (id) => {
     const {data} = await $host.get(`/api/item/${id}`);
     return data
 }
-
+export const bought = async (userId, itemId) => {
+    let queryStr = '';
+    if (userId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'userId=' + userId;
+    }
+    if (itemId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'itemId=' + itemId;
+    }
+    const {data} = await $host.get(`/api/basket/bought${queryStr}`);
+    return data;
+}
+export const reviewed = async (userId, itemId) => {
+    let queryStr = '';
+    if (userId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'userId=' + userId;
+    }
+    if (itemId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'itemId=' + itemId;
+    }
+    const {data} = await $host.get(`/api/basket/reviewed${queryStr}`);
+    return data;
+}
+export const addReview = async (body) => {
+    const {data} = await $authHost.post('/api/basket/review', body);
+    return data;
+}
+export const fetchReviews = async (itemId) => {
+    let queryStr = '';
+    if (itemId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'itemId=' + itemId;
+    }
+    const {data} = await $host.get(`/api/basket/reviews${queryStr}`);
+    return data;
+}

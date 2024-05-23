@@ -28,7 +28,7 @@ const SetProductRatingCard = ({item}) => {
                 navigate(`/catalog/all/product_${item.itemId}`)
             }}/>
             <div>{item.name}</div>
-            <Rating/>
+            <Rating itemsId={[item.itemId]}/>
         </Styled>
     );
 };

@@ -7,7 +7,7 @@ import comparisonImg from "../assets/free-icon-font-chart-histogram-5528038.svg"
 import cartImg from "../assets/free-icon-font-shopping-cart-3916627.svg";
 import userImg from "../assets/free-icon-font-user-3917688.svg";
 import searchImg from "../assets/free-icon-font-search-3917132.svg";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Styled = styled.div`
   padding: 8px 24px;
@@ -123,9 +123,15 @@ const CommonBar = () => {
                 <Button variant="success"><Image src={searchImg} role={"button"} className={'search'}/></Button>
             </Form>
             <div className={"controls"}>
-                <Image src={userImg} role={"button"} onClick={() => navigate('/profile')}/>
-                <Image src={comparisonImg} role={"button"}/>
-                <Image src={cartImg} role={"button"} onClick={() => navigate('/basket')}/>
+                <Link to={'/profile'}>
+                    <Image src={userImg} />
+                </Link>
+                <Link to={'/'}>
+                    <Image src={comparisonImg}/>
+                </Link>
+                <Link to={'/basket'}>
+                    <Image src={cartImg}/>
+                </Link>
             </div>
         </Styled>
     );

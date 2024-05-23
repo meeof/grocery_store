@@ -41,8 +41,12 @@ export const getContacts = async (userId) => {
     const {data} = await $authHost.get(`/api/basket/orderContacts${queryStr}`);
     return data
 }
-export const createOrder = async (body) => {
-    const {data} = await $authHost.post('/api/basket/formOrder', body);
+export const createBasketOrder = async (body) => {
+    const {data} = await $authHost.post('/api/basket/formBasketOrder', body);
+    return data
+}
+export const createFastOrder = async (body) => {
+    const {data} = await $authHost.post('/api/basket/formFastOrder', body);
     return data
 }
 export const getOrders = async (userId, limit) => {
@@ -56,5 +60,27 @@ export const getOrders = async (userId, limit) => {
         queryStr += 'limit=' + limit;
     }
     const {data} = await $authHost.get(`/api/basket/orders${queryStr}`);
+    return data
+}
+export const clearOrders = async (userId) => {
+    let queryStr = '';
+    if (userId) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'userId=' + userId;
+    }
+    const {data} = await $authHost.delete(`/api/basket/clearOrders${queryStr}`);
+    return data
+}
+export const deleteReview = async (id) => {
+    let queryStr = '';
+    if (id) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'id=' + id;
+    }
+    const {data} = await $authHost.delete(`/api/basket/review${queryStr}`);
+    return data
+}
+export const updateReview = async (body) => {
+    const {data} = await $authHost.patch(`/api/basket/review`, body);
     return data
 }

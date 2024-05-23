@@ -14,25 +14,9 @@ import {deleteItem} from "../http/itemAPI";
 import DelButton from "./miniComponents/DelButton";
 import {authAPI} from "../http/userAPI";
 import UpdateProduct from "./UpdateProduct";
+import OneClickBuy from "./OneClickBuy";
 
 const Styled = styled.div`
-  @keyframes shopButtonAnim {
-    0% {
-      background: transparent;
-    }
-    25% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), transparent, transparent, transparent);
-    }
-    50% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), transparent ,transparent);
-    }
-    75% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), transparent);
-    }
-    100% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7));
-    }
-  }
   .delivery {
     border: solid lightgray 2px;
     padding-bottom: 10px;
@@ -98,23 +82,6 @@ const Styled = styled.div`
           width: 100%;
         }
       }
-      .one-click-buy {
-        width: 100%;
-        color: #1f7d63;
-        font-weight: bold;
-        margin-bottom: 10px;
-        border: solid 1px #1f7d63;
-        border-radius: 5px;
-        padding: 5px;
-        text-align: center;
-      }
-      .one-click-buy:hover {
-        animation-name: shopButtonAnim;
-        animation-duration: 200ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        color: white;
-      }
     }
     .prices {
       align-items: center;
@@ -143,7 +110,6 @@ const Styled = styled.div`
 `
 
 const ProductInterface = observer(({product}) => {
-    const {item} = useContext(Context);
     const {user} = useContext(Context);
     let width = useWindowSize();
     const navigate = useNavigate();
@@ -155,12 +121,6 @@ const ProductInterface = observer(({product}) => {
         })
     }
     let city = 'Москва';
-    let rating = item.rating.find(rate => {
-        if (rate.itemId === product.id) {
-            return rate
-        }
-        else return false
-    });
     useEffect(() => {
         authAPI().then(data => {
             user.setAuth(data);
@@ -173,11 +133,11 @@ const ProductInterface = observer(({product}) => {
             <div className={'product-head'}>
                 <h1>
                     {product.name}
-                    {user.isAuth && <UpdateProduct productInterface={true} product={product} page={true}/>}
-                    {user.isAuth && <DelButton productInterface={true} delFun={delItem} id={product.id} name={product.name}/>}
+                    {user.isAuth && <UpdateProduct right={'64px'} product={product} page={true}/>}
+                    {user.isAuth && <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>}
                 </h1>
                 <div className={'rating-comparison'}>
-                    <Rating rating={rating?.rate} digit={true}/>
+                    <Rating isProduct={true} itemsId={[product.id]}/>
                     <div role={"button"} className={'comparison-button'}>
                         <img alt={''} src={fillComparisonImg}/>
                         <span>Добавить в сравнение</span>
@@ -191,7 +151,7 @@ const ProductInterface = observer(({product}) => {
                     <h3>{product.discount > 0 && product.price + ' ₽'}</h3>
                 </div>
                 <div className={'buy'}>
-                    <div role={"button"} className={'one-click-buy'}>Купить в 1 клик</div>
+                    <OneClickBuy itemId={product.id}/>
                     {width > 575.5 && <ButtonBuy productId={product.id}/>}
                 </div>
             </div>

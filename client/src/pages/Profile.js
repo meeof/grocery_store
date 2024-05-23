@@ -7,6 +7,7 @@ import {Button} from "react-bootstrap";
 import styled from "styled-components";
 import AddCategory from "../components/AddCategory";
 import AddProduct from "../components/AddProduct";
+import ViewProfile from "../components/ViewProfile";
 
 const Styled = styled.div`
   margin-left: 24px;
@@ -56,6 +57,7 @@ const Profile = observer( () => {
         <Styled>
             <h2>Личный кабинет</h2>
             <h4>{roles[user.isAuth.role]} {user.isAuth.email}</h4>
+            <ViewProfile/>
             <div className={'profile-buttons-block'}>
                 <AddCategory setChangeCategories={setChangeCategories}/>
                 <AddProduct changeCategories={changeCategories} setChangeCategories={setChangeCategories}/>

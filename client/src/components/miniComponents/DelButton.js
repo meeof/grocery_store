@@ -4,8 +4,8 @@ import {Alert, Button} from "react-bootstrap";
 
 const Styled = styled.div`
   position: absolute;
-  top: 5px;
-  right: ${props => (props.$productInterface ? '24px' : '5px')};
+  top: ${props => (props.$top ? props.$top : '5px')};
+  right: ${props => (props.$right ? props.$right : '5px')};
   z-index: 999;
   button {
     padding: 0;
@@ -28,24 +28,24 @@ const Styled = styled.div`
   }
 `
 
-const DelButton = ({delFun, id, name, productInterface}) => {
+const DelButton = ({delFun, id, name, top, right}) => {
     const [show, setShow] = useState(false);
     if (show) {
-        if (name.length > 18) {
+        if (name && name.length > 18) {
             name = name.slice(0, 15) + '...'
+            name = `"${name}"`
         }
-        name = `"${name}"`
         return (
-            <Styled $productInterface={productInterface}>
+            <Styled $top={top} $right={right}>
                 <Alert style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
                        onClick={(e) => e.stopPropagation()}>
-                    <Alert.Heading>Удалить {name}?</Alert.Heading>
+                    <Alert.Heading>Удалить {name && name}?</Alert.Heading>
                     <Button variant={"outline-danger"} onClick={() => delFun(id)}>Удалить</Button>
                 </Alert>
             </Styled>
         );
     }
-    return <Styled $productInterface={productInterface}>
+    return <Styled $top={top} $right={right}>
         <Button variant={"outline-danger"} onClick={(e) => {
             e.stopPropagation();
             setShow(!show)

@@ -8,7 +8,7 @@ import ProductInfoField from "./miniComponents/ProductInfoField";
 import Ovr from "./miniComponents/Ovr";
 import {fetchCategories, fetchOneItem, updateItem} from "../http/itemAPI";
 
-const UpdateProduct = observer(  ({product, page, fetchItems, productInterface}) => {
+const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
     const {item} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
 
@@ -105,7 +105,7 @@ const UpdateProduct = observer(  ({product, page, fetchItems, productInterface})
     }, [product.categoryId, item?.categories, product.discount, product?.info, product.name, product.price]);
     return (
         <div onClick={(e) => e.stopPropagation()}>
-            <UpdateButton handleModal={handleModal} productInterface={productInterface}/>
+            <UpdateButton handleModal={handleModal} right={right} isActive={showModal}/>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}

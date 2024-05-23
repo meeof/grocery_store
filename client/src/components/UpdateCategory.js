@@ -47,7 +47,7 @@ const UpdateCategory = observer( ({id, name}) => {
     }
     return (
         <div onClick={(e) => e.stopPropagation()}>
-            <UpdateButton handleModal={handleModal}/>
+            <UpdateButton handleModal={handleModal} isActive={showModal}/>
             <Modal
                 show={showModal}
                 onHide={() => handleModal(false)}
