@@ -1,38 +1,28 @@
 import React, {useContext, useEffect} from 'react';
 import styled from "styled-components";
 import {useNavigate, useParams} from "react-router-dom";
-import CatalogCategoryCard from "../components/CatalogCategoryCard";
+import CategoryCard from "../components/cards/CategoryCard";
 import {Button} from "react-bootstrap";
 import {Context} from "../index";
-import {deleteCategory, fetchCategories} from "../http/itemAPI";
+import {deleteCategory, fetchCategories} from "../api/itemAPI";
 import {observer} from "mobx-react-lite";
-import {authAPI} from "../http/userAPI";
+import {authAPI} from "../api/userAPI";
+import {breakpoints, colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 16px;
-  margin-right: 16px;
-  @media (max-width: 575.5px) {
-    margin-left: 8px;
-    margin-right: 8px;
-  }
+  ${flexColumn};
+  ${marginsPage};
   .view-all-button {
-    width: 300px;
+    width: ${freeButtonWidth};
     align-self: center;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    @media (max-width: 575.5px) {
+    margin-bottom: ${marginSmall};
+    margin-top: ${marginSmall};
+    @media (${breakpoints.small}) {
       width: 100%;
     }
   }
   .card_container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    @media (max-width: 575.5px) {
-      justify-content: space-between;
-    }
+    ${customGrid};
   }
 `
 
@@ -61,8 +51,8 @@ const Catalog = observer( () => {
     const navigate = useNavigate();
     let {categoryId} = useParams();
     let cards  = item.categories?.map(category => {
-            return <CatalogCategoryCard key={category.id} delCategory={delCategory}
-                                        img={category.image} name={category.name} id={category.id} isAuth={user.isAuth} />
+            return <CategoryCard key={category.id} delCategory={delCategory}
+                                 img={category.image} name={category.name} id={category.id} isAuth={user.isAuth} />
         });
     const handlerShowAll = () => {
         item.setFind('');
@@ -70,7 +60,7 @@ const Catalog = observer( () => {
     }
     return (
         <Styled>
-            {!categoryId && <Button variant={"success"} className={'view-all-button'}
+            {!categoryId && <Button variant={colors.bootstrapVariant} className={'view-all-button'}
                                     onClick={handlerShowAll}
             >Показать все</Button>}
             <div className={'card_container'}>

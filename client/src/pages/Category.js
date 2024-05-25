@@ -1,39 +1,30 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
-import {deleteItem, fetchAllItems} from "../http/itemAPI";
+import {deleteItem, fetchAllItems} from "../api/itemAPI";
 import {useParams} from "react-router-dom";
-import CatalogItemCard from "../components/CatalogItemCard";
+import ItemCard from "../components/cards/ItemCard";
 import * as uf from "../usefulFunctions";
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
-import Pgn from "../components/miniComponents/Pgn";
+import CustomPagination from "../components/CustomPagination";
 import {Button} from "react-bootstrap";
-import {authAPI} from "../http/userAPI";
+import {authAPI} from "../api/userAPI";
+import {colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 16px;
-  margin-right: 16px;
+  ${flexColumn};
+  ${marginsPage};
   .show-more {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-top: ${marginSmall};
+    margin-bottom: ${marginSmall};
     button {
-      width: 300px;
+      width: ${freeButtonWidth};
     }
-  }
-  @media (max-width: 575.5px) {
-    margin-left: 8px;
-    margin-right: 8px;
   }
   .card_container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    @media (max-width: 575.5px) {
-      justify-content: space-between;
-    }
+    ${customGrid};
   }
 `
 
@@ -64,8 +55,8 @@ const Category = observer( () => {
         })
     }
     let cards = item.items?.map(product => {
-        return <CatalogItemCard key={uf.routePrefix('item', product.id)} delItem={delItem} isAuth={user.isAuth}
-                                product={product} fetchItems={fetchItems}/>
+        return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delItem} isAuth={user.isAuth}
+                         product={product} fetchItems={fetchItems}/>
     });
     const pagesAmount = Math.ceil(item.count/item.limit);
     const clickPage = (num) => {
@@ -82,17 +73,17 @@ const Category = observer( () => {
     return (
         <Styled>
             <div className={'card_container'}>
-                {cards}
+                {cards.length > 0 ? cards : 'Ничего нет'}
             </div>
             {(item.count > item.limit && page === 1) &&
                 <div className={'show-more'}>
-                    <Button variant={"success"} onClick={() => {
+                    <Button variant={colors.bootstrapVariant} onClick={() => {
                         item.setLimit(item.limit + item.limit);
                     }}>Показывать больше</Button>
                 </div>
             }
             {pagesAmount > 1 &&
-                <Pgn pagesAmount={pagesAmount} page={page} clickPage={clickPage}/>
+                <CustomPagination pagesAmount={pagesAmount} page={page} clickPage={clickPage}/>
             }
         </Styled>
     );

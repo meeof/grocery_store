@@ -1,22 +1,58 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {deleteBasketItem, getAllBasketItems} from "../http/basketAPI";
+import {deleteBasketItem, getAllBasketItems} from "../api/basketAPI";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
-import {authAPI} from "../http/userAPI";
+import {authAPI} from "../api/userAPI";
 import styled from "styled-components";
-import BasketProductCard from "../components/BasketProductCard";
-import AllCostPromoBlock from "../components/miniComponents/AllCostPromoBlock";
+import BasketProductCard from "../components/cards/BasketProductCard";
+import {Button, Form} from "react-bootstrap";
+import {breakpoints, colors, flexColumn, largeButton, marginMedium, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
-  margin: 8px 24px;
-  flex-direction: column;
+  ${marginsPage};
   display: grid;
   grid-template-columns: 5fr 2fr;
-  @media (max-width: 575.5px) {
-    margin: 8px;
-    display: flex;
-    flex-direction: column;
+  @media (${breakpoints.small}) {
+    ${flexColumn}
+  }
+  .basket-other {
+    ${flexColumn}
+    button {
+      font-size: large;
+      ${largeButton};
+      margin-bottom: 0;
+      margin-top: auto;
+    }
+    .other-block {
+      ${flexColumn};
+      padding: 15px;
+      width: 100%;
+      background-color: ${colors.extraLightGray};
+      border: 1px transparent solid;
+      border-radius: 5px;
+      height: 160px;
+    }
+    .other-promo {
+      margin-bottom: 10px;
+      .link-promo {
+        color: ${colors.primary};
+        margin-top: auto;
+        align-self: flex-end;
+        text-decoration: underline;
+      }
+      .form-control {
+        margin-top: ${marginSmall}
+      }
+    }
+    .other-cost {
+      font-size: x-large;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    @media (${breakpoints.fromSmall}) {
+      margin-left: ${marginMedium};
+    }
   }
 `;
 
@@ -70,7 +106,18 @@ const Basket = observer(() => {
             <div className={'card-block'}>
                 {cards.length !== 0 ? cards : <h2>Корзина пуста</h2>}
             </div>
-            <AllCostPromoBlock allCost={allCost} active={cards.length === 0}/>
+            <div className={'basket-other'}>
+                <div className={'other-block other-promo'}>
+                    <b>Введите промокод</b>
+                    <Form.Control placeholder={'Промокод'}/>
+                    <div role={"button"} className={'link-promo'}>Активировать</div>
+                </div>
+                <div className={'other-block'}>
+                    <div className={'other-cost'}>Итого к оплате:</div>
+                    <div className={'other-cost'}>{allCost} ₽</div>
+                    <Button variant={colors.bootstrapVariant} disabled={cards.length === 0} onClick={() => navigate('order')}>Оформить заказ</Button>
+                </div>
+            </div>
         </Styled>
     );
 });

@@ -1,12 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {Button, Form, Image} from "react-bootstrap";
-import logo from '../assets/markom_logo.svg'
+import logo from '../assets/logo.svg'
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import comparisonImg from "../assets/free-icon-font-chart-histogram-5528038.svg";
-import cartImg from "../assets/free-icon-font-shopping-cart-3916627.svg";
-import userImg from "../assets/free-icon-font-user-3917688.svg";
-import searchImg from "../assets/free-icon-font-search-3917132.svg";
+import comparisonImg from "../assets/icon_comparison.svg";
+import cartImg from "../assets/icon_basket_black.svg";
+import userImg from "../assets/icon_user.svg";
+import searchImg from "../assets/icon_search.svg";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";

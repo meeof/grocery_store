@@ -1,13 +1,9 @@
 import React from 'react';
 import MainSlider from "../components/MainSlider";
 import styled from "styled-components";
+import {marginsPage} from "../StyledGlobal";
 const Styled = styled.div`
-  margin-left: 24px;
-  margin-right: 24px;
-  @media (max-width: 575.5px) {
-    margin-left: 8px;
-    margin-right: 8px;
-  }
+  ${marginsPage}
 `
 
 const Main = () => {

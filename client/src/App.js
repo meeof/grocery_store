@@ -1,5 +1,5 @@
 import React from 'react';
-import AppRouter from "./components/AppRouter";
+import AppRouter from "./AppRouter";
 import NavBar from "./components/NavBar";
 import CommonBar from "./components/CommonBar";
 import styled from "styled-components";

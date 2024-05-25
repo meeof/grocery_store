@@ -1,28 +1,28 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {authAPI} from "../http/userAPI";
+import {authAPI} from "../api/userAPI";
 import {Context} from "../index";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
-import OrderProductCard from "../components/OrderProductCard";
+import OrderProductCard from "../components/cards/OrderProductCard";
 import {observer} from "mobx-react-lite";
-import OrderForm from "../components/OrderForm";
-import AlertOrdered from "../components/miniComponents/AlertOrdered";
+import OrderForm from "../components/orders/OrderForm";
+import AlertOrdered from "../components/alerts/AlertOrdered";
+import {marginMedium, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-left: 24px;
-  margin-right: 24px;
-  @media (max-width: 575.5px) {
-    margin-left: 8px;
-    margin-right: 8px;
+  ${marginsPage};
+  .order-left {
+    padding-right: ${marginMedium};
   }
-  .left-container {
-    padding-right: 20px;
-  }
-  .right-container {
+  .order-right {
     box-shadow: 2px 0 2px inset rgba(0, 0, 0, 0.1);
-    padding-left: 20px;
+    padding-left: ${marginMedium};
+    .order-cost {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 `;
 
@@ -46,13 +46,16 @@ const Order = observer( () => {
     return (
         <>
             <Styled>
-                <div className={'left-container'}>
+                <div className={'order-left'}>
                     <h2>Оформление заказа</h2>
                     <OrderForm setShowAlert={setShowAlert} field={'page'}/>
                 </div>
-                <div className={'right-container'}>
+                <div className={'order-right'}>
                     {cards}
-                    <h1>{allCost}</h1>
+                    <div className={'order-cost'}>
+                        <h1>Итого:</h1>
+                        <h1>{allCost} ₽</h1>
+                    </div>
                 </div>
             </Styled>
             <AlertOrdered field={'page'} showAlert={showAlert} setShowAlert={setShowAlert}/>

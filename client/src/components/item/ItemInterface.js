@@ -1,0 +1,171 @@
+import React, {useContext, useEffect} from 'react';
+import styled from "styled-components";
+import Rating from "../Rating";
+import fillComparisonImg from "../../assets/icon_comparison_green.svg";
+import * as uf from "../../usefulFunctions";
+import ButtonBuy from "../buttons/ButtonBuy";
+import truckImg from '../../assets/icon_truck.svg';
+import DeliveryVariant from "./DeliveryVariant";
+import useWindowSize from "../../hooks/useWindowSize";
+import {Context} from "../../index";
+import {observer} from "mobx-react-lite";
+import {useNavigate} from "react-router-dom";
+import {deleteItem} from "../../api/itemAPI";
+import DelButton from "../buttons/DelButton";
+import {authAPI} from "../../api/userAPI";
+import UpdateProduct from "../modals/UpdateProduct";
+import OneClickBuy from "../buttons/OneClickBuy";
+
+const Styled = styled.div`
+  .delivery {
+    border: solid lightgray 2px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    .delivery-head {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #f7f7f7;
+      * {
+        margin-right: 6px;
+      }
+      .delivery-city {
+        font-weight: bold;
+      }
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      .change-delivery {
+        color: #835fef;
+      }
+    }
+  }
+  .item-head {
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 10px;
+    .rating-comparison {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .comparison-button {
+      margin-left: 25px;
+      span {
+        color: #1f7d63;
+      }
+      img {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
+    }
+  }
+  .price-buy {
+    display: flex;
+    justify-content: space-between;
+    border: solid transparent 1px;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    padding: 10px;
+    margin-bottom: 20px;
+    .buy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      @media (min-width: 767.5px) {
+        width: 300px;
+        > button {
+          width: 100%;
+        }
+      }
+    }
+    .prices {
+      align-items: center;
+      width: min-content;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      h1, h3 {
+        white-space: nowrap;
+        margin-bottom: 0;
+      }
+      .discount {
+        width: min-content;
+        background-color: #dc5757;
+        color: white;
+        border: solid transparent 1px;
+        border-radius: 5px;
+        grid-column: 1/3;
+      }
+      h3 {
+        color: gray;
+        text-decoration: line-through;
+        margin-left: 12px;
+      }
+    }
+  }
+`
+
+const ItemInterface = observer(({product}) => {
+    const {user} = useContext(Context);
+    let width = useWindowSize();
+    const navigate = useNavigate();
+    const delItem = (id) => {
+        deleteItem(id).then((data) => {
+            navigate(-1);
+        }).catch(err => {
+            console.log(err.response.data);
+        })
+    }
+    let city = 'Москва';
+    useEffect(() => {
+        authAPI().then(data => {
+            user.setAuth(data);
+        }).catch(err => {
+            user.setAuth(false);
+        })
+    }, [user]);
+    return (
+        <Styled>
+            <div className={'item-head'}>
+                <h1>
+                    {product.name}
+                    {user.isAuth && <UpdateProduct right={'64px'} product={product} page={true}/>}
+                    {user.isAuth && <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>}
+                </h1>
+                <div className={'rating-comparison'}>
+                    <Rating isProduct={true} itemsId={[product.id]}/>
+                    <div role={"button"} className={'comparison-button'}>
+                        <img alt={''} src={fillComparisonImg}/>
+                        <span>Добавить в сравнение</span>
+                    </div>
+                </div>
+            </div>
+            <div className={'price-buy'}>
+                <div className={'prices'}>
+                    {product.discount > 0 && <span className={'discount'}>-{product.discount}%</span>}
+                    <h1>{uf.getPriceDiscount(product.price, product.discount)} ₽</h1>
+                    <h3>{product.discount > 0 && product.price + ' ₽'}</h3>
+                </div>
+                <div className={'buy'}>
+                    <OneClickBuy itemId={product.id}/>
+                    {width > 575.5 && <ButtonBuy productId={product.id}/>}
+                </div>
+            </div>
+            <div className={'delivery'}>
+                <div className={'delivery-head'}>
+                    <img alt={''} src={truckImg}/>
+                    <span>Доставка в <span className={'delivery-city'}>{city}</span></span>
+                    <span className={'change-delivery'} role={"button"}>Изменить</span>
+                </div>
+                <DeliveryVariant name={'Самовывоз'} price={'бесплатно'} info={'На пункте выдачи'}/>
+                <DeliveryVariant name={'Курьером'} price={'300 ₽'} info={'Доставка курьером'}/>
+            </div>
+        </Styled>
+    );
+});
+
+export default ItemInterface;

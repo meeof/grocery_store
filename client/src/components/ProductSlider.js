@@ -2,7 +2,7 @@ import React from 'react';
 import {Carousel, Image} from "react-bootstrap";
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import noImage from '../assets/free-icon-font-copy-image-9291618.svg';
+import noImage from '../assets/icon_no_image.svg';
 const Styled = styled.div`
   margin-left: 16px;
   margin-right: 16px;
