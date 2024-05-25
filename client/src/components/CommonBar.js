@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Form, Image} from "react-bootstrap";
 import logo from '../assets/markom_logo.svg'
 import styled from "styled-components";
@@ -7,7 +7,9 @@ import comparisonImg from "../assets/free-icon-font-chart-histogram-5528038.svg"
 import cartImg from "../assets/free-icon-font-shopping-cart-3916627.svg";
 import userImg from "../assets/free-icon-font-user-3917688.svg";
 import searchImg from "../assets/free-icon-font-search-3917132.svg";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
 const Styled = styled.div`
   padding: 8px 24px;
@@ -95,12 +97,24 @@ const Styled = styled.div`
   };
 `
 
-const CommonBar = () => {
+const CommonBar = observer (() => {
+    const {item, user} = useContext(Context);
+    const [find, setFind] = useState(item.find);
+    const location = useLocation();
     let width = useWindowSize();
     const navigate = useNavigate();
     const logoElement = <Image src={logo} role={"button"} className={'logo'} onClick={() => navigate('/')}/>
     const catalogButtonElement = <Button variant="success" className={"catalog-button"}
                                          onClick={() => navigate('/catalog')}>Каталог</Button>
+    const handlerFind = () => {
+        item.setFind(find);
+        if (location.pathname === '/catalog/all') {
+            user.forceUpdate();
+        }
+        else {
+            navigate('/catalog/all');
+        }
+    }
     return (
         <Styled>
             {width >= 576 ?
@@ -119,8 +133,11 @@ const CommonBar = () => {
                     className="ms-2"
                     aria-label="Search"
                     id={'commonFind'}
+                    value={find}
+                    onChange={(e) => setFind(e.target.value)}
                 />
-                <Button variant="success"><Image src={searchImg} role={"button"} className={'search'}/></Button>
+                <Button variant="success" onClick={handlerFind}
+                ><Image src={searchImg} role={"button"} className={'search'}/></Button>
             </Form>
             <div className={"controls"}>
                 <Link to={'/profile'}>
@@ -135,6 +152,6 @@ const CommonBar = () => {
             </div>
         </Styled>
     );
-};
+});
 
 export default CommonBar;

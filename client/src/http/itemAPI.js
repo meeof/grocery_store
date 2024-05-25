@@ -39,7 +39,7 @@ export const deleteItem = async (id) => {
     const {data} = await $authHost.delete(`/api/item${queryStr}`);
     return data
 }
-export const fetchAllItems = async (categoryId, limit, page) => {
+export const fetchAllItems = async (categoryId, limit, page, find) => {
     let queryStr = '';
     if (categoryId) {
         queryStr = divideQueryString(queryStr);
@@ -52,6 +52,10 @@ export const fetchAllItems = async (categoryId, limit, page) => {
     if (page) {
         queryStr = divideQueryString(queryStr);
         queryStr += 'page=' + page;
+    }
+    if (find) {
+        queryStr = divideQueryString(queryStr);
+        queryStr += 'find=' + find;
     }
     const {data} = await $host.get(`/api/item${queryStr}`);
     return data;

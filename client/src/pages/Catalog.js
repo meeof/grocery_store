@@ -64,10 +64,14 @@ const Catalog = observer( () => {
             return <CatalogCategoryCard key={category.id} delCategory={delCategory}
                                         img={category.image} name={category.name} id={category.id} isAuth={user.isAuth} />
         });
+    const handlerShowAll = () => {
+        item.setFind('');
+        navigate(`all`)
+    }
     return (
         <Styled>
             {!categoryId && <Button variant={"success"} className={'view-all-button'}
-                                    onClick={() => navigate(`all`)}
+                                    onClick={handlerShowAll}
             >Показать все</Button>}
             <div className={'card_container'}>
                 {cards}

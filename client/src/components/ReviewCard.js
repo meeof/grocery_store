@@ -70,7 +70,7 @@ const ReviewCard = ({reviewObj, userId}) => {
     }
     const [showImages, setShowImages] = useState(false);
     const [showUser, setShowUser] = useState(false);
-    const updated = new Date(reviewObj.updatedAt);
+    const created = new Date(reviewObj.createdAt);
     const localeStringOptions = {
         year: 'numeric',
         month: 'numeric',
@@ -127,7 +127,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                 <Image src={reviewObj.img ? process.env.REACT_APP_API_URL + reviewObj.img : noImage}
                        roundedCircle className={'review-card-profile-image'} onClick={() => setShowUser(true)}/>
                 <h5>{reviewObj.name} {reviewObj.surname}</h5>
-                <i>{reviewObj.createdAt !== reviewObj.updatedAt ? 'Изм.' : ''} {updated.toLocaleString("eu", localeStringOptions)}</i>
+                <i>{reviewObj.createdAt !== reviewObj.updatedAt ? 'Изм.' : ''} {created.toLocaleString("eu", localeStringOptions)}</i>
                 {myReview && <UpdateButton top={'20px'} handleModal={handleModal}/>}
                 {myReview && <DelButton delFun={handlerDeleteReview} id={reviewObj.id} name={'отзыв'} top={'20px'}/>}
             </div>

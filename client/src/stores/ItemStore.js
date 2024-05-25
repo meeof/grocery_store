@@ -13,7 +13,14 @@ class ItemStore {
             {id: 3, itemId: 2, title: 'Страна', description: 'Эквадор'},
             {id: 4, itemId: 2, title: 'Масса', description: '1кг.'},
         ];
+        this._find = '';
         makeAutoObservable(this)
+    }
+    setFind(data) {
+        this._find = data
+    }
+    get find() {
+        return this._find
     }
     setCategories(data) {
         this._categories = data

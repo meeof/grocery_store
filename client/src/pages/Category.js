@@ -44,7 +44,7 @@ const Category = observer( () => {
     let {categoryId} = useParams();
     const fetchItems = () => {
         if (categoryId === 'all') {
-            fetchAllItems(null, item.limit, page).then(data => {
+            fetchAllItems(null, item.limit, page, item.find).then(data => {
                 item.setItems(data.rows);
                 item.setCount(data.count);
             });
@@ -71,7 +71,7 @@ const Category = observer( () => {
     const clickPage = (num) => {
         setPage(num)
     }
-    useEffect(fetchItems, [item, categoryId, item?.limit, page]);
+    useEffect(fetchItems, [item, categoryId, item?.limit, page, user.rerender]);
     useEffect(() => {
         authAPI().then(data => {
             user.setAuth(data);

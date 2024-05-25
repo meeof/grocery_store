@@ -5,6 +5,30 @@ import __dirname from "../__dirname.js";
 import { v4 as uuidv4 } from 'uuid';
 import {deleteSpace} from "../usefulFunctions.js";
 import {Op} from "sequelize";
+
+const getItems = async (catId, limit, page, find) => {
+    page = page || 1;
+    limit = limit || 4;
+    let offset = limit * (page - 1);
+    let where = {};
+    catId && (where.categoryId = catId);
+    find && (where.name = {[Op.iRegexp]: find});
+    const allItems = await models.Item.findAndCountAll({
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
+        where, limit, offset, order: [
+            ['id', 'DESC'],
+        ],
+    })
+    allItems.rows.map(item => {
+        if (item.dataValues.images === null) {
+            item.dataValues.images = [];
+        }
+        else {
+            item.dataValues.images = JSON.parse(item.dataValues.images);
+        }
+    })
+    return allItems
+}
 class ItemController {
     async create(req, res) {
         try {
@@ -177,26 +201,8 @@ class ItemController {
     }
     async getAll(req, res) {
         try {
-            let {catId, limit, page} = req.query;
-            page = page || 1;
-            limit = limit || 4;
-            let offset = limit * (page - 1);
-            let where = {};
-            catId ? where = {'categoryId': catId} : {};
-            const allItems = await models.Item.findAndCountAll({
-                attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
-                where, limit, offset, order: [
-                    ['id', 'DESC'],
-                ],
-            })
-            allItems.rows.map(item => {
-                if (item.dataValues.images === null) {
-                    item.dataValues.images = [];
-                }
-                else {
-                    item.dataValues.images = JSON.parse(item.dataValues.images);
-                }
-            })
+            let {catId, limit, page, find} = req.query;
+            const allItems = await getItems(catId, limit, page, find);
             res.json(allItems);
         } catch (error) {
             ErrorTemp.badRequest(res)

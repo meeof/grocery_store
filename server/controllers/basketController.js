@@ -318,7 +318,10 @@ class BasketController {
                 attributes: ['id', 'userId', 'review', 'images', "createdAt", "updatedAt"],
                 where: {
                     itemId
-                }
+                },
+                order: [
+                    ["createdAt", 'ASC'],
+                ],
             });
             const reviewsAndUsersInfos = await Promise.all(reviews.map(async (review) => {
                 const {userId} = review.dataValues;
@@ -349,6 +352,7 @@ class BasketController {
         }
     }
     async updateReview(req, res){
+        console.log("\x1b[35m", 'fafassfaasf', "\x1b[0m")
         try {
             const {id, review} = req.body;
             let imgNames = null;
