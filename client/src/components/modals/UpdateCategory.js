@@ -6,6 +6,7 @@ import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import {fetchCategories, updateCategory} from "../../api/itemAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
+import {colors} from "../../StyledGlobal";
 
 const UpdateCategory = observer( ({id, name}) => {
     const {item} = useContext(Context);
@@ -59,8 +60,8 @@ const UpdateCategory = observer( ({id, name}) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicCategoryUp">
-                            <Form.Label className={'category-label'}>Наименование категории</Form.Label>
+                        <Form.Group className="mb-3" controlId="formUpdateCategory">
+                            <Form.Label>Наименование категории</Form.Label>
                             <Form.Control type="text" value={categoryName}
                                           onChange={(e) => setCategoryName(e.target.value)}/>
                         </Form.Group>
@@ -70,8 +71,8 @@ const UpdateCategory = observer( ({id, name}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant="success" ref={target} onClick={() => upCategory({id, categoryName})}>Изменить</Button>
-                    <CustomOverlay show={showOverlay} color={'rgba(255, 100, 100, 0.85)'} message={overlayMessage}
+                    <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => upCategory({id, categoryName})}>Изменить</Button>
+                    <CustomOverlay show={showOverlay} color={colors.opacityRed} message={overlayMessage}
                                    target={target} placement={width > 576 ? "right" : "bottom-start"}/>
                 </Modal.Footer>
             </Modal>

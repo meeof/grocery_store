@@ -6,8 +6,9 @@ import {observer} from "mobx-react-lite";
 import ItemInfoField from "../item/ItemInfoField";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import useWindowSize from "../../hooks/useWindowSize";
+import {colors} from "../../StyledGlobal";
 
-const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
+const AddItem = observer( ({changeCategories, setChangeCategories}) => {
     const {item} = useContext(Context);
     const [show, setShow] = useState(false);
 
@@ -15,7 +16,7 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
     const [showOverlay, setShowOverlay] = useState(false);
     const target = useRef(null);
     const [overlayMessage, setOverlayMessage] = useState('-');
-    const [overlayColor, setOverlayColor] = useState('rgba(13, 110, 253, 0.85)');
+    const [overlayColor, setOverlayColor] = useState(colors.opacityPrimary);
     const overlayHandle = () => {
         setShowOverlay(true);
         setTimeout(() => {
@@ -51,17 +52,17 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
         createItem(formData).then(data => {
             if (data?.name === name && data?.price === Number(price) && data?.discount === Number(discount)) {
                 setOverlayMessage(`Товар "${data.name}" успешно добавлен`);
-                setOverlayColor('rgba(13, 110, 253, 0.85)');
+                setOverlayColor(colors.opacityPrimary);
                 handleCancel();
             }
             else {
                 setOverlayMessage(data);
-                setOverlayColor('rgba(255, 100, 100, 0.85)');
+                setOverlayColor(colors.opacityRed);
                 setShow(false);
             }
         }).catch(err => {
             setOverlayMessage('Непредвиденная ошибка');
-            setOverlayColor('rgba(255, 100, 100, 0.85)');
+            setOverlayColor(colors.opacityRed);
         })
         overlayHandle();
     }
@@ -94,7 +95,7 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
     }, [item, changeCategories, setChangeCategories]);
     return (
         <>
-            <Button variant="success" ref={target} onClick={() => setShow(true)}>
+            <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => setShow(true)}>
                 Добавить товар
             </Button>
             <CustomOverlay show={showOverlay} color={overlayColor} message={overlayMessage}
@@ -110,12 +111,12 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicProductName">
-                            <Form.Label className={'item-label'}>Наименование товара</Form.Label>
+                        <Form.Group className="mb-3" controlId="formAddItemName">
+                            <Form.Label>Наименование товара</Form.Label>
                             <Form.Control type="text" value={name}
                                           onChange={(e) => setName(e.target.value)}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductCategory">
+                        <Form.Group className="mb-3" controlId="formAddItemCategory">
                             <div className={'mb-2'}>Категория товара</div>
                             <DropdownButton
                                 onSelect={handleSelect}
@@ -128,23 +129,23 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
                                 })}
                             </DropdownButton>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductPrice">
-                            <Form.Label className={'item-label'}>Цена</Form.Label>
+                        <Form.Group className="mb-3" controlId="formAddItemPrice">
+                            <Form.Label>Цена</Form.Label>
                             <Form.Control type="number" value={price}
                                           onChange={(e) => setPrice(e.target.value)}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductDiscount">
-                            <Form.Label className={'item-label'}>Скидка %</Form.Label>
+                        <Form.Group className="mb-3" controlId="formAddItemDiscount">
+                            <Form.Label>Скидка %</Form.Label>
                             <Form.Control type="number" value={discount}
                                           onChange={(e) => setDiscount(e.target.value)}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductPhoto">
-                            <Form.Label className={'item-label'}>Фото</Form.Label>
+                        <Form.Group className="mb-3" controlId="formAddItemPhoto">
+                            <Form.Label>Фото</Form.Label>
                             <Form.Control type="file" accept="image/*"  multiple onChange={(event) => {
                                 setImages(event.target.files);
                             }}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductChar" style={{display: "flex", flexDirection: "column"}}>
+                        <Form.Group className="mb-3" controlId="formAddItemChar" style={{display: "flex", flexDirection: "column"}}>
                             <div className={'mb-2'}>Характеристики</div>
                             {info.map((infoObj, index) => {
                                 return <ItemInfoField
@@ -154,7 +155,7 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
                                     changeInfo={changeInfo}
                                     deleteInfo={deleteInfo}/>
                             })}
-                            <Button variant="success" onClick={newInfo} className={'mt-3'}
+                            <Button variant={colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
                                     style={{width: '50%', alignSelf: "center"}}>Добавить характеристику</Button>
                         </Form.Group>
                     </Form>
@@ -163,11 +164,11 @@ const AddProduct = observer( ({changeCategories, setChangeCategories}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant="success" onClick={handleAdd}>Добавить</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={handleAdd}>Добавить</Button>
                 </Modal.Footer>
             </Modal>
         </>
     );
 });
 
-export default AddProduct;
+export default AddItem;

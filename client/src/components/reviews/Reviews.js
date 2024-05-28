@@ -6,13 +6,12 @@ import {observer} from "mobx-react-lite";
 import {bought, fetchReviews, reviewed} from "../../api/itemAPI";
 import AddReview from "./AddReview";
 import ReviewCard from "../cards/ReviewCard";
+import {marginMedium, marginsPage} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin: 24px;
-  @media (max-width: 575.5px) {
-    margin: 8px;
-  }
+  ${marginsPage};
+  margin-bottom: ${marginMedium};
   button {
-    margin-top: 15px;
+    margin-top: ${marginMedium};
   }
 `
 

@@ -2,15 +2,15 @@ import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import noImage from "../../assets/icon_no_image.svg";
 import {Accordion, Button, Carousel, Image, Modal} from "react-bootstrap";
-import ViewProfileUser from "../modals/ViewProfileUser";
+import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";
 import DelButton from "../buttons/DelButton";
 import {deleteReview, updateReview} from "../../api/basketAPI";
 import {Context} from "../../index";
+import {colors, flexColumn, marginMedium} from "../../StyledGlobal";
 const Styled = styled.div`
-    display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+    ${flexColumn};
+  margin-bottom: ${marginMedium};
   .review-card-head {
     width: 100%;
     display: flex;
@@ -23,8 +23,7 @@ const Styled = styled.div`
     }
     .review-card-profile-image {
       width: 50px;
-      height: 50px;
-      margin-right: 20px;
+      margin-right: ${marginMedium};
       cursor: pointer;
     }
   }
@@ -33,7 +32,7 @@ const Styled = styled.div`
       margin: 0;
     }
     .review-text {
-      padding: 20px;
+      padding: ${marginMedium};
     }
     .review-image {
       width: 100%;
@@ -91,7 +90,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                                    handleSelect(index);
                                }}/>);
             slides.push(<Carousel.Item key={`slide_${index}_${image}`}>
-                <Image src={process.env.REACT_APP_API_URL + image} style={{width: '100%'}}/>
+                <Image src={process.env.REACT_APP_API_URL} style={{width: '100%'}}/>
             </Carousel.Item>)
         })
     }
@@ -150,13 +149,13 @@ const ReviewCard = ({reviewObj, userId}) => {
             >
                 <Modal.Header closeButton/>
                 <Modal.Body>
-                    <Carousel variant={"dark"} activeIndex={index} onSelect={handleSelect} interval={null}>
+                    <Carousel variant={colors.bootstrapOtherVariant} activeIndex={index} onSelect={handleSelect} interval={null}>
                         {slides}
                     </Carousel>
                 </Modal.Body>
             </Modal>
-            <ViewProfileUser name={reviewObj.name} surname={reviewObj.surname} about={reviewObj.about} status={reviewObj.status}
-                image={reviewObj.img} showUser={showUser} setShowUser={setShowUser}/>
+            <ViewUser name={reviewObj.name} surname={reviewObj.surname} about={reviewObj.about} status={reviewObj.status}
+                      image={reviewObj.img} showUser={showUser} setShowUser={setShowUser}/>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}
@@ -167,7 +166,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                     <Modal.Title>Редактирование отзыва</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{display: "flex", flexDirection: "column"}}>
-                    <textarea autoFocus={true} className="redactComRevArea" placeholder={`Напишите отзыв ...`}
+                    <textarea autoFocus={true} className="redactReviewArea" placeholder={`Напишите отзыв ...`}
                               value={review} onChange={(e)=> handlerTextArea(e)}
                               style={{marginBottom: '20px', minHeight: '100px'}}
                     ></textarea>
@@ -179,7 +178,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant="success" onClick={handleUpdateReview}>Редактировать</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={handleUpdateReview}>Редактировать</Button>
                 </Modal.Footer>
             </Modal>
         </Styled>

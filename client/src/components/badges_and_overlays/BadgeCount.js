@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from "styled-components";
+import {colors} from "../../StyledGlobal";
 let Styled = styled.div`
 position: absolute;
-  background-color: rgba(25,135,84, .5);
+  background-color: ${colors.mainOpacity};
   top: -12px;
   right: -12px;
   font-size: 14px;
@@ -14,7 +15,6 @@ position: absolute;
   align-items: center;
   border: solid transparent 1px;
   border-radius: 50%;
-  color: white;
 `
 
 const BadgeCount = ({count}) => {

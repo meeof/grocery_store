@@ -1,5 +1,5 @@
 import React from 'react';
-import MainSlider from "../components/MainSlider";
+import MainSlider from "../components/sliders/MainSlider";
 import styled from "styled-components";
 import {marginsPage} from "../StyledGlobal";
 const Styled = styled.div`

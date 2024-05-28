@@ -22,6 +22,8 @@ const Styled = styled.div`
   .alert {
     cursor: default;
     font-size: 1rem;
+    right: ${props => (props.$right ? -props.$right : '-5px')};
+    top: ${props => (props.$top ? -props.$top : '-5px')};;
     .alert-heading {
       font-size: 1rem;
     }

@@ -60,7 +60,7 @@ const Catalog = observer( () => {
     }
     return (
         <Styled>
-            {!categoryId && <Button variant={colors.bootstrapVariant} className={'view-all-button'}
+            {!categoryId && <Button variant={colors.bootstrapMainVariant} className={'view-all-button'}
                                     onClick={handlerShowAll}
             >Показать все</Button>}
             <div className={'card_container'}>

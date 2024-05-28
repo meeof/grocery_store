@@ -77,7 +77,7 @@ const Category = observer( () => {
             </div>
             {(item.count > item.limit && page === 1) &&
                 <div className={'show-more'}>
-                    <Button variant={colors.bootstrapVariant} onClick={() => {
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
                         item.setLimit(item.limit + item.limit);
                     }}>Показывать больше</Button>
                 </div>

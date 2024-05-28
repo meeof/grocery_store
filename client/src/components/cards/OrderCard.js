@@ -5,30 +5,29 @@ import noImage from "../../assets/icon_no_image.svg";
 import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
 import SetProductRatingCard from "./SetProductRatingCard";
+import {breakpoints, colors, flexColumn, marginMedium, marginSmall} from "../../StyledGlobal";
 const Styled = styled.div`
+  ${flexColumn};
   border-radius: 5px;
-  border: solid lightgray 1px;
+  border: solid ${colors.lightColor} 1px;
   padding: 10px;
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  background-color: #f8f9fa;
-  @media (max-width: 575.5px) {
-    margin-bottom: 20px;
+  background-color: ${colors.extraLightColor};
+  @media (${breakpoints.large}) {
+    margin-bottom: ${marginMedium};
   }
   .order-card-head {
     display: flex;
     align-items: flex-start;
     i {
-      color: #198754;
+      color: ${colors.main};
     }
   }
   .order-important {
     border-radius: 5px;
-    border: solid #198754 2px;
-    color: #198754;
+    border: solid ${colors.main} 2px;
+    color: ${colors.main};
     width: min-content;
     white-space: nowrap;
     padding: 5px;
@@ -36,9 +35,6 @@ const Styled = styled.div`
     margin-left: auto;
     display: flex;
     justify-content: center;
-    > h2 {
-      width: 100%;
-    }
   }
   .orders-grade-block {
     display: flex;
@@ -47,16 +43,10 @@ const Styled = styled.div`
       width: 48%;
     }
   }
-  > button {
-    width: 100%;
-  }
   .accordion-body {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-  }
-  .accordion {
-    width: 100%;
   }
   .img-block {
     .img-item {
@@ -70,8 +60,7 @@ const Styled = styled.div`
         position: absolute;
         top: 5px;
         right: 5px;
-        background-color: rgba(25,135,84, 0.5);
-        color: black;
+        background-color: ${colors.mainOpacity};
         border: solid transparent 1px;
         border-radius: 5px;
         line-height: 1;
@@ -85,7 +74,7 @@ const Styled = styled.div`
     }
   }
   .comm-block, .img-block {
-    margin: 10px 0;
+    margin: ${marginSmall} 0;
   }
 `
 
@@ -145,8 +134,8 @@ const OrderCard = ({order, months}) => {
                     </Accordion>
                 </div>}
                 <div className={'orders-grade-block'}>
-                    <Button variant={"success"} onClick={() => setShowModalAll(true)}>Оценить заказ</Button>
-                    <Button variant={"success"} onClick={() => setShowModalOne(true)}>Оценить товар</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => setShowModalAll(true)}>Оценить заказ</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => setShowModalOne(true)}>Оценить товар</Button>
                 </div>
                 <div className={'img-block'}>
                     <Accordion>
@@ -168,8 +157,8 @@ const OrderCard = ({order, months}) => {
                 backdrop="static"
                 keyboard={false}
             >
-                <Modal.Header closeButton style={{backgroundColor: 'rgba(25,135,84, 0.5)'}}>
-                    <Modal.Title>
+                <Modal.Header closeButton style={{backgroundColor: colors.mainOpacity}}>
+                    <Modal.Title style={{whiteSpace: "nowrap"}}>
                         Общая оценка для всех товаров заказа
                     </Modal.Title>
                 </Modal.Header>
@@ -183,7 +172,7 @@ const OrderCard = ({order, months}) => {
                 backdrop="static"
                 keyboard={false}
             >
-                <Modal.Header closeButton style={{backgroundColor: 'rgba(25,135,84, 0.5)'}}>
+                <Modal.Header closeButton style={{backgroundColor: colors.mainOpacity}}>
                     <Modal.Title>
                         Оценка товаров
                     </Modal.Title>

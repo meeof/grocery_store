@@ -3,10 +3,11 @@ import noImage from "../../assets/icon_no_image.svg";
 import styled from "styled-components";
 import Rating from "../Rating";
 import {useNavigate} from "react-router-dom";
+import {marginMedium} from "../../StyledGlobal";
 const Styled = styled.div`
 display: flex;
   height: 3rem;
-  margin: 10px 0;
+  margin: ${marginMedium} 0;
   justify-content: space-between;
   align-items: center;
   > {

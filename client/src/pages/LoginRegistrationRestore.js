@@ -11,7 +11,7 @@ import {
     breakpoints,
     colors,
     flexColumn,
-    freeButtonWidth,
+    freeButtonWidth, importantStar,
     marginMedium,
     marginSmall,
     marginsPage
@@ -20,8 +20,7 @@ const Styled = styled.div`
   margin-bottom: ${marginSmall};
   ${marginsPage};
   .input-label:after {
-    content: ' *';
-    color: red;
+    ${importantStar};
   }
   .button-container {
     display: flex;
@@ -29,8 +28,8 @@ const Styled = styled.div`
       width: ${freeButtonWidth};
     }
     .link-underline {
-      color: ${colors.primary};
-      text-decoration-color: ${colors.primary} !important;
+      color: ${colors.main};
+      text-decoration-color: ${colors.main} !important;
       text-decoration: underline;
       margin-left: ${marginMedium};
       display: flex;
@@ -44,6 +43,14 @@ const Styled = styled.div`
   .dropdown-menu {
     width: 50%;
   }
+  @media (${breakpoints.fromLarge}) {
+    .form-control, .dropdown-toggle, .dropdown-item {
+      width: 50%;
+    }
+    .dropdown-menu {
+      width: 25%;
+    }
+  }
   @media (${breakpoints.small}) {
     .button-container {
       ${flexColumn};
@@ -52,14 +59,6 @@ const Styled = styled.div`
         width: 100%;
         margin-bottom: ${marginSmall};
       }
-    }
-  }
-  @media (${breakpoints.fromLarge}) {
-    .form-control, .dropdown-toggle, .dropdown-item {
-      width: 50%;
-    }
-    .dropdown-menu {
-      width: 25%;
     }
   }
 `
@@ -156,7 +155,7 @@ const LoginRegistrationRestore = observer(() => {
                         <DropdownButton
                             onSelect={handleSelect}
                             id={`languages-group`}
-                            variant={colors.bootstrapVariantOutline}
+                            variant={colors.bootstrapMainVariantOutline}
                             title={selected}
                         >
                             {languages.map((lang, index) => {
@@ -175,8 +174,8 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setRepeatPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button ref={target} type={"submit"} variant={colors.bootstrapVariant}>Зарегистрироваться</Button>
-                        <CustomOverlay show={showOverlay} color={colors.errorOverlayRed} message={overlayMessage}
+                        <Button ref={target} type={"submit"} variant={colors.bootstrapMainVariant}>Зарегистрироваться</Button>
+                        <CustomOverlay show={showOverlay} color={colors.opacityRed} message={overlayMessage}
                                        target={target} placement={width > 576 ? "right" : "bottom-start"}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>У меня уже есть аккаунт</div>
@@ -195,7 +194,7 @@ const LoginRegistrationRestore = observer(() => {
                         }}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button variant={colors.bootstrapVariant} type="submit">Восстановить пароль</Button>
+                        <Button variant={colors.bootstrapMainVariant} type="submit">Восстановить пароль</Button>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>Я вспомнил(-а) пароль!</div>
                     </div>
@@ -216,7 +215,7 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setEnterPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button ref={target} variant={colors.bootstrapVariant} type={"submit"}>Войти</Button>
+                        <Button ref={target} variant={colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
                         <CustomOverlay show={showOverlay} color={'rgba(255, 100, 100, 0.85)'} message={overlayMessage}
                                        target={target} placement={width > 576 ? "right" : "bottom-start"}/>
                         <div role={"button"} className={'link-underline'}

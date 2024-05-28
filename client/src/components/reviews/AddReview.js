@@ -6,49 +6,42 @@ import AddImagesButton from "../buttons/AddImagesButton";
 import {addReview} from "../../api/itemAPI";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
+import {breakpoints, colors, flexColumn, iconsSize, marginsCenter} from "../../StyledGlobal";
 
 let Styled = styled.div`
+  ${flexColumn};
   position: relative;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  box-sizing: border-box;
+  width: 65%;
+  ${marginsCenter};
   .btn-close {
     padding: 0;
-    background-size: 30px;
-    height: 30px;
-    width: 30px;
+    background-size: ${iconsSize};
+    height: ${iconsSize};
+    min-width: ${iconsSize};;
     margin-left: 40px;
+    position: absolute;
+    top: 60px;
+    right: 15px;
+    cursor: pointer;
   }
   .review-button-block {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     > {
       &:first-child {
         width: 100%;
       }
     }
   }
-  button {
-    margin: 0;
-  }
   > textarea {
     min-height: 120px;
   }
-  @media (max-width: 575.5px) {
+  @media (${breakpoints.small}) {
     width: 100%;
-  }
-  @media (min-width: 576px) {
-    width: 65%;
-    margin-left: auto;
-    margin-right: auto;
     .btn-close {
-      position: absolute;
-      top: 65px;
-      right: 15px;
-      cursor: pointer;
+      position: static;
     }
   }
 `;
@@ -86,17 +79,17 @@ const AddReview = observer(({userId, itemId}) => {
 
     return <Styled>
         {write ? <div className={'review-button-block'}>
-                <Button variant={"success"} onClick={()=> {
+                <Button variant={colors.bootstrapMainVariant} onClick={()=> {
                     setReview('');
                     handlerAddReview();
                 }}>Добавить отзыв</Button>
                 {width < 576 && <CloseButton onClick={() => setWrite(false)}/>}
             </div>
-            : <Button variant={"success"} onClick={()=> handlerWriteButton()}>Написать отзыв</Button>
+            : <Button variant={colors.bootstrapMainVariant} onClick={()=> handlerWriteButton()}>Написать отзыв</Button>
         }
         {
             write ? <><textarea onFocus={(e) => {e.target.scrollIntoView()}}
-                                autoFocus={true} className="addComRevArea" placeholder={`Напишите отзыв ...`}
+                                autoFocus={true} className="addReviewArea" placeholder={`Напишите отзыв ...`}
                                 value={review} onChange={(e)=> handlerTextArea(e)}></textarea>
                 <AddImagesButton setImages={setImages} count={images?.length} big={width < 576}/>
                 {width >= 576 && <CloseButton onClick={() => setWrite(false)}/>}</> : <></>

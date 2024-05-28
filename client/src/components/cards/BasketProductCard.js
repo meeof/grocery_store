@@ -7,44 +7,37 @@ import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";
 import {Context} from "../../index";
 import {authAPI} from "../../api/userAPI";
+import {flexColumn, marginSmall} from "../../StyledGlobal";
 
 const Styled = styled.div`
   height: 10rem;
-  margin: 10px 0;
+  margin: ${marginSmall} 0;
   display: flex;
   > img {
     cursor: pointer;
     height: 100%;
-    margin-right: 10px;
+    margin-right: ${marginSmall};
+  }
+  .basket-card-end, .basket-card-body {
+    padding: ${marginSmall} 0;
+    ${flexColumn};
+    justify-content: space-between;
   }
   .basket-card-end {
-    padding: 10px 0;
     justify-self: flex-end;
     margin-left: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     align-items: flex-end;
-    .cost-summary {
-      font-size: x-large;
-      font-weight: bold;
-      line-height: 0.8;
-    }
-    .button-close {
-      margin: 10px 0;
-    }
+    
   }
-  .basket-card-body {
-    padding: 10px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    p {
-      font-size: x-large;
-    }
-    h2 {
-      cursor: pointer;
-    }
+  p {
+    font-size: x-large;
+  }
+  h2 {
+    cursor: pointer;
+  }
+  .cost-summary {
+    font-size: x-large;
+    font-weight: bold;
   }
 `;
 

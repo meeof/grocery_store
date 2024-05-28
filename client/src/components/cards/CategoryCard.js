@@ -6,25 +6,13 @@ import noImage from '../../assets/icon_no_image.svg';
 import DelButton from "../buttons/DelButton";
 import UpdateCategory from "../modals/UpdateCategory";
 import * as uf from "../../usefulFunctions";
+import {breakpoints, itemCategoryCard} from "../../StyledGlobal";
 
 const Styled = styled.div`
-  .card {
-    width: 100%;
-    cursor: pointer;
-  }
-  .card-body {
-    padding: 5px;
-  }
-  @media (max-width: 575.5px) {
-    .card {
-      width: 100%;
-      margin: 0 0 10px 0;
-      * {
-        font-size: 16px;
-      }
-    }
-    .card-title {
-      text-align: center;
+  ${itemCategoryCard};
+  @media (${breakpoints.small}) {
+    * {
+      font-size: 16px;
     }
   }
 `

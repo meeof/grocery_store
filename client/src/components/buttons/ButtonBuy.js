@@ -8,6 +8,7 @@ import {addBasketItem, getOneBasketItemAmount} from "../../api/basketAPI";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react-lite";
+import {colors} from "../../StyledGlobal";
 const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
@@ -85,10 +86,10 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
         })
     }, [productId, user.isAuth.id]);
     return (
-        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={basket}>
+        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={basket} onClick={e => e.stopPropagation()}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
-                    <Button variant="success" onClick={() => {
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
                         if (basket && productAmount <= 1) {
                             return
                         }
@@ -96,7 +97,7 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
                         setProductAmount(productAmount - 1);
                         handleBuy(user.isAuth.id, productId, productAmount - 1);
                     }}><b>-</b></Button>
-                    <Button variant="success" className={'to-basket'}
+                    <Button variant={colors.bootstrapMainVariant} className={'to-basket'}
                             onClick={() => navigate('/basket')}>
                         {basket ? <b>{productAmount}</b> : <>
                             <p>В корзине <b>{productAmount}</b></p>
@@ -104,13 +105,13 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
                         </>}
 
                     </Button>
-                    <Button variant="success" onClick={() => {
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
                         setProductAmount(productAmount + 1);
                         outherCostsHandler(cost, 1);
                         handleBuy(user.isAuth.id, productId, productAmount + 1);
                     }}><b>+</b></Button>
                 </div> :
-                <Button variant="success" onClick={() => {
+                <Button variant={colors.bootstrapMainVariant} onClick={() => {
                     if (user.isAuth) {
                         setProductAmount(1)
                         handleBuy(user.isAuth.id, productId, 1);

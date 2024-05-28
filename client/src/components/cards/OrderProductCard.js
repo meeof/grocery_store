@@ -1,38 +1,25 @@
 import React from 'react';
 import noImage from "../../assets/icon_no_image.svg";
 import styled from "styled-components";
+import {colors, marginMedium, marginSmall} from "../../StyledGlobal";
 const Styled = styled.div`
   height: 3rem;
-  margin: 10px 0;
+  margin: ${marginSmall} 0;
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 550px;
-  > div {
-    height: 20px;
-  }
+  font-size: large;
+  border-bottom: solid 1px ${colors.lightColor};
   > img {
     height: 100%;
-    margin-right: 10px;
+    margin-right: ${marginMedium};
   }
   .order-card-text {
     width: 100%;
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    > {
-      &:first-child {
-        justify-self: flex-start;
-        margin-right: auto;
-        margin-left: 20px;
-      }
-    }
-    * {
-      line-height: 1;
-      white-space: nowrap;
-    }
+    justify-content: space-between;
     b {
-      font-size: 20px;
+      white-space: nowrap;
     }
   }
 `;
@@ -43,8 +30,7 @@ const OrderProductCard = ({product}) => {
             <img src={product.image ? process.env.REACT_APP_API_URL + product.image : noImage} alt={''}/>
             <div className={'order-card-text'}>
                 <div>{product.name}</div>
-                <div>{product.amount} x </div>
-                <b>{product.cost} ₽</b>
+                <b>{product.amount} x {product.cost} ₽</b>
             </div>
         </Styled>
     );

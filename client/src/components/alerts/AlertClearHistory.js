@@ -1,15 +1,15 @@
 import React from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import styled from "styled-components";
+import {marginsCenter, smallButtonWidth} from "../../StyledGlobal";
 const Styled = styled.div`
-  .button-block-yes-no {
+  .yes-no-block {
     width: 50%;
     display: flex;
     justify-content: space-evenly;
-    margin-left: auto;
-    margin-right: auto;
+    ${marginsCenter};
     >button {
-      width: 80px;
+      width: ${smallButtonWidth};
     }
   }
 `
@@ -26,7 +26,7 @@ const AlertClearHistory = ({showAlert, setShowAlert, clearOrdersHandler}) => {
                        onClick={(e) => e.stopPropagation()}>
                     <Alert.Heading>Очистить историю заказов ?</Alert.Heading>
                     <p>Восстановить её будет невозможно.</p>
-                    <div className={'button-block-yes-no'}>
+                    <div className={'yes-no-block'}>
                         <Button variant={"outline-danger"} onClick={clearOrdersHandler}>Да</Button>
                         <Button variant={"outline-secondary"} onClick={() => {setShowAlert(false)}}>Нет</Button>
                     </div>

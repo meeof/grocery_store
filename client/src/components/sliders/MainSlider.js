@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {Carousel, Image} from "react-bootstrap";
 /*import slideLow from "../images/slider_low.webp";*/
-import slideHigh from "../images/slider_high.jpg";
+import slideHigh from "../../images/slider_high.jpg";
 import styled from "styled-components";
+import {breakpoints} from "../../StyledGlobal";
 
 const Styled = styled.div`
   .carousel-caption {
     padding: 0;
     top: 40%;
-    @media (max-width: 575.5px) {
+    @media (${breakpoints.small}) {
       top: 20%;
     }
   }

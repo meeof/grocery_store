@@ -1,37 +1,22 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import {Modal} from "react-bootstrap";
-import OrderForm from "../orders/OrderForm";
+import OrderForm from "../OrderForm";
 import AlertOrdered from "../alerts/AlertOrdered";
+import {animations, colors, marginSmall} from "../../StyledGlobal";
 const Styled = styled.div`
-  @keyframes shopButtonAnim {
-    0% {
-      background: transparent;
-    }
-    25% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), transparent, transparent, transparent);
-    }
-    50% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), transparent ,transparent);
-    }
-    75% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), transparent);
-    }
-    100% {
-      background: linear-gradient(0.25turn, rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7), rgba(31, 125, 99, 0.7));
-    }
-  }
+  ${animations.getGradient('0.7')};
   width: 100%;
-  color: #1f7d63;
+  color: ${colors.main};
   font-weight: bold;
-  margin-bottom: 10px;
-  border: solid 1px #1f7d63;
+  margin-bottom: ${marginSmall};
+  border: solid 1px ${colors.main};
   border-radius: 5px;
-  padding: 5px;
+  padding: 6px;
   text-align: center;
   &:hover {
     animation-name: shopButtonAnim;
-    animation-duration: 200ms;
+    animation-duration: 250ms;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
     color: white;
@@ -43,7 +28,7 @@ const OneClickBuy = ({itemId}) => {
     const [showAlert, setShowAlert] = useState(false);
     return (
         <>
-            <Styled role={"button"} className={'one-click-buy'} onClick={() => setShowModal(true)}>Купить в 1 клик</Styled>
+            <Styled role={"button"} onClick={() => setShowModal(true)}>Купить в 1 клик</Styled>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}

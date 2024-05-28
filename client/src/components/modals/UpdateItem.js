@@ -7,8 +7,9 @@ import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import ItemInfoField from "../item/ItemInfoField";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import {fetchCategories, fetchOneItem, updateItem} from "../../api/itemAPI";
+import {colors} from "../../StyledGlobal";
 
-const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
+const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
     const {item} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
 
@@ -117,12 +118,12 @@ const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicProductNameUp">
-                            <Form.Label className={'item-label'}>Наименование товара</Form.Label>
+                        <Form.Group className="mb-3" controlId="formUpdateItemName">
+                            <Form.Label>Наименование товара</Form.Label>
                             <Form.Control type="text" value={name}
                                           onChange={(e) => setName(e.target.value)}/>
                         </Form.Group>
-                        {page && <Form.Group className="mb-3" controlId="formBasicProductCategoryUp">
+                        {page && <Form.Group className="mb-3" controlId="formUpdateItemCategory">
                             <div className={'mb-2'}>Категория товара</div>
                             <DropdownButton
                                 onSelect={handleSelect}
@@ -135,23 +136,23 @@ const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
                                 })}
                             </DropdownButton>
                         </Form.Group>}
-                        <Form.Group className="mb-3" controlId="formBasicProductPriceUp">
-                            <Form.Label className={'item-label'}>Цена</Form.Label>
+                        <Form.Group className="mb-3" controlId="formUpdateItemPrice">
+                            <Form.Label>Цена</Form.Label>
                             <Form.Control type="number" value={price}
                                           onChange={(e) => setPrice(e.target.value)}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicProductDiscountUp">
-                            <Form.Label className={'item-label'}>Скидка %</Form.Label>
+                        <Form.Group className="mb-3" controlId="formUpdateItemDiscount">
+                            <Form.Label>Скидка %</Form.Label>
                             <Form.Control type="number" value={discount}
                                           onChange={(e) => setDiscount(e.target.value)}/>
                         </Form.Group>
-                        {page && <Form.Group className="mb-3" controlId="formBasicProductPhotoUp">
-                            <Form.Label className={'item-label'}>Фото</Form.Label>
+                        {page && <Form.Group className="mb-3" controlId="formUpdateItemPhoto">
+                            <Form.Label>Фото</Form.Label>
                             <Form.Control type="file" accept="image/*"  multiple onChange={(event) => {
                                 setImages(event.target.files);
                             }}/>
                         </Form.Group>}
-                        {page && <Form.Group className="mb-3" controlId="formBasicProductCharUp" style={{display: "flex", flexDirection: "column"}}>
+                        {page && <Form.Group className="mb-3" controlId="formUpdateItemChar" style={{display: "flex", flexDirection: "column"}}>
                             <div className={'mb-2'}>Характеристики</div>
                             {info.map((infoObj, index) => {
                                 return <ItemInfoField
@@ -161,7 +162,7 @@ const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
                                     changeInfo={changeInfo}
                                     deleteInfo={deleteInfo}/>
                             })}
-                            <Button variant="success" onClick={newInfo} className={'mt-3'}
+                            <Button variant={colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
                                     style={{width: '50%', alignSelf: "center"}}>Добавить характеристику</Button>
                         </Form.Group>}
                     </Form>
@@ -170,8 +171,8 @@ const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant="success" ref={target} onClick={() => upProduct(product.id)}>Изменить</Button>
-                    <CustomOverlay show={showOverlay} color={'rgba(255, 100, 100, 0.85)'} message={overlayMessage}
+                    <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => upProduct(product.id)}>Изменить</Button>
+                    <CustomOverlay show={showOverlay} color={colors.opacityRed} message={overlayMessage}
                                    target={target} placement={width > 576 ? "right" : "bottom-start"}/>
                 </Modal.Footer>
             </Modal>
@@ -179,4 +180,4 @@ const UpdateProduct = observer(  ({product, page, fetchItems, right}) => {
     );
 });
 
-export default UpdateProduct;
+export default UpdateItem;

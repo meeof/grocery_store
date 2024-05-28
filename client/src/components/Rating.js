@@ -8,9 +8,9 @@ import {getRating, getRatingForUser, setRatings} from "../api/ratingApi";
 const Styled = styled.div`
   display: flex;
   align-items: center;
-  cursor: ${(props) => (props.$isProduct ? "default" : "pointer")};
-  width: ${(props) => (props.$isProduct ? "min-content" : "100%")};
-  justify-content: ${(props) => (props.$isProduct ? "flex-start" : "space-evenly")};
+  cursor: ${(props) => (props.$disabled ? "default" : "pointer")};
+  width: ${(props) => (props.$disabled ? "min-content" : "100%")};
+  justify-content: ${(props) => (props.$disabled ? "flex-start" : "space-evenly")};
   span {
     vertical-align: center;
     font-weight: bold;
@@ -21,14 +21,14 @@ const Styled = styled.div`
   }
 `
 
-const Rating = ({isProduct, big, itemsId}) => {
+const Rating = ({disabled, big, itemsId}) => {
     const {user} = useContext(Context);
     const [rating, setRating] = useState(0);
     useEffect(() => {
         if (big) {
             return
         }
-        if (isProduct) {
+        if (disabled) {
             getRating(itemsId[0]).then(data => {
                 setRating(data);
             }).catch((err) => {
@@ -42,7 +42,7 @@ const Rating = ({isProduct, big, itemsId}) => {
                 console.log(err);
             });
         }
-    }, [big, itemsId, user.isAuth.id, isProduct]);
+    }, [big, itemsId, user.isAuth.id, disabled]);
     useEffect(() => {
         authAPI().then(data => {
             user.setAuth(data);
@@ -60,16 +60,16 @@ const Rating = ({isProduct, big, itemsId}) => {
     let imgStars = [];
     for (let i=0; i < 5; i++) {
         imgStars.push(<img key={i} alt={'star'} src={i < rating ? starImgFill : starImg} onClick={() => {
-            if (isProduct) {
+            if (disabled) {
                 return
             }
             handleSetRating(i + 1)
         }}/>)
     }
     return (
-        <Styled $isProduct={isProduct} $big={big}>
+        <Styled $disabled={disabled} $big={big}>
             {imgStars}
-            {isProduct && <span>({rating})</span>}
+            {disabled && <span>{rating}</span>}
         </Styled>
     );
 };

@@ -3,6 +3,7 @@ import {Button, Form, Modal} from "react-bootstrap";
 import {createCategory} from "../../api/itemAPI";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import useWindowSize from "../../hooks/useWindowSize";
+import {colors} from "../../StyledGlobal";
 
 const AddCategory = ({setChangeCategories}) => {
     const [showModal, setShowModal] = useState(false);
@@ -12,7 +13,7 @@ const AddCategory = ({setChangeCategories}) => {
     const [showOverlay, setShowOverlay] = useState(false);
     const target = useRef(null);
     const [overlayMessage, setOverlayMessage] = useState('-');
-    const [overlayColor, setOverlayColor] = useState('rgba(13, 110, 253, 0.85)');
+    const [overlayColor, setOverlayColor] = useState(colors.opacityPrimary);
     const overlayHandle = () => {
         setShowOverlay(true);
         setTimeout(() => {
@@ -27,24 +28,24 @@ const AddCategory = ({setChangeCategories}) => {
         createCategory({categoryName}).then((data) => {
             if (data === categoryName) {
                 setOverlayMessage(`Категория "${data}" успешно добавлена`);
-                setOverlayColor('rgba(13, 110, 253, 0.85)');
+                setOverlayColor(colors.opacityPrimary);
                 handleCancel();
             }
             else {
                 setOverlayMessage(data);
-                setOverlayColor('rgba(255, 100, 100, 0.85)');
+                setOverlayColor(colors.opacityRed);
                 setShowModal(false);
             }
         }).catch(err => {
             setOverlayMessage('Непредвиденная ошибка');
-            setOverlayColor('rgba(255, 100, 100, 0.85)');
+            setOverlayColor(colors.opacityRed);
         })
         overlayHandle();
         setChangeCategories(true);
     }
     return (
         <>
-            <Button variant="success" ref={target} onClick={() => {
+            <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => {
                 setShowModal(true);
             }}>
                 Добавить категорию
@@ -62,7 +63,7 @@ const AddCategory = ({setChangeCategories}) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicCategory">
+                        <Form.Group className="mb-3" controlId="formAddCategory">
                             <Form.Label className={'category-label'}>Наименование категории</Form.Label>
                             <Form.Control type="text" value={categoryName}
                                           onChange={(e) => setCategoryName(e.target.value)}/>
@@ -73,7 +74,7 @@ const AddCategory = ({setChangeCategories}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant="success" onClick={handleAdd}>Добавить</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={handleAdd}>Добавить</Button>
                 </Modal.Footer>
             </Modal>
         </>

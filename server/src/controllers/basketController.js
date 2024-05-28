@@ -325,12 +325,19 @@ class BasketController {
             });
             const reviewsAndUsersInfos = await Promise.all(reviews.map(async (review) => {
                 const {userId} = review.dataValues;
-                const userInfo = await getUserInfo(userId);
-                review.dataValues.name = userInfo.name;
-                review.dataValues.surname = userInfo.surname;
-                review.dataValues.img = userInfo.img;
-                if (review.dataValues.images) {
-                    review.dataValues.images = JSON.parse(review.dataValues.images)
+                try {
+                    const userInfo = await getUserInfo(userId);
+                    review.dataValues.name = userInfo.name;
+                    review.dataValues.surname = userInfo.surname;
+                    review.dataValues.img = userInfo.img;
+                    if (review.dataValues.images) {
+                        review.dataValues.images = JSON.parse(review.dataValues.images)
+                    }
+                } catch (err) {
+                    review.dataValues.name = 'Пользователь удален';
+                    review.dataValues.surname = '';
+                    review.dataValues.img = null;
+                    review.dataValues.images = [];
                 }
                 return review.dataValues;
             }))
@@ -352,7 +359,6 @@ class BasketController {
         }
     }
     async updateReview(req, res){
-        console.log("\x1b[35m", 'fafassfaasf', "\x1b[0m")
         try {
             const {id, review} = req.body;
             let imgNames = null;

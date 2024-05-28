@@ -1,17 +1,17 @@
 import React from 'react';
 import {Carousel, Image} from "react-bootstrap";
 import styled from "styled-components";
-import useWindowSize from "../hooks/useWindowSize";
-import noImage from '../assets/icon_no_image.svg';
+import useWindowSize from "../../hooks/useWindowSize";
+import noImage from '../../assets/icon_no_image.svg';
+import {breakpoints, colors, marginMedium} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin-left: 16px;
-  margin-right: 16px;
-  grid-column:  ${(props) => (props.$isImages ? "2/3" : "1/3")};
-  @media (max-width: 991.5px) {
+  margin: ${marginMedium} 0;
+  grid-column:  ${(props) => (props.$previews ? "2/3" : "1/3")};
+  @media (${breakpoints.large}) {
     grid-column: 1/3;
     margin-left: 0;
   }
-  @media (max-width: 575.5px) {
+  @media (${breakpoints.small}) {
     margin-right: 0;
   }
 `
@@ -24,8 +24,8 @@ const ProductSlider = ({...props}) => {
         </Carousel.Item>
     })
     return (
-        <Styled $isImages={props.isImages}>
-            <Carousel activeIndex={props.slideIndex} onSelect={props.handleSlideSelect} interval={null} variant="dark"
+        <Styled $previews={props.previews}>
+            <Carousel activeIndex={props.slideIndex} onSelect={props.handleSlideSelect} interval={null} variant={colors.bootstrapOtherVariant}
                       indicators={width < 992}>
                 {carouselItems}
                 {!props.images?.[0] && <Carousel.Item>

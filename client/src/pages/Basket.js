@@ -13,9 +13,6 @@ const Styled = styled.div`
   ${marginsPage};
   display: grid;
   grid-template-columns: 5fr 2fr;
-  @media (${breakpoints.small}) {
-    ${flexColumn}
-  }
   .basket-other {
     ${flexColumn}
     button {
@@ -28,7 +25,7 @@ const Styled = styled.div`
       ${flexColumn};
       padding: 15px;
       width: 100%;
-      background-color: ${colors.extraLightGray};
+      background-color: ${colors.extraLightColor};
       border: 1px transparent solid;
       border-radius: 5px;
       height: 160px;
@@ -36,7 +33,7 @@ const Styled = styled.div`
     .other-promo {
       margin-bottom: 10px;
       .link-promo {
-        color: ${colors.primary};
+        color: ${colors.main};
         margin-top: auto;
         align-self: flex-end;
         text-decoration: underline;
@@ -53,6 +50,9 @@ const Styled = styled.div`
     @media (${breakpoints.fromSmall}) {
       margin-left: ${marginMedium};
     }
+  }
+  @media (${breakpoints.small}) {
+    ${flexColumn}
   }
 `;
 
@@ -115,7 +115,7 @@ const Basket = observer(() => {
                 <div className={'other-block'}>
                     <div className={'other-cost'}>Итого к оплате:</div>
                     <div className={'other-cost'}>{allCost} ₽</div>
-                    <Button variant={colors.bootstrapVariant} disabled={cards.length === 0} onClick={() => navigate('order')}>Оформить заказ</Button>
+                    <Button variant={colors.bootstrapMainVariant} disabled={cards.length === 0} onClick={() => navigate('order')}>Оформить заказ</Button>
                 </div>
             </div>
         </Styled>

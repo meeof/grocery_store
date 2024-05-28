@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import infoImg from '../../assets/icon_comment_info.svg';
 import styled from "styled-components";
+import {marginSmall} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin: 10px 10px 0 10px;
-  padding-bottom: 10px;
+  margin: 0 ${marginSmall};
+  padding: ${marginSmall} 0;
   border-bottom: solid gray 1px;
   .delivery-hide {
-    font-size: 14px;
+    font-size: smaller;
   }
   .delivery-show {
     display: flex;
@@ -15,7 +16,7 @@ const Styled = styled.div`
     img {
       width: 16px;
       height: 16px;
-      margin-right: 6px;
+      margin-right: 5px;
     }
 
     b {

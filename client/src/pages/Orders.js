@@ -94,7 +94,7 @@ const Orders = observer(() => {
             <div className={'orders-block'}>
                 {orders}
             </div>
-            <Button variant={colors.bootstrapVariant} className={'show-more'} onClick={() => setLimit(limit + 6)}>Показывать больше</Button>
+            <Button variant={colors.bootstrapMainVariant} className={'show-more'} onClick={() => setLimit(limit + 6)}>Показывать больше</Button>
             <Button className={'clear-orders'} variant={"secondary"} disabled={orders.length === 0}
                     onClick={() => setShowAlert(true)}>Очистить историю</Button>
             <AlertClearHistory showAlert={showAlert} setShowAlert={setShowAlert} clearOrdersHandler={clearOrdersHandler}/>

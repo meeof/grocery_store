@@ -2,21 +2,21 @@ import React from 'react';
 import {Pagination} from "react-bootstrap";
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
+import {colors, marginsCenter} from "../StyledGlobal";
 const Styled = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   .pagination {
-    margin-left: auto;
-    margin-right: auto;
+    ${marginsCenter};
     * {
-      color: #1f7d63;
+      color: ${colors.main};
     }
     .page-item + .active {
       > span {
-        background-color: #1f7d63;
+        background-color: ${colors.main};
         color: white;
-        border-color: #1f7d63;
+        border-color: ${colors.main};
       }
     }
   }
@@ -58,7 +58,7 @@ const CustomPagination = ({pagesAmount, page, clickPage}) => {
     }
     return (
         <Styled>
-            <Pagination size={limit === limits.small && 'sm'}>
+            <Pagination size={limit === limits.small ? 'sm' : ''}>
                 <Pagination.First onClick={() => clickPage(1)} disabled={page === 1}/>
                 <Pagination.Prev disabled={page === 1} onClick={() => clickPage(page - 1)}/>
                 {pages}

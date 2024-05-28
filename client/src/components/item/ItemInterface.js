@@ -13,53 +13,59 @@ import {useNavigate} from "react-router-dom";
 import {deleteItem} from "../../api/itemAPI";
 import DelButton from "../buttons/DelButton";
 import {authAPI} from "../../api/userAPI";
-import UpdateProduct from "../modals/UpdateProduct";
+import UpdateItem from "../modals/UpdateItem";
 import OneClickBuy from "../buttons/OneClickBuy";
+import {breakpoints, colors, flexColumn, freeButtonWidth, marginMedium, marginSmall} from "../../StyledGlobal";
 
 const Styled = styled.div`
   .delivery {
-    border: solid lightgray 2px;
-    padding-bottom: 10px;
+    border: solid ${colors.lightColor} 2px;
+    padding-bottom: ${marginSmall};
     border-radius: 10px;
     overflow: hidden;
     .delivery-head {
       display: flex;
       align-items: center;
-      padding: 10px;
-      background-color: #f7f7f7;
+      padding: ${marginSmall};
+      background-color: ${colors.extraLightColor};
+      > { 
+        &:first-child {
+          background-image: url(${truckImg});
+          background-size: 20px;
+          background-repeat: no-repeat;
+          background-position: left;
+          padding-left: 25px;
+        }
+      }
       * {
-        margin-right: 6px;
+        margin-right: 5px;
       }
       .delivery-city {
         font-weight: bold;
       }
-      img {
-        width: 20px;
-        height: 20px;
-      }
       .change-delivery {
-        color: #835fef;
+        color: rgb(13,110,253);
       }
     }
   }
   .item-head {
-    border-bottom: 1px solid lightgray;
-    margin-bottom: 10px;
+    border-bottom: 1px solid ${colors.descriptionColor};
+    margin-bottom: ${marginSmall};
     .rating-comparison {
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: ${marginSmall};
     }
     .comparison-button {
-      margin-left: 25px;
+      margin-left: ${marginMedium};
       span {
-        color: #1f7d63;
+        color: ${colors.main};
       }
-      img {
-        width: 16px;
-        height: 16px;
-        margin-right: 4px;
-      }
+      padding-left: 18px;
+      background-image: url(${fillComparisonImg});
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: left;
     }
   }
   .price-buy {
@@ -67,20 +73,16 @@ const Styled = styled.div`
     justify-content: space-between;
     border: solid transparent 1px;
     border-radius: 10px;
-    background-color: #f7f7f7;
-    padding: 10px;
-    margin-bottom: 20px;
+    background-color: ${colors.extraLightColor};
+    padding: ${marginSmall};
+    margin-bottom: ${marginMedium};
     .buy {
-      display: flex;
-      flex-direction: column;
+      ${flexColumn};
       align-items: center;
       justify-content: center;
-      margin-left: 10px;
-      @media (min-width: 767.5px) {
-        width: 300px;
-        > button {
-          width: 100%;
-        }
+      margin-left: ${marginSmall};
+      @media (${breakpoints.fromMedium}) {
+        width: ${freeButtonWidth};
       }
     }
     .prices {
@@ -94,7 +96,7 @@ const Styled = styled.div`
       }
       .discount {
         width: min-content;
-        background-color: #dc5757;
+        background-color: ${colors.opacityRed};
         color: white;
         border: solid transparent 1px;
         border-radius: 5px;
@@ -103,7 +105,7 @@ const Styled = styled.div`
       h3 {
         color: gray;
         text-decoration: line-through;
-        margin-left: 12px;
+        margin-left: ${marginSmall};
       }
     }
   }
@@ -133,13 +135,12 @@ const ItemInterface = observer(({product}) => {
             <div className={'item-head'}>
                 <h1>
                     {product.name}
-                    {user.isAuth && <UpdateProduct right={'64px'} product={product} page={true}/>}
+                    {user.isAuth && <UpdateItem right={'64px'} product={product} page={true}/>}
                     {user.isAuth && <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>}
                 </h1>
                 <div className={'rating-comparison'}>
-                    <Rating isProduct={true} itemsId={[product.id]}/>
+                    <Rating disabled={true} itemsId={[product.id]}/>
                     <div role={"button"} className={'comparison-button'}>
-                        <img alt={''} src={fillComparisonImg}/>
                         <span>Добавить в сравнение</span>
                     </div>
                 </div>
@@ -157,7 +158,6 @@ const ItemInterface = observer(({product}) => {
             </div>
             <div className={'delivery'}>
                 <div className={'delivery-head'}>
-                    <img alt={''} src={truckImg}/>
                     <span>Доставка в <span className={'delivery-city'}>{city}</span></span>
                     <span className={'change-delivery'} role={"button"}>Изменить</span>
                 </div>

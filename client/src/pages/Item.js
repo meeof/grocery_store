@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import * as uf from '../usefulFunctions';
 import styled from "styled-components";
-import ProductSlider from "../components/ProductSlider";
+import ProductSlider from "../components/sliders/ProductSlider";
 import ItemInterface from "../components/item/ItemInterface";
 import useWindowSize from "../hooks/useWindowSize";
 import ButtonBuy from "../components/buttons/ButtonBuy";
@@ -14,18 +14,9 @@ import {breakpoints, colors, flexColumn, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
   position: relative;
-  @media (${breakpoints.small}) {
-    margin-bottom: 60px;
-    .characteristics {
-      padding: 8px;
-    }
-    .item-container {
-      ${flexColumn}
-    }
-  }
   .characteristics {
     width: 100%;
-    background-color: ${colors.extraLightGray};
+    background-color: ${colors.extraLightColor};
     padding: 24px;
     .info {
       display: grid;
@@ -55,11 +46,20 @@ const Styled = styled.div`
     grid-template-columns: 1fr 4fr 5fr;
     ${marginsPage}
   }
+  @media (${breakpoints.small}) {
+    margin-bottom: 60px;
+    .characteristics {
+      padding: 8px;
+    }
+    .item-container {
+      ${flexColumn}
+    }
+  }
 `
 const StyledImg = styled.img`
   width: 100%;
   box-sizing: border-box;
-  border: ${(props) => (props.$active && `solid ${colors.primary} 1px !important`)}
+  border: ${(props) => (props.$active && `solid ${colors.main} 1px !important`)}
 `
 
 const Item = observer (() => {
@@ -102,7 +102,7 @@ const Item = observer (() => {
                     <></>
                 }
                 <ProductSlider images={item.oneItem.images} slideIndex={slideIndex}
-                               handleSlideSelect={handleSlideSelect} isImages={item.oneItem.images?.[0]}/>
+                               handleSlideSelect={handleSlideSelect} previews={item.oneItem.images?.[0]}/>
                 <ItemInterface product={item.oneItem}/>
             </div>
             {infoTags.length > 0 && <div className={'characteristics'}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
+import {colors, smallButtonWidth} from "../../StyledGlobal";
 
 const AlertOrdered = ({field, showAlert, setShowAlert}) => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const AlertOrdered = ({field, showAlert, setShowAlert}) => {
                         if (field === 'page') {
                             navigate('/catalog');
                         }
-                    }} variant="outline-success">
+                    }} variant={colors.bootstrapMainVariant} style={{width: smallButtonWidth}}>
                         Ок
                     </Button>
                 </div>

@@ -43,23 +43,67 @@ class Breakpoints {
 }
 export const breakpoints = new Breakpoints();
 class Colors {
-    get extraLightGray () {
+    get lightColor () {
+        return 'lightgray'
+    }
+    get extraLightColor () {
         return '#f8f9fa'
     }
-    get primary () {
-        return '#198754'
+    get descriptionColor () {
+        return 'gray';
     }
-    get errorOverlayRed () {
-        return 'rgba(255, 100, 100, 0.85)'
+    get main () {
+        return 'rgba(25,135,84,1)' //'rgba(25,135,84,1)' RGBA ONLY
     }
-    get bootstrapVariant () {
+    get mainOpacity () {
+        return 'rgba(25,135,84,.5)'
+    }
+    get opacityRed () {
+        return 'rgba(255, 100, 100,0.85)'
+    }
+    get opacityPrimary () {
+        return 'rgba(13,110,253,0.85)'
+    }
+    get bootstrapMainVariant () {
         return 'success'
     }
-    get bootstrapVariantOutline () {
+    get bootstrapMainVariantOutline () {
         return 'outline-success'
+    }
+    get bootstrapOtherVariant () {
+        return 'dark'
+    }
+    get bootstrapOtherVariantOutline () {
+        return 'outline-dark'
     }
 }
 export const colors = new Colors();
+class Animations {
+    getGradient (opacity) {
+        const opacityColor = colors.main.replace(/(?<=,)[0-9.](?=\))/g, opacity);
+        return css`
+          @keyframes shopButtonAnim {
+            0% {
+              background: transparent;
+            }
+            25% {
+              background: linear-gradient(0.25turn, ${opacityColor}, transparent, transparent, transparent);
+            }
+            50% {
+              background: linear-gradient(0.25turn, ${opacityColor}, ${opacityColor}, transparent ,transparent);
+            }
+            75% {
+              background: linear-gradient(0.25turn, ${opacityColor}, ${opacityColor}, ${opacityColor}, transparent);
+            }
+            100% {
+              background: linear-gradient(0.25turn, ${opacityColor}, ${opacityColor}, ${opacityColor}, ${opacityColor});
+            }
+          }
+        `
+    }
+}
+export const animations = new Animations();
+
 export const customGrid = css`
   display: grid;
   gap: 40px;
@@ -98,12 +142,10 @@ export const marginsPage = css`
     margin-right: 8px;
   }
 `
-export const paddingPage = css`
-  padding-left: 24px;
-  padding-right: 24px;
+export const paddingsPage = css`
+  padding: 8px 24px;
   @media (${breakpoints.small}) {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 8px;
   }
 `
 export const flexColumn = css`
@@ -118,5 +160,39 @@ export const marginsCenter = css`
   margin-right: auto;
 `
 export const freeButtonWidth = '300px';
+export const smallButtonWidth = '80px';
 export const marginSmall = '10px';
 export const marginMedium = '20px';
+export const iconsSize = '34px';
+export const importantStar = css`
+  content: ' *';
+  color: red;
+`
+export const styledCheckbox = css`
+  input[type="radio"]:checked, input[type="checkbox"]:checked {
+    background-color: ${colors.main};
+    box-shadow: none;
+    border: 3px solid ${colors.main};
+  }
+`
+export const itemCategoryCard = css`
+  .card {
+    cursor: pointer;
+    height: 100%;
+    ${flexColumn};
+    justify-content: space-between;
+  }
+  .card-body {
+    padding: 5px;
+    ${flexColumn};
+    justify-content: flex-end;
+  }
+  .card-title {
+    text-align: center;
+  }
+  @media (${breakpoints.small}) {
+    .card {
+      margin-bottom: ${marginSmall};
+    }
+  }
+`

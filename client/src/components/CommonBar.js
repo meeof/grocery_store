@@ -10,17 +10,17 @@ import searchImg from "../assets/icon_search.svg";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import {breakpoints, colors, iconsSize, largeButton, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
-  padding: 8px 24px;
+  margin-top: ${marginSmall};
+  margin-bottom: ${marginSmall};
+  ${marginsPage};
   display: flex;
   justify-content: space-between;
   .form-control {
-    margin-left: 5px;
-    margin-right: 5px;
-  } 
-  .logo {
-    height: 54px;
+    margin-left: ${marginSmall};
+    margin-right: ${marginSmall};
   }
   form {
     min-width: 240px;
@@ -28,32 +28,52 @@ const Styled = styled.div`
     width: 100%;
   }
   .catalog-button {
-    @media (min-width: 576px) {
-      max-width: 270px;
-      margin-right: 10px;
-    }
-    max-width: 200px !important;
+    ${largeButton};
     width: 100%;
+    font-size: x-large;
+    max-width: 200px !important;
   }
   .logo {
-    @media (min-width: 576px) {
-      margin-right: 10px;
-    }
+    ${largeButton};
+    margin-right: ${marginSmall};
   }
   .search {
-    width: 32px;
-    height: 32px;
+    ${largeButton};
+    background-image: url(${searchImg});
+    background-size: ${iconsSize};
+    background-repeat: no-repeat;
+    background-position: center;
+    min-width: 54px;
   }
   .controls {
     display: flex;
     align-items: center;
     img {
-      width: 32px;
-      height: 32px;
-      margin-left: 13px;
+      width: ${iconsSize};
+      margin-left: ${marginSmall};
     }
   }
-  @media (min-width: 576px)  and (max-width: 767px) {
+  @media (${breakpoints.small}) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .form-control {
+      margin-left: 0 !important;
+    }
+    .controls {
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      margin-top: ${marginSmall};
+    }
+    .logo {
+      margin-right: 0;
+    }
+    .catalog-button {
+      max-width: 100% !important;
+    }
+  };
+  @media (${breakpoints.fromSmall})  and (${breakpoints.medium}) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     .logo {
@@ -74,27 +94,6 @@ const Styled = styled.div`
       grid-row: 2/3;
     }
   }
-  @media (max-width: 575.5px) {
-    padding: 8px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    .form-control {
-      margin-left: 0 !important;
-    }
-    form, .catalog-button {
-      width: 100% !important;
-    }
-    img {
-      height: 54px;
-    }
-    .controls {
-      width: 100%;
-      display: flex;
-      justify-content: space-evenly;
-      margin-top: 10px;
-    }
-  };
 `
 
 const CommonBar = observer (() => {
@@ -103,9 +102,15 @@ const CommonBar = observer (() => {
     const location = useLocation();
     let width = useWindowSize();
     const navigate = useNavigate();
-    const logoElement = <Image src={logo} role={"button"} className={'logo'} onClick={() => navigate('/')}/>
-    const catalogButtonElement = <Button variant="success" className={"catalog-button"}
-                                         onClick={() => navigate('/catalog')}>Каталог</Button>
+    const logoElement = <Link to={'/'} role={"button"}>
+        <Image src={logo} className={'logo'}/>
+    </Link>
+    const catalogButtonElement = <Link to={'/catalog'} className={"catalog-button"}>
+        <Button variant={colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
+    </Link>
+
+
+    /**/
     const handlerFind = () => {
         item.setFind(find);
         if (location.pathname === '/catalog/all') {
@@ -136,8 +141,7 @@ const CommonBar = observer (() => {
                     value={find}
                     onChange={(e) => setFind(e.target.value)}
                 />
-                <Button variant="success" onClick={handlerFind}
-                ><Image src={searchImg} role={"button"} className={'search'}/></Button>
+                <Button variant={colors.bootstrapMainVariant} onClick={handlerFind} className={'search'}/>
             </Form>
             <div className={"controls"}>
                 <Link to={'/profile'}>

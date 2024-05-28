@@ -5,7 +5,7 @@ import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import OrderProductCard from "../components/cards/OrderProductCard";
 import {observer} from "mobx-react-lite";
-import OrderForm from "../components/orders/OrderForm";
+import OrderForm from "../components/OrderForm";
 import AlertOrdered from "../components/alerts/AlertOrdered";
 import {marginMedium, marginsPage} from "../StyledGlobal";
 
@@ -20,6 +20,7 @@ const Styled = styled.div`
     box-shadow: 2px 0 2px inset rgba(0, 0, 0, 0.1);
     padding-left: ${marginMedium};
     .order-cost {
+      box-shadow: 0 2px 2px  rgba(0, 0, 0, 0.1), 0 2px 2px inset rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-between;
     }

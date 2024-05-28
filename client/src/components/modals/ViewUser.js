@@ -1,7 +1,7 @@
 import React from 'react';
 import noImage from "../../assets/icon_no_image.svg";
 import {Image, Modal} from "react-bootstrap";
-const ViewProfileUser = ({showUser, setShowUser, name, surname, status, about, image}) => {
+const ViewUser = ({showUser, setShowUser, name, surname, status, about, image}) => {
     return (
         <Modal
             show={showUser}
@@ -12,7 +12,7 @@ const ViewProfileUser = ({showUser, setShowUser, name, surname, status, about, i
             }}
         >
             <Modal.Header closeButton/>
-            <Modal.Body style={{backgroundColor: '#f8f9fa', display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <Modal.Body style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <div style={{width: '100%', display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Image src={image ?
                         process.env.REACT_APP_API_URL + image : noImage}
@@ -26,4 +26,4 @@ const ViewProfileUser = ({showUser, setShowUser, name, surname, status, about, i
     );
 };
 
-export default ViewProfileUser;
+export default ViewUser;
