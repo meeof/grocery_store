@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {authAPI, deleteUser, getUserInfo, updateUserInfo} from "../api/userAPI";
+import {authorization} from "../api";
 import {Button, Image} from "react-bootstrap";
 import styled from "styled-components";
 import AddCategory from "../components/modals/AddCategory";
@@ -19,6 +19,7 @@ import {
 } from "../StyledGlobal";
 import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
+import {authAPI} from "../api";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -101,7 +102,7 @@ const Profile = observer( () => {
         setChange(value);
     }
     const setUserInfo = (userId) => {
-        getUserInfo(userId).then(data => {
+        authAPI('get', '/api/user/info', {userId}).then(data => {
             user.setUserInfo(data);
 
             user.userInfo.name && setName(user.userInfo.name);
@@ -120,7 +121,7 @@ const Profile = observer( () => {
         status && formData.append('status', status);
         about && formData.append('about', about);
         image && formData.append(`${image[0].name}`, image[0]);
-        updateUserInfo(formData).then(data => {
+        authAPI('patch', '/api/user/info', formData).then(data => {
             setUserInfo(userId)
             setChange(false);
         }).catch((err) => {
@@ -128,7 +129,7 @@ const Profile = observer( () => {
         })
     }
     const deleteUserHandler = (userId) => {
-        deleteUser(userId).then(data => {
+        authAPI('delete', '/api/user', {userId}).then(data => {
             user.setAuth(false);
             localStorage.setItem('token', '');
             navigate('/');
@@ -137,7 +138,7 @@ const Profile = observer( () => {
         })
     }
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);

@@ -6,8 +6,8 @@ import {useNavigate} from "react-router-dom";
 import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";
 import {Context} from "../../index";
-import {authAPI} from "../../api/userAPI";
 import {flexColumn, marginSmall} from "../../StyledGlobal";
+import {authorization} from "../../api";
 
 const Styled = styled.div`
   height: 10rem;
@@ -54,7 +54,7 @@ const BasketProductCard = ({product, allCost, setAllCost, deleteBasketItemHandle
         )
     }
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);

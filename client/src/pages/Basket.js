@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {deleteBasketItem, getAllBasketItems} from "../api/basketAPI";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
-import {authAPI} from "../api/userAPI";
+import {authorization} from "../api";
 import styled from "styled-components";
 import BasketProductCard from "../components/cards/BasketProductCard";
 import {Button, Form} from "react-bootstrap";
 import {breakpoints, colors, flexColumn, largeButton, marginMedium, marginSmall, marginsPage} from "../StyledGlobal";
+import {authAPI} from "../api";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -62,8 +62,8 @@ const Basket = observer(() => {
     const [allCost, setAllCost] = useState(0);
     const deleteBasketItemHandle = (userId, itemId) => {
         if (user.isAuth) {
-            deleteBasketItem(userId, itemId).then(data => {
-                getAllBasketItems(user.isAuth.id).then(data => {
+            authAPI( 'delete', '/api/basket', {userId, itemId}).then(data => {
+                authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
                     basket.setBasket(data);
                 }).catch(err => {
                     console.log(err);
@@ -78,7 +78,7 @@ const Basket = observer(() => {
                                   setAllCost={setAllCost} deleteBasketItemHandle={deleteBasketItemHandle}/>
     });
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);
@@ -87,7 +87,7 @@ const Basket = observer(() => {
     }, [navigate, user]);
     useEffect(() => {
         if (user.isAuth) {
-            getAllBasketItems(user.isAuth.id).then(data => {
+            authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
                 basket.setBasket(data);
             }).catch(err => {
                 console.log(err);

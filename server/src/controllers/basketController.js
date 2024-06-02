@@ -112,7 +112,7 @@ class BasketController {
     }
     async getAll (req, res) {
         try {
-            const basketId = await getBasketId(req.params.userId);
+            const basketId = await getBasketId(req.query.userId);
             const allBasketItems = await getAllBasketItems(basketId);
             const response = await Promise.all(allBasketItems.map(async (item) => {
                 const oneItem = await models.Item.findOne({
@@ -129,7 +129,7 @@ class BasketController {
                     cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
                     image: JSON.parse(oneItem.dataValues.images)[0],
                     categoryId: oneItem.dataValues.categoryId,
-                    userId: req.params.userId,
+                    userId: req.query.userId,
                 }
             }));
             res.json(response);

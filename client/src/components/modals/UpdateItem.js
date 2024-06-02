@@ -6,8 +6,8 @@ import UpdateButton from "../buttons/UpdateButton";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import ItemInfoField from "../item/ItemInfoField";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
-import {fetchCategories, fetchOneItem, updateItem} from "../../api/itemAPI";
 import {colors} from "../../StyledGlobal";
+import {API, authAPI} from "../../api";
 
 const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
     const {item} = useContext(Context);
@@ -75,9 +75,9 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
                 formData.append(`${key}_${value.name}`, value)
             }
         }
-        updateItem(formData).then(data => {
+        authAPI('patch', '/api/item', formData).then(data => {
             if (page) {
-                fetchOneItem(product.id).then(data => {
+                API('get','/api/item/one', {id: product.id}).then(data => {
                     item.setOneItem(data);
                 })
             }
@@ -91,7 +91,7 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
         });
     }
     useEffect(() => {
-        fetchCategories().then(data => {
+        API('get', '/api/categories').then(data => {
             item.setCategories(data);
             const indexThisCategory = item.categories.findIndex(({id}) => id === product.categoryId);
             setSelected(item?.categories?.[indexThisCategory]);

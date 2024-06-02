@@ -13,8 +13,8 @@ const findOneRating = async (userId, itemId) => {
 class RatingController {
     async getRatingForUser (req, res) {
         try {
-            const {itemId} = req.query;
-            const userId = req.params.userId;
+            const {itemId, userId} = req.query;
+            console.log("\x1b[35m", itemId, userId, "\x1b[0m");
             if (itemId && userId) {
                 const rateObj = await findOneRating(userId, itemId);
                 rateObj ? res.json(rateObj.dataValues.rate) : res.json(0)
@@ -30,7 +30,7 @@ class RatingController {
                 const ratings = await models.Rating.findAndCountAll({
                     attributes: ['rate'],
                     where: {
-                        itemId
+                        itemId,
                     },
                 })
                 const sumRating = ratings.rows.reduce(

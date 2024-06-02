@@ -9,8 +9,8 @@ import ButtonBuy from "../components/buttons/ButtonBuy";
 import Reviews from "../components/reviews/Reviews";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {fetchOneItem} from "../api/itemAPI";
 import {breakpoints, colors, flexColumn, marginsPage} from "../StyledGlobal";
+import {API} from "../api";
 
 const Styled = styled.div`
   position: relative;
@@ -64,12 +64,12 @@ const StyledImg = styled.img`
 
 const Item = observer (() => {
     const {item} = useContext(Context);
-    const productId = uf.routeUnPrefix(useParams().productId);
+    const id = uf.routeUnPrefix(useParams().productId);
     useEffect(() => {
-        fetchOneItem(productId).then(data => {
+        API('get','/api/item/one', {id}).then(data => {
             item.setOneItem(data);
         })
-    }, [item, productId]);
+    }, [item, id]);
     const [slideIndex, setSlideIndex] = useState(0);
     let width = useWindowSize();
     const handleSlideSelect = (selectedIndex) => {

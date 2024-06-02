@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createCategory} from "../../api/itemAPI";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import useWindowSize from "../../hooks/useWindowSize";
 import {colors} from "../../StyledGlobal";
+import {authAPI} from "../../api";
 
 const AddCategory = ({setChangeCategories}) => {
     const [showModal, setShowModal] = useState(false);
@@ -25,7 +25,7 @@ const AddCategory = ({setChangeCategories}) => {
         setShowModal(false);
     }
     const handleAdd = () => {
-        createCategory({categoryName}).then((data) => {
+        authAPI('post', '/api/categories', {categoryName}).then((data) => {
             if (data === categoryName) {
                 setOverlayMessage(`Категория "${data}" успешно добавлена`);
                 setOverlayColor(colors.opacityPrimary);

@@ -4,11 +4,11 @@ import cartImg from '../../assets/icon_basket.svg';
 import styled from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
 import useGetScrollBar from "../../hooks/useGetScrollBar";
-import {addBasketItem, getOneBasketItemAmount} from "../../api/basketAPI";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react-lite";
 import {colors} from "../../StyledGlobal";
+import {authAPI} from "../../api";
 const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
@@ -72,12 +72,12 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
         }
     }
     function handleBuy(userId, itemId, amount) {
-        addBasketItem({userId, itemId, amount}).catch(err => {
+        authAPI( 'post', '/api/basket', {userId, itemId, amount}).catch(err => {
             console.log(err);
         })
     }
     useEffect(() => {
-        getOneBasketItemAmount(user.isAuth.id, productId).then(data => {
+        authAPI('get', '/api/basket/one', {userId: user.isAuth.id, itemId: productId}).then(data => {
             if (data) {
                 setProductAmount(data);
             }

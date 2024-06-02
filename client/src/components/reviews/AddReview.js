@@ -3,10 +3,10 @@ import React, {useContext, useState} from "react";
 import {Button, CloseButton} from "react-bootstrap";
 import useWindowSize from "../../hooks/useWindowSize";
 import AddImagesButton from "../buttons/AddImagesButton";
-import {addReview} from "../../api/itemAPI";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {breakpoints, colors, flexColumn, iconsSize, marginsCenter} from "../../StyledGlobal";
+import {authAPI} from "../../api";
 
 let Styled = styled.div`
   ${flexColumn};
@@ -68,7 +68,7 @@ const AddReview = observer(({userId, itemId}) => {
         for (const [key, value] of Object.entries(images)) {
             formData.append(`${key}_${value.name}`, value)
         }
-        addReview(formData).then(data => {
+        authAPI('post', '/api/basket/review', formData).then(data => {
             setWrite(false);
             setImages([]);
             user.forceUpdate();

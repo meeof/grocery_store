@@ -2,9 +2,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import starImg from '../assets/icon_star.svg';
 import starImgFill from '../assets/icon_star_black.svg';
 import styled from "styled-components";
-import {authAPI} from "../api/userAPI";
 import {Context} from "../index";
-import {getRating, getRatingForUser, setRatings} from "../api/ratingApi";
+import {API, authAPI, authorization} from "../api";
 const Styled = styled.div`
   display: flex;
   align-items: center;
@@ -29,14 +28,14 @@ const Rating = ({disabled, big, itemsId}) => {
             return
         }
         if (disabled) {
-            getRating(itemsId[0]).then(data => {
+            API('get', '/api/rating', {itemId: itemsId[0]}).then(data => {
                 setRating(data);
             }).catch((err) => {
                 console.log(err);
             });
         }
         else  {
-            getRatingForUser(itemsId[0], user.isAuth.id).then(data => {
+            authAPI('get', '/api/rating/user', {itemId: itemsId[0], userId: user.isAuth.id}).then(data => {
                 setRating(data);
             }).catch((err) => {
                 console.log(err);
@@ -44,14 +43,14 @@ const Rating = ({disabled, big, itemsId}) => {
         }
     }, [big, itemsId, user.isAuth.id, disabled]);
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch((err) => {
             user.setAuth(false);
         })
     }, [user]);
     const handleSetRating = (rate) => {
-        setRatings({rate, userId: user.isAuth.id, itemsId}).then(data => {
+        authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(data => {
 
         }).catch(err => {
             console.log(err);

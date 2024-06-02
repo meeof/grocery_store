@@ -96,8 +96,8 @@ class UserController {
     }
     async login(req, res) {
         try {
-            const {phoneEmail, enterPassword} = req.body;
-            const {findEmail, findPhone} = await findEmailPassword([phoneEmail]);
+            const {enterLogin, enterPassword} = req.body;
+            const {findEmail, findPhone} = await findEmailPassword([enterLogin]);
             if (findEmail) {
                 const token = generateToken(findEmail.dataValues);
                 bcrypt.compareSync(enterPassword, findEmail.dataValues.password) ?

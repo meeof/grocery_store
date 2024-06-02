@@ -1,9 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {clearOrders, getOrders} from "../api/basketAPI";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import OrderCard from "../components/cards/OrderCard";
-import {authAPI} from "../api/userAPI";
+import {authorization} from "../api";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {Button} from "react-bootstrap";
@@ -17,6 +16,7 @@ import {
     marginSmall,
     marginsPage
 } from "../StyledGlobal";
+import {authAPI} from "../api";
 
 const Styled = styled.div`
   margin-top: ${marginSmall};
@@ -59,7 +59,7 @@ const Orders = observer(() => {
         return <OrderCard order={order} months={months} key={order.id}/>
     })
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);
@@ -68,7 +68,7 @@ const Orders = observer(() => {
     }, [navigate, user]);
     useEffect(() => {
         if (user.isAuth) {
-            getOrders(user.isAuth.id, limit).then(data => {
+            authAPI( 'get', '/api/basket/orders', {userId: user.isAuth.id, limit}).then(data => {
                 basket.setOrders(data);
             }).catch(err => {
                 console.log(err);
@@ -76,10 +76,10 @@ const Orders = observer(() => {
         }
     }, [user.isAuth, basket, limit]);
     const clearOrdersHandler = () => {
-        clearOrders(user.isAuth.id).then(data => {
+        authAPI('delete', '/api/basket/clearOrders', {userId: user.isAuth.id}).then(data => {
             if (data === 'success') {
                 setShowAlert(false);
-                getOrders(user.isAuth.id, limit).then(data => {
+                authAPI('get', '/api/basket/orders', {userId: user.isAuth.id, limit}).then(data => {
                     basket.setOrders(data);
                 }).catch(err => {
                     console.log(err);

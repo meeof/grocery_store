@@ -1,12 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form,} from "react-bootstrap";
-import {authAPI} from "../api/userAPI";
-import {createBasketOrder, createFastOrder, getContacts} from "../api/basketAPI";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {colors, importantStar, marginSmall, styledCheckbox} from "../StyledGlobal";
+import {authAPI, authorization} from "../api";
 const StyledForm = styled.form`
   .input-label:after {
     ${importantStar};
@@ -76,7 +75,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     const [subscription, setSubscription] = useState(false);
     const [autoContact, setAutoContact] = useState(false);
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);
@@ -95,7 +94,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
         formData.append('sms', subscription);
         formData.append('userId', user.isAuth.id);
         if (field === 'page') {
-            createBasketOrder(formData).then(data => {
+            authAPI('post', '/api/basket/formBasketOrder', formData).then(data => {
                 if (data === 'success') {
                     setShowAlert(true);
                 }
@@ -105,7 +104,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
         }
         else if (field === 'modal') {
             formData.append('itemId', itemId);
-            createFastOrder(formData).then(data => {
+            authAPI('post', '/api/basket/formFastOrder', formData).then(data => {
                 if (data === 'success') {
                     setShowModal(false);
                     setShowAlert(true);
@@ -125,7 +124,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
             setPhone('');
         }
         else {
-            getContacts(user.isAuth.id).then(data => {
+            authAPI( 'get', '/api/basket/orderContacts', {userId: user.isAuth.id}).then(data => {
                 setName(data.name);
                 setSurname(data.surname);
                 setPhone(data.phone);

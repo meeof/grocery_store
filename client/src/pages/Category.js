@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
-import {deleteItem, fetchAllItems} from "../api/itemAPI";
 import {useParams} from "react-router-dom";
 import ItemCard from "../components/cards/ItemCard";
 import * as uf from "../usefulFunctions";
@@ -8,7 +7,7 @@ import styled from "styled-components";
 import {observer} from "mobx-react-lite";
 import CustomPagination from "../components/CustomPagination";
 import {Button} from "react-bootstrap";
-import {authAPI} from "../api/userAPI";
+import {API, authAPI, authorization} from "../api";
 import {colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
@@ -35,20 +34,30 @@ const Category = observer( () => {
     let {categoryId} = useParams();
     const fetchItems = () => {
         if (categoryId === 'all') {
-            fetchAllItems(null, item.limit, page, item.find).then(data => {
+            API('get', '/api/item', {
+                    categoryId: null,
+                    limit: item.limit,
+                    page,
+                    find: item.find
+                }).then(data => {
                 item.setItems(data.rows);
                 item.setCount(data.count);
             });
         }
         else if (categoryId) {
-            fetchAllItems(uf.routeUnPrefix(categoryId), item.limit, page).then(data => {
+            API('get', '/api/item',{
+                    categoryId: uf.routeUnPrefix(categoryId),
+                    limit: item.limit,
+                    page,
+                    find: item.find
+                }).then(data => {
                 item.setItems(data.rows);
                 item.setCount(data.count);
             });
         }
     }
     const delItem = (id) => {
-        deleteItem(id).then((data) => {
+        authAPI('delete', '/api/item', {id}).then((data) => {
             fetchItems();
         }).catch(err => {
             console.log(err.response.data);
@@ -64,7 +73,7 @@ const Category = observer( () => {
     }
     useEffect(fetchItems, [item, categoryId, item?.limit, page, user.rerender]);
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(err => {
             user.setAuth(false);

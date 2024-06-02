@@ -3,7 +3,7 @@ import {Overlay} from "react-bootstrap";
 
 const CustomOverlay = ({show, color, message, target, placement}) => {
     return (
-        <Overlay target={target.current} show={show} placement={placement}>
+        <Overlay target={target} show={show} placement={placement}>
             {({
                   placement: _placement,
                   arrowProps: _arrowProps,

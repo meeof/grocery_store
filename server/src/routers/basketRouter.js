@@ -1,7 +1,8 @@
 import express from "express";
 import basketController from "../controllers/basketController.js";
 const basketRouter = new express.Router();
-basketRouter.get('/', basketController.getOneAmount);
+basketRouter.get('/', basketController.getAll);
+basketRouter.get('/one', basketController.getOneAmount);
 basketRouter.get('/bought', basketController.bought);
 basketRouter.get('/reviewed', basketController.reviewed);
 basketRouter.get('/orders', basketController.getOrders);
@@ -13,7 +14,6 @@ basketRouter.delete('/review', basketController.deleteReview);
 basketRouter.post('/formBasketOrder', basketController.formBasketOrder);
 basketRouter.post('/formFastOrder', basketController.formFastOrder);
 basketRouter.delete('/clearOrders', basketController.clearOrders);
-basketRouter.get('/:userId', basketController.getAll);
 basketRouter.post('/', basketController.addItem);
 basketRouter.delete('/', basketController.deleteItem);
 export default basketRouter;

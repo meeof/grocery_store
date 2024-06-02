@@ -10,12 +10,11 @@ import useWindowSize from "../../hooks/useWindowSize";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
-import {deleteItem} from "../../api/itemAPI";
 import DelButton from "../buttons/DelButton";
-import {authAPI} from "../../api/userAPI";
 import UpdateItem from "../modals/UpdateItem";
 import OneClickBuy from "../buttons/OneClickBuy";
 import {breakpoints, colors, flexColumn, freeButtonWidth, marginMedium, marginSmall} from "../../StyledGlobal";
+import {authAPI, authorization} from "../../api";
 
 const Styled = styled.div`
   .delivery {
@@ -116,7 +115,7 @@ const ItemInterface = observer(({product}) => {
     let width = useWindowSize();
     const navigate = useNavigate();
     const delItem = (id) => {
-        deleteItem(id).then((data) => {
+        authAPI('delete', '/api/item', {id}).then((data) => {
             navigate(-1);
         }).catch(err => {
             console.log(err.response.data);
@@ -124,7 +123,7 @@ const ItemInterface = observer(({product}) => {
     }
     let city = 'Москва';
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(err => {
             user.setAuth(false);

@@ -8,6 +8,7 @@ import './style.css';
 import UserStore from "./stores/userStore";
 import ItemStore from "./stores/ItemStore";
 import BasketStore from "./stores/basketStore";
+import OverlayStore from "./stores/overlayStore";
 
 export const Context = createContext(null);
 
@@ -17,6 +18,7 @@ root.render(
         user: new UserStore(),
         item: new ItemStore(),
         basket: new BasketStore(),
+        overlay: new OverlayStore(),
     }}>
         <React.StrictMode>
             <BrowserRouter>

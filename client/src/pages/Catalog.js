@@ -4,9 +4,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import CategoryCard from "../components/cards/CategoryCard";
 import {Button} from "react-bootstrap";
 import {Context} from "../index";
-import {deleteCategory, fetchCategories} from "../api/itemAPI";
 import {observer} from "mobx-react-lite";
-import {authAPI} from "../api/userAPI";
+import {API, authAPI, authorization} from "../api";
 import {breakpoints, colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
 
 const Styled = styled.div`
@@ -30,18 +29,18 @@ const Catalog = observer( () => {
     const {item} = useContext(Context);
     const {user} = useContext(Context);
     useEffect(() => {
-        fetchCategories().then(data => {
+        API('get', '/api/categories').then(data => {
             item.setCategories(data);
         });
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(err => {
             user.setAuth(false);
         })
     }, [item, user]);
     const delCategory = (id) => {
-        deleteCategory(id).then((data) => {
-            fetchCategories().then(data => {
+        authAPI('delete', '/api/categories', {id}).then((data) => {
+            API('get', '/api/categories').then(data => {
                 item.setCategories(data);
             });
         }).catch(err => {

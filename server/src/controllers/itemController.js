@@ -6,12 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 import {deleteSpace} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 
-const getItems = async (catId, limit, page, find) => {
+const getItems = async (categoryId, limit, page, find) => {
     page = page || 1;
     limit = limit || 4;
     let offset = limit * (page - 1);
     let where = {};
-    catId && (where.categoryId = catId);
+    categoryId && (where.categoryId = categoryId);
     find && (where.name = {[Op.iRegexp]: find});
     const allItems = await models.Item.findAndCountAll({
         attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
@@ -183,15 +183,15 @@ class ItemController {
     }
     async delete(req, res) {
         try {
-            const {itemId} = req.query;
+            const {id} = req.query;
             await models.ItemInfo.destroy({
                 where: {
-                    itemId: itemId,
+                    itemId: id,
                 },
             });
             await models.Item.destroy({
                 where: {
-                    id: itemId,
+                    id,
                 },
             });
             res.json('delete success');
@@ -201,8 +201,8 @@ class ItemController {
     }
     async getAll(req, res) {
         try {
-            let {catId, limit, page, find} = req.query;
-            const allItems = await getItems(catId, limit, page, find);
+            let {categoryId, limit, page, find} = req.query;
+            const allItems = await getItems(categoryId, limit, page, find);
             res.json(allItems);
         } catch (error) {
             ErrorTemp.badRequest(res)
@@ -213,13 +213,13 @@ class ItemController {
             const oneItem = await models.Item.findOne({
                 attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
                 where: {
-                    id: req.params.id
+                    id: req.query.id
                 }
             });
             const itemInfos = await models.ItemInfo.findAll({
                 attributes: ['id', 'title', 'description'],
                 where: {
-                    itemId: req.params.id
+                    itemId: req.query.id
                 }
             })
             const frontResponse = {

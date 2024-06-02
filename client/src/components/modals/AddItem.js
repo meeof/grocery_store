@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {createItem, fetchCategories} from "../../api/itemAPI";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
@@ -7,6 +6,7 @@ import ItemInfoField from "../item/ItemInfoField";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import useWindowSize from "../../hooks/useWindowSize";
 import {colors} from "../../StyledGlobal";
+import {API, authAPI} from "../../api";
 
 const AddItem = observer( ({changeCategories, setChangeCategories}) => {
     const {item} = useContext(Context);
@@ -49,7 +49,7 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
         for (const [key, value] of Object.entries(images)) {
             formData.append(`${key}_${value.name}`, value)
         }
-        createItem(formData).then(data => {
+        authAPI('post', '/api/item', formData).then(data => {
             if (data?.name === name && data?.price === Number(price) && data?.discount === Number(discount)) {
                 setOverlayMessage(`Товар "${data.name}" успешно добавлен`);
                 setOverlayColor(colors.opacityPrimary);
@@ -88,7 +88,7 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
     };
     useEffect(() => {
         setChangeCategories(false);
-        fetchCategories().then(data => {
+        API('get', '/api/categories').then(data => {
             item.setCategories(data);
             setSelected(item?.categories?.[0]);
         })

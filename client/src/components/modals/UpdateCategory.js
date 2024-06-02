@@ -3,10 +3,10 @@ import {Button, Form, Modal} from "react-bootstrap";
 import UpdateButton from "../buttons/UpdateButton";
 import useWindowSize from "../../hooks/useWindowSize";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
-import {fetchCategories, updateCategory} from "../../api/itemAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import {colors} from "../../StyledGlobal";
+import {API, authAPI} from "../../api";
 
 const UpdateCategory = observer( ({id, name}) => {
     const {item} = useContext(Context);
@@ -31,13 +31,13 @@ const UpdateCategory = observer( ({id, name}) => {
         handleModal(false);
     }
     const upCategory = (body) => {
-        updateCategory(body).then((data) => {
+        authAPI('patch', '/api/categories', body).then((data) => {
             if (data !== 'success') {
                 setOverlayMessage(data);
                 overlayHandle();
             }
             else {
-                fetchCategories().then(data => {
+                API('get', '/api/categories').then(data => {
                     item.setCategories(data);
                 });
                 handleModal(false);

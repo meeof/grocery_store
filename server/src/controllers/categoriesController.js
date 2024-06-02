@@ -33,10 +33,10 @@ class CategoriesController {
     }
     async delete(req, res){
         try {
-            const {catId} = req.query;
+            const {id} = req.query;
             await models.Categories.destroy({
                 where: {
-                    id: catId,
+                    id,
                 },
             });
             res.json('delete success');

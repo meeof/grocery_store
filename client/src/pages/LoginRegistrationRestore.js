@@ -1,10 +1,9 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
 import {Button, Dropdown, DropdownButton, Form} from "react-bootstrap";
 import CustomOverlay from "../components/badges_and_overlays/CustomOverlay";
 import {Context} from "../index";
 import useWindowSize from "../hooks/useWindowSize";
-import {loginAPI, registrationAPI} from "../api/userAPI";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {
@@ -16,6 +15,8 @@ import {
     marginSmall,
     marginsPage
 } from "../StyledGlobal";
+import {decodeAuthAPI} from "../api";
+
 const Styled = styled.div`
   margin-bottom: ${marginSmall};
   ${marginsPage};
@@ -64,76 +65,60 @@ const Styled = styled.div`
 `
 
 const LoginRegistrationRestore = observer(() => {
-    const {user} = useContext(Context);
-    const navigate = useNavigate();
-    const [phoneEmail, setPhoneEmail] = useState('');
-    const [enterPassword, setEnterPassword] = useState('');
-
-    const [showOverlay, setShowOverlay] = useState(false);
-    const target = useRef(null);
-    const [overlayMessage, setOverlayMessage] = useState('-');
-    let width = useWindowSize();
-    const overlayHandle = () => {
-        setShowOverlay(true);
-        setTimeout(() => {
-            setShowOverlay(false);
-        }, 2000);
-    }
-    const handleLogin = (e) => {
-        e.preventDefault();
-        loginAPI({phoneEmail, enterPassword}).then((data) => {
-            user.setAuth(data);
-            navigate('/profile');
-        }).catch(err => {
-            setOverlayMessage(err.response.data);
-            overlayHandle();
-        });
-    }
-
-
-
     const languages = ['Русский', 'English'];
-    const [selected, setSelected] = useState(languages[0]);
+    const {user, overlay} = useContext(Context);
+    const navigate = useNavigate();
+    const width = useWindowSize();
+    const location = useLocation();
+    //data for login page
+    const [enterLogin, setEnterLogin] = useState('');
+    const [enterPassword, setEnterPassword] = useState('');
+    //data for registration page
+    const [language, setLanguage] = useState(languages[0]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    //data for restore
+    const [restoreLogin, setRestoreLogin] = useState('');
 
-    const handleSelect = (key) => {
-        setSelected(key);
-    };
-    const handleRegistration = (e) => {
+    const handlerLoginRegistration = (e) => {
         e.preventDefault();
-        if (password === repeatPassword) {
-            registrationAPI(
-                {name, surname, phone, email, password, language: selected}
-            ).then((data) => {
-                user.setAuth(data);
-                navigate('/profile');
-            }).catch(err => {
-                setOverlayMessage(err.response.data);
-                overlayHandle();
-            })
-        }
-        else {
-            setOverlayMessage('Пароли не совпадают');
-            overlayHandle()
+        switch (e.target.id) {
+            case 'formRegistration':
+                if (password === repeatPassword) {
+                    decodeAuthAPI('post', '/api/user/registration',
+                        {name, surname, phone, email, password, language}).then((data) => {
+                        user.setAuth(data);
+                        navigate('/profile');
+                    }).catch(err => {
+                        overlay.setMessage(err.response.data);
+                        overlay.handlerOverlay();
+                    })
+                } else {
+                    overlay.setMessage('Пароли не совпадают');
+                    overlay.handlerOverlay();
+                }
+                break;
+            default :
+                decodeAuthAPI('post','/api/user/login', {enterLogin, enterPassword}).then((data) => {
+                    user.setAuth(data);
+                    navigate('/profile');
+                }).catch(err => {
+                    overlay.setMessage(err.response.data);
+                    overlay.handlerOverlay();
+                });
+                break;
         }
     }
-    const [restorePhoneEmail, setRestorePhoneEmail] = useState('');
-
-
-
-
-    const location = useLocation();
-    let page = <></>;
+    let page;
     switch(location.pathname) {
         case '/profile/registration':
             page = <Styled>
                 <h2>Регистрация</h2>
-                <Form onSubmit={(e) => handleRegistration(e)}>
+                <Form id={'formRegistration'} onSubmit={(e) => handlerLoginRegistration(e)}>
                     <Form.Group className="mb-3" controlId="formRegistrationName">
                         <Form.Label className={'input-label'}>Имя</Form.Label>
                         <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)}/>
@@ -153,14 +138,16 @@ const LoginRegistrationRestore = observer(() => {
                     <Form.Group className="mb-3" controlId="formRegistrationLanguage">
                         <div className={'mb-2'}>Язык</div>
                         <DropdownButton
-                            onSelect={handleSelect}
+                            onSelect={(key => setLanguage(key))}
                             id={`languages-group`}
                             variant={colors.bootstrapMainVariantOutline}
-                            title={selected}
+                            title={language}
                         >
-                            {languages.map((lang, index) => {
-                                return <Dropdown.Item key={index} eventKey={lang}>{lang}</Dropdown.Item>
-                            })}
+                            <>
+                                {languages.map((lang, index) => {
+                                    return <Dropdown.Item key={index} eventKey={lang}>{lang}</Dropdown.Item>
+                                })}
+                            </>
                         </DropdownButton>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formRegistrationPassword">
@@ -174,9 +161,9 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setRepeatPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button ref={target} type={"submit"} variant={colors.bootstrapMainVariant}>Зарегистрироваться</Button>
-                        <CustomOverlay show={showOverlay} color={colors.opacityRed} message={overlayMessage}
-                                       target={target} placement={width > 576 ? "right" : "bottom-start"}/>
+                        <Button onClick={e => overlay.setTarget(e.target)} type={"submit"} variant={colors.bootstrapMainVariant}>Зарегистрироваться</Button>
+                        <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
+                                       target={overlay.target} placement={width > 576 ? "right" : "bottom-start"}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>У меня уже есть аккаунт</div>
                     </div>
@@ -189,8 +176,8 @@ const LoginRegistrationRestore = observer(() => {
                 <Form onSubmit={(e) => {e.preventDefault()}}>
                     <Form.Group className="mb-3" controlId="formRestoreEmail">
                         <Form.Label className={'input-label'}>Телефон или Email</Form.Label>
-                        <Form.Control type="text" value={restorePhoneEmail} onChange={e => {
-                            setRestorePhoneEmail(e.target.value);
+                        <Form.Control type="text" value={restoreLogin} onChange={e => {
+                            setRestoreLogin(e.target.value);
                         }}/>
                     </Form.Group>
                     <div className={'button-container'}>
@@ -204,10 +191,10 @@ const LoginRegistrationRestore = observer(() => {
         default:
             page = <Styled>
                 <h2>Вход в кабинет покупателя</h2>
-                <Form onSubmit={(e) => handleLogin(e)}>
+                <Form id={'formLogin'} onSubmit={(e) => handlerLoginRegistration(e)}>
                     <Form.Group className="mb-3" controlId="formLoginEmail">
                         <Form.Label className={'input-label'}>Телефон или Email</Form.Label>
-                        <Form.Control type="text" value={phoneEmail} onChange={(e) => setPhoneEmail(e.target.value)}/>
+                        <Form.Control type="text" value={enterLogin} onChange={(e) => setEnterLogin(e.target.value)}/>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formLoginPassword">
                         <Form.Label className={'input-label'}>Пароль</Form.Label>
@@ -215,9 +202,9 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setEnterPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button ref={target} variant={colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
-                        <CustomOverlay show={showOverlay} color={'rgba(255, 100, 100, 0.85)'} message={overlayMessage}
-                                       target={target} placement={width > 576 ? "right" : "bottom-start"}/>
+                        <Button onClick={e => overlay.setTarget(e.target)} variant={colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
+                        <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
+                                       target={overlay.target} placement={width > 576 ? "right" : "bottom-start"}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/restore')}>Восстановить пароль</div>
                         <div role={"button"} className={'link-underline'}

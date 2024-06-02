@@ -5,9 +5,9 @@ import {Accordion, Button, Carousel, Image, Modal} from "react-bootstrap";
 import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";
 import DelButton from "../buttons/DelButton";
-import {deleteReview, updateReview} from "../../api/basketAPI";
 import {Context} from "../../index";
 import {colors, flexColumn, marginMedium} from "../../StyledGlobal";
+import {authAPI} from "../../api";
 const Styled = styled.div`
     ${flexColumn};
   margin-bottom: ${marginMedium};
@@ -80,7 +80,7 @@ const ReviewCard = ({reviewObj, userId}) => {
         second: 'numeric'
     };
     let images = [];
-    let slides = []
+    let slides = [];
     if (reviewObj.images) {
         reviewObj.images.forEach((image, index) => {
             images.push(<Image className={'review-image'} key={`${index}_${image}`} alt={''}
@@ -90,12 +90,12 @@ const ReviewCard = ({reviewObj, userId}) => {
                                    handleSelect(index);
                                }}/>);
             slides.push(<Carousel.Item key={`slide_${index}_${image}`}>
-                <Image src={process.env.REACT_APP_API_URL} style={{width: '100%'}}/>
+                <Image src={process.env.REACT_APP_API_URL + image} style={{width: '100%'}}/>
             </Carousel.Item>)
         })
     }
     const handlerDeleteReview = (id) => {
-        deleteReview(id).then(data => {
+        authAPI( 'delete', '/api/basket/review', {id}).then(data => {
             user.forceUpdate();
         }).catch((err) => {
             console.log(err);
@@ -113,7 +113,7 @@ const ReviewCard = ({reviewObj, userId}) => {
         for (const [key, value] of Object.entries(redactImages)) {
             formData.append(`${key}_${value.name}`, value)
         }
-        updateReview(formData).then(data => {
+        authAPI('patch', '/api/basket/review', formData).then(data => {
             user.forceUpdate();
             handleCancel();
         }).catch((err) => {

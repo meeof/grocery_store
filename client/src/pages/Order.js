@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {authAPI} from "../api/userAPI";
+import {authorization} from "../api";
 import {Context} from "../index";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
@@ -32,7 +32,7 @@ const Order = observer( () => {
     const {user, basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
     useEffect(() => {
-        authAPI().then(data => {
+        authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);
