@@ -9,7 +9,7 @@ import {colors} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 
 const AddItem = observer( ({changeCategories, setChangeCategories}) => {
-    const {item} = useContext(Context);
+    const {item, category} = useContext(Context);
     const [show, setShow] = useState(false);
 
     let width = useWindowSize();
@@ -35,7 +35,7 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
         setName('');
         setPrice('');
         setDiscount('');
-        setSelected(item?.categories?.[0]);
+        setSelected(category?.categories?.[0]);
         setInfo([]);
         setShow(false);
     }
@@ -84,15 +84,15 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
         setInfo(newInfo);
     }
     const handleSelect = (key) => {
-        setSelected(item?.categories?.[key]);
+        setSelected(category?.categories?.[key]);
     };
     useEffect(() => {
         setChangeCategories(false);
         API('get', '/api/categories').then(data => {
-            item.setCategories(data);
-            setSelected(item?.categories?.[0]);
+            category.setCategories(data);
+            setSelected(category?.categories?.[0]);
         })
-    }, [item, changeCategories, setChangeCategories]);
+    }, [item, category, changeCategories, setChangeCategories]);
     return (
         <>
             <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => setShow(true)}>
@@ -124,7 +124,7 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
                                 variant={'outline-secondary'}
                                 title={selected?.name || 'Категории отсутствуют'}
                             >
-                                {item?.categories.map((category, index) => {
+                                {category?.categories.map((category, index) => {
                                     return <Dropdown.Item key={index} eventKey={index}>{category?.name}</Dropdown.Item>
                                 })}
                             </DropdownButton>

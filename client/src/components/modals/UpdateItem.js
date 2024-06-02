@@ -10,7 +10,7 @@ import {colors} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 
 const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
-    const {item} = useContext(Context);
+    const {item, category} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
 
     const [name, setName] = useState(product.name);
@@ -41,7 +41,7 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
         setShowModal(value);
     }
     const handleSelect = (key) => {
-        setSelected(item?.categories?.[key]);
+        setSelected(category?.categories?.[key]);
     };
     const handleCancel = () => {
         setName(product.name);
@@ -49,8 +49,8 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
         setDiscount(product.discount);
         setInfo(product.info);
         setShowModal(false);
-        const indexThisCategory = item.categories.findIndex(({id}) => id === product.categoryId);
-        setSelected(item?.categories?.[indexThisCategory]);
+        const indexThisCategory = category.categories.findIndex(({id}) => id === product.categoryId);
+        setSelected(category?.categories?.[indexThisCategory]);
     }
     let width = useWindowSize();
     const [showOverlay, setShowOverlay] = useState(false);
@@ -92,18 +92,18 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
     }
     useEffect(() => {
         API('get', '/api/categories').then(data => {
-            item.setCategories(data);
-            const indexThisCategory = item.categories.findIndex(({id}) => id === product.categoryId);
-            setSelected(item?.categories?.[indexThisCategory]);
+            category.setCategories(data);
+            const indexThisCategory = category.categories.findIndex(({id}) => id === product.categoryId);
+            setSelected(category?.categories?.[indexThisCategory]);
         })
-    }, [item, product.categoryId]);
+    }, [item, category, product.categoryId]);
     useEffect(() => {
         setName(product.name);
         setPrice(product.price);
         setDiscount(product.discount);
         setInfo(product?.info || []);
         setShowModal(false);
-    }, [product.categoryId, item?.categories, product.discount, product?.info, product.name, product.price]);
+    }, [product.categoryId, category?.categories, product.discount, product?.info, product.name, product.price]);
     return (
         <div onClick={(e) => e.stopPropagation()}>
             <UpdateButton handleModal={handleModal} right={right} isActive={showModal}/>
@@ -131,7 +131,7 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
                                 variant={'outline-secondary'}
                                 title={selected?.name || 'Категории отсутствуют'}
                             >
-                                {item?.categories.map((category, index) => {
+                                {category?.categories.map((category, index) => {
                                     return <Dropdown.Item key={index} eventKey={index}>{category?.name}</Dropdown.Item>
                                 })}
                             </DropdownButton>

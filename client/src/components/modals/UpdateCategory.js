@@ -9,7 +9,7 @@ import {colors} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 
 const UpdateCategory = observer( ({id, name}) => {
-    const {item} = useContext(Context);
+    const {category} = useContext(Context);
     const [categoryName, setCategoryName] = useState(name);
     const [showModal, setShowModal] = useState(false);
 
@@ -38,7 +38,7 @@ const UpdateCategory = observer( ({id, name}) => {
             }
             else {
                 API('get', '/api/categories').then(data => {
-                    item.setCategories(data);
+                    category.setCategories(data);
                 });
                 handleModal(false);
             }

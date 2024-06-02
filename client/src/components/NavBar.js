@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ButtonGroup, Nav, Navbar, ToggleButton} from "react-bootstrap";
 import useWindowSize from "../hooks/useWindowSize";
 import styled from "styled-components";
 import {breakpoints, colors, flexColumn, marginMedium, marginsCenter, marginSmall, marginsPage} from "../StyledGlobal";
+import {Context} from "../index";
+import {useNavigate} from "react-router-dom";
 const Styled = styled.div`
   background-color: ${colors.extraLightColor};
   .header {
@@ -59,6 +61,8 @@ const Styled = styled.div`
 `
 
 const NavBar = () => {
+    const navigate = useNavigate();
+    const {user} = useContext(Context);
     const [radioValue, setRadioValue] = useState('RU');
     let width = useWindowSize();
     const contacts = <div className={"contacts"}>
@@ -77,7 +81,12 @@ const NavBar = () => {
                             <Nav.Link href="/shipping">Доставка</Nav.Link>
                             <Nav.Link href="/pay">Оплата</Nav.Link>
                             <Nav.Link href="/blog">Блог</Nav.Link>
-                            <Nav.Link href="/profile">Личный кабинет</Nav.Link>
+                            <Nav.Link onClick={e => {
+                                e.preventDefault();
+                                navigate(user.isAuth ? '/profile' : '/profile/login')
+                            }}>
+                                Личный кабинет
+                            </Nav.Link>
                             {(width >= 992 || width < 576) && contacts}
                         </Nav>
                     </Navbar.Collapse>

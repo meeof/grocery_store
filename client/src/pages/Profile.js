@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {authorization} from "../api";
 import {Button, Image} from "react-bootstrap";
 import styled from "styled-components";
 import AddCategory from "../components/modals/AddCategory";
@@ -19,7 +18,7 @@ import {
 } from "../StyledGlobal";
 import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
-import {authAPI} from "../api";
+import {authAPI, authorization} from "../api";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -83,9 +82,10 @@ const Styled = styled.div`
   }
 `
 const Profile = observer( () => {
+    console.log('render PROFILE');
     const {user} = useContext(Context);
-    const [changeCategories, setChangeCategories] = useState(false);
     const navigate = useNavigate();
+    const [changeCategories, setChangeCategories] = useState(false);
     const roles = {
         ADMIN : 'Администратор',
         USER : 'Пользователь'
@@ -138,13 +138,15 @@ const Profile = observer( () => {
         })
     }
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-            navigate(`login`);
-        })
-    }, [navigate, user]);
+        if (!user.isAuth) {
+            authorization().then(data => {
+                user.setAuth(data);
+            }).catch(() => {
+                user.setAuth(false);
+                navigate('/profile/login');
+            })
+        }
+    }, [user, navigate]);
     useEffect(() => {
         if (user.isAuth) {
             setUserInfo(user.isAuth.id);

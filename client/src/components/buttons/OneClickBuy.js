@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import {Modal} from "react-bootstrap";
 import OrderForm from "../OrderForm";
 import AlertOrdered from "../alerts/AlertOrdered";
 import {animations, colors, marginSmall} from "../../StyledGlobal";
+import {Context} from "../../index";
+import {useNavigate} from "react-router-dom";
 const Styled = styled.div`
   ${animations.getGradient('0.7')};
   width: 100%;
@@ -24,11 +26,16 @@ const Styled = styled.div`
 `
 
 const OneClickBuy = ({itemId}) => {
+    const {user} = useContext(Context);
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const handlerBuy = () => {
+        user.isAuth ? setShowModal(true) : navigate('/profile/login')
+    }
     return (
         <>
-            <Styled role={"button"} onClick={() => setShowModal(true)}>Купить в 1 клик</Styled>
+            <Styled role={"button"} onClick={handlerBuy}>Купить в 1 клик</Styled>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}

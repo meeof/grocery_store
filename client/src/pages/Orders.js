@@ -50,6 +50,7 @@ const Styled = styled.div`
 `;
 
 const Orders = observer(() => {
+    console.log('render ORDERS');
     const months = ['Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря'];
     const navigate = useNavigate();
     const {user, basket} = useContext(Context);

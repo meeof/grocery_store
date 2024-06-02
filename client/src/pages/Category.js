@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {useParams} from "react-router-dom";
 import ItemCard from "../components/cards/ItemCard";
@@ -9,6 +9,7 @@ import CustomPagination from "../components/CustomPagination";
 import {Button} from "react-bootstrap";
 import {API, authAPI, authorization} from "../api";
 import {colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
+import Load from "../components/Load";
 
 const Styled = styled.div`
   ${flexColumn};
@@ -17,7 +18,6 @@ const Styled = styled.div`
     display: flex;
     justify-content: center;
     margin-top: ${marginSmall};
-    margin-bottom: ${marginSmall};
     button {
       width: ${freeButtonWidth};
     }
@@ -28,11 +28,11 @@ const Styled = styled.div`
 `
 
 const Category = observer( () => {
-    const {item} = useContext(Context);
-    const {user} = useContext(Context);
+    console.log('render CATEGORY');
+    const {item, user} = useContext(Context);
     const [page, setPage] = useState(1);
     let {categoryId} = useParams();
-    const fetchItems = () => {
+    const fetchItems = useCallback( () => {
         if (categoryId === 'all') {
             API('get', '/api/item', {
                     categoryId: null,
@@ -55,7 +55,7 @@ const Category = observer( () => {
                 item.setCount(data.count);
             });
         }
-    }
+    }, [item, categoryId, page])
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then((data) => {
             fetchItems();
@@ -63,38 +63,44 @@ const Category = observer( () => {
             console.log(err.response.data);
         })
     }
-    let cards = item.items?.map(product => {
-        return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delItem} isAuth={user.isAuth}
-                         product={product} fetchItems={fetchItems}/>
-    });
     const pagesAmount = Math.ceil(item.count/item.limit);
     const clickPage = (num) => {
         setPage(num)
     }
-    useEffect(fetchItems, [item, categoryId, item?.limit, page, user.rerender]);
     useEffect(() => {
         authorization().then(data => {
             user.setAuth(data);
-        }).catch(err => {
+        }).catch(() => {
             user.setAuth(false);
+        }).finally(() => {
+            fetchItems();
         })
-    }, [user]);
+    }, [item, categoryId, item?.limit, user.rerender, fetchItems, user]);
     return (
-        <Styled>
-            <div className={'card_container'}>
-                {cards.length > 0 ? cards : 'Ничего нет'}
-            </div>
-            {(item.count > item.limit && page === 1) &&
-                <div className={'show-more'}>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
-                        item.setLimit(item.limit + item.limit);
-                    }}>Показывать больше</Button>
-                </div>
+        <>
+            {
+                item.items ?
+                <Styled>
+                    <div className={'card_container'}>
+                        {item.items.length > 0 ?
+                            item.items.map(product => {
+                                return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delItem} isAuth={user.isAuth}
+                                                 product={product} fetchItems={fetchItems}/>
+                            }) : 'Ничего нет'}
+                    </div>
+                    {(item.count > item.limit && page === 1) &&
+                        <div className={'show-more'}>
+                            <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                                item.setLimit(item.limit + item.limit);
+                            }}>Показывать больше</Button>
+                        </div>
+                    }
+                    {pagesAmount > 1 &&
+                        <CustomPagination pagesAmount={pagesAmount} page={page} clickPage={clickPage}/>
+                    }
+                </Styled> : <Load/>
             }
-            {pagesAmount > 1 &&
-                <CustomPagination pagesAmount={pagesAmount} page={page} clickPage={clickPage}/>
-            }
-        </Styled>
+        </>
     );
 });
 

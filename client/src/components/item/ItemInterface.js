@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import styled from "styled-components";
 import Rating from "../Rating";
 import fillComparisonImg from "../../assets/icon_comparison_green.svg";
@@ -14,7 +14,7 @@ import DelButton from "../buttons/DelButton";
 import UpdateItem from "../modals/UpdateItem";
 import OneClickBuy from "../buttons/OneClickBuy";
 import {breakpoints, colors, flexColumn, freeButtonWidth, marginMedium, marginSmall} from "../../StyledGlobal";
-import {authAPI, authorization} from "../../api";
+import {authAPI} from "../../api";
 
 const Styled = styled.div`
   .delivery {
@@ -122,13 +122,6 @@ const ItemInterface = observer(({product}) => {
         })
     }
     let city = 'Москва';
-    useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(err => {
-            user.setAuth(false);
-        })
-    }, [user]);
     return (
         <Styled>
             <div className={'item-head'}>

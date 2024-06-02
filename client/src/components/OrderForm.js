@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Form,} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {colors, importantStar, marginSmall, styledCheckbox} from "../StyledGlobal";
-import {authAPI, authorization} from "../api";
+import {authAPI} from "../api";
 const StyledForm = styled.form`
   .input-label:after {
     ${importantStar};
@@ -74,13 +74,13 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     const [orderAddress, setOrderAddress] = useState('');
     const [subscription, setSubscription] = useState(false);
     const [autoContact, setAutoContact] = useState(false);
-    useEffect(() => {
+    /*useEffect(() => {
         authorization().then(data => {
             user.setAuth(data);
         }).catch(() => {
             user.setAuth(false);
         })
-    }, [navigate, user]);
+    }, [navigate, user]);*/
     const handlerOrder = (e) => {
         e.preventDefault();
         const formData = new FormData();

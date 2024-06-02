@@ -2,11 +2,12 @@ import React from 'react';
 import {Pagination} from "react-bootstrap";
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import {colors, marginsCenter} from "../StyledGlobal";
+import {colors, marginsCenter, marginSmall} from "../StyledGlobal";
 const Styled = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: ${marginSmall};;
   .pagination {
     ${marginsCenter};
     * {

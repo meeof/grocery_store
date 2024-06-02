@@ -1,13 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import * as uf from "../../usefulFunctions";
 import noImage from "../../assets/icon_no_image.svg";
 import {useNavigate} from "react-router-dom";
 import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";
-import {Context} from "../../index";
 import {flexColumn, marginSmall} from "../../StyledGlobal";
-import {authorization} from "../../api";
 
 const Styled = styled.div`
   height: 10rem;
@@ -43,7 +41,6 @@ const Styled = styled.div`
 
 const BasketProductCard = ({product, allCost, setAllCost, deleteBasketItemHandle}) => {
     const [allProductCost, setAllProductCost] = useState(0);
-    const {user} = useContext(Context);
     useEffect(() => {
         setAllProductCost(product.cost * product.amount)
     }, [product.amount, product.cost]);
@@ -53,14 +50,6 @@ const BasketProductCard = ({product, allCost, setAllCost, deleteBasketItemHandle
             `/catalog/${uf.routePrefix('category', product.categoryId)}/${uf.routePrefix('product', product.itemId)}`
         )
     }
-    useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-            navigate(`/profile/login`);
-        })
-    }, [navigate, user]);
     return (
         <Styled>
             <img src={product.image ? process.env.REACT_APP_API_URL + product.image : noImage}

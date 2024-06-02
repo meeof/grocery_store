@@ -57,6 +57,7 @@ const Styled = styled.div`
 `;
 
 const Basket = observer(() => {
+    console.log('render BASKET');
     const {user, basket} = useContext(Context);
     const navigate = useNavigate();
     const [allCost, setAllCost] = useState(0);
@@ -78,12 +79,14 @@ const Basket = observer(() => {
                                   setAllCost={setAllCost} deleteBasketItemHandle={deleteBasketItemHandle}/>
     });
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-            navigate(`/profile/login`);
-        })
+        if (!user.isAuth) {
+            authorization().then(data => {
+                user.setAuth(data);
+            }).catch(() => {
+                user.setAuth(false);
+                navigate(`/profile/login`);
+            })
+        }
     }, [navigate, user]);
     useEffect(() => {
         if (user.isAuth) {

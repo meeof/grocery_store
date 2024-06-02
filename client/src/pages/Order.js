@@ -28,6 +28,7 @@ const Styled = styled.div`
 `;
 
 const Order = observer( () => {
+    console.log('render ORDER');
     const navigate = useNavigate();
     const {user, basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);

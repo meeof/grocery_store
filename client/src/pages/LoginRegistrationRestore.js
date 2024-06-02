@@ -65,6 +65,7 @@ const Styled = styled.div`
 `
 
 const LoginRegistrationRestore = observer(() => {
+    console.log('render LOGIN');
     const languages = ['Русский', 'English'];
     const {user, overlay} = useContext(Context);
     const navigate = useNavigate();
@@ -105,7 +106,7 @@ const LoginRegistrationRestore = observer(() => {
             default :
                 decodeAuthAPI('post','/api/user/login', {enterLogin, enterPassword}).then((data) => {
                     user.setAuth(data);
-                    navigate('/profile');
+                    navigate(-1);
                 }).catch(err => {
                     overlay.setMessage(err.response.data);
                     overlay.handlerOverlay();

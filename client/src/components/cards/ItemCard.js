@@ -41,6 +41,7 @@ const Styled = styled.div`
 `
 
 const ItemCard = ({...props}) => {
+    console.log('render item card')
     const navigate = useNavigate();
     return (
         <Styled $disc={props.product.discount}>

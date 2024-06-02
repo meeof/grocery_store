@@ -108,9 +108,6 @@ const CommonBar = observer (() => {
     const catalogButtonElement = <Link to={'/catalog'} className={"catalog-button"}>
         <Button variant={colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
     </Link>
-
-
-    /**/
     const handlerFind = () => {
         item.setFind(find);
         if (location.pathname === '/catalog/all') {
@@ -144,7 +141,7 @@ const CommonBar = observer (() => {
                 <Button variant={colors.bootstrapMainVariant} onClick={handlerFind} className={'search'}/>
             </Form>
             <div className={"controls"}>
-                <Link to={'/profile'}>
+                <Link to={user.isAuth ? '/profile' : '/profile/login'}>
                     <Image src={userImg} />
                 </Link>
                 <Link to={'/'}>

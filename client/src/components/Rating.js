@@ -3,7 +3,7 @@ import starImg from '../assets/icon_star.svg';
 import starImgFill from '../assets/icon_star_black.svg';
 import styled from "styled-components";
 import {Context} from "../index";
-import {API, authAPI, authorization} from "../api";
+import {API, authAPI} from "../api";
 const Styled = styled.div`
   display: flex;
   align-items: center;
@@ -42,13 +42,6 @@ const Rating = ({disabled, big, itemsId}) => {
             });
         }
     }, [big, itemsId, user.isAuth.id, disabled]);
-    useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch((err) => {
-            user.setAuth(false);
-        })
-    }, [user]);
     const handleSetRating = (rate) => {
         authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(data => {
 

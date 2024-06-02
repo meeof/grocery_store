@@ -63,6 +63,7 @@ const StyledImg = styled.img`
 `
 
 const Item = observer (() => {
+    console.log('render ITEM');
     const {item} = useContext(Context);
     const id = uf.routeUnPrefix(useParams().productId);
     useEffect(() => {

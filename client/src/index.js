@@ -9,6 +9,7 @@ import UserStore from "./stores/userStore";
 import ItemStore from "./stores/ItemStore";
 import BasketStore from "./stores/basketStore";
 import OverlayStore from "./stores/overlayStore";
+import CategoryStore from "./stores/categoryStore";
 
 export const Context = createContext(null);
 
@@ -19,11 +20,15 @@ root.render(
         item: new ItemStore(),
         basket: new BasketStore(),
         overlay: new OverlayStore(),
+        category: new CategoryStore(),
     }}>
-        <React.StrictMode>
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+        {/*<React.StrictMode>
             <BrowserRouter>
                 <App/>
             </BrowserRouter>
-        </React.StrictMode>
+        </React.StrictMode>*/}
     </Context.Provider>
 );

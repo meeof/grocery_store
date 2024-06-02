@@ -7,6 +7,7 @@ import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {API, authAPI, authorization} from "../api";
 import {breakpoints, colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
+import Load from "../components/Load";
 
 const Styled = styled.div`
   ${flexColumn};
@@ -26,46 +27,47 @@ const Styled = styled.div`
 `
 
 const Catalog = observer( () => {
-    const {item} = useContext(Context);
-    const {user} = useContext(Context);
-    useEffect(() => {
-        API('get', '/api/categories').then(data => {
-            item.setCategories(data);
-        });
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(err => {
-            user.setAuth(false);
-        })
-    }, [item, user]);
+    const {item, category, user} = useContext(Context);
+    const navigate = useNavigate();
+    const {categoryId} = useParams();
     const delCategory = (id) => {
-        authAPI('delete', '/api/categories', {id}).then((data) => {
+        authAPI('delete', '/api/categories', {id}).then(() => {
             API('get', '/api/categories').then(data => {
-                item.setCategories(data);
+                category.setCategories(data);
             });
         }).catch(err => {
             console.log(err.response.data);
         })
-    }
-    const navigate = useNavigate();
-    let {categoryId} = useParams();
-    let cards  = item.categories?.map(category => {
-            return <CategoryCard key={category.id} delCategory={delCategory}
-                                 img={category.image} name={category.name} id={category.id} isAuth={user.isAuth} />
-        });
+    };
     const handlerShowAll = () => {
         item.setFind('');
         navigate(`all`)
     }
+    useEffect(() => {
+        authorization().then(data => {
+            user.setAuth(data);
+        }).catch(() => {
+            user.setAuth(false);
+        }).finally(() => {
+            API('get', '/api/categories').then(data => {
+                category.setCategories(data);
+            });
+        })
+    }, [item, category, user]);
     return (
-        <Styled>
-            {!categoryId && <Button variant={colors.bootstrapMainVariant} className={'view-all-button'}
-                                    onClick={handlerShowAll}
-            >Показать все</Button>}
-            <div className={'card_container'}>
-                {cards}
-            </div>
-        </Styled>
+        <>
+            {category.categories ? <Styled>
+                {!categoryId && <Button variant={colors.bootstrapMainVariant} className={'view-all-button'}
+                                        onClick={handlerShowAll}
+                >Показать все</Button>}
+                <div className={'card_container'}>
+                    {category.categories.map(category => {
+                        return <CategoryCard key={category.id} delCategory={delCategory}
+                                             img={category.image} name={category.name} id={category.id} isAuth={user.isAuth}/>
+                    })}
+                </div>
+            </Styled> : <Load/>}
+        </>
     );
 });
 
