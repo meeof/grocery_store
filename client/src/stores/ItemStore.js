@@ -3,7 +3,7 @@ import {makeAutoObservable} from "mobx";
 class ItemStore {
     constructor() {
         this._items = null;
-        this._showItem = {};
+        this._showItem = null;
         this._count = 0;
         this._limit = 4;
         this._itemInfo = [];

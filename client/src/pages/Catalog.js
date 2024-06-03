@@ -42,7 +42,7 @@ const Catalog = observer( () => {
     const handlerShowAll = () => {
         item.setItems(null);
         item.setFind('');
-        navigate(`all`)
+        navigate(`all`);
     }
     useEffect(() => {
         if (!category.categories) {

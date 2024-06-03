@@ -44,8 +44,12 @@ const Styled = styled.div`
   .dropdown-menu {
     width: 50%;
   }
+  .dropdown-item {
+    width: 100%;
+    text-align: center;
+  }
   @media (${breakpoints.fromLarge}) {
-    .form-control, .dropdown-toggle, .dropdown-item {
+    .form-control, .dropdown-toggle {
       width: 50%;
     }
     .dropdown-menu {
@@ -65,7 +69,6 @@ const Styled = styled.div`
 `
 
 const LoginRegistrationRestore = observer(() => {
-    console.log('render LOGIN');
     const languages = ['Русский', 'English'];
     const {user, overlay} = useContext(Context);
     const navigate = useNavigate();

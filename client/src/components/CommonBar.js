@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {Button, Form, Image} from "react-bootstrap";
 import logo from '../assets/logo.svg'
 import styled from "styled-components";
@@ -98,7 +98,6 @@ const Styled = styled.div`
 
 const CommonBar = observer (() => {
     const {item, user} = useContext(Context);
-    const [find, setFind] = useState(item.find);
     const location = useLocation();
     let width = useWindowSize();
     const navigate = useNavigate();
@@ -109,7 +108,6 @@ const CommonBar = observer (() => {
         <Button variant={colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
     </Link>
     const handlerFind = () => {
-        item.setFind(find);
         if (location.pathname === '/catalog/all') {
             user.forceUpdate();
         }
@@ -135,8 +133,8 @@ const CommonBar = observer (() => {
                     className="ms-2"
                     aria-label="Search"
                     id={'commonFind'}
-                    value={find}
-                    onChange={(e) => setFind(e.target.value)}
+                    value={item.find}
+                    onChange={(e) => item.setFind(e.target.value)}
                 />
                 <Button variant={colors.bootstrapMainVariant} onClick={handlerFind} className={'search'}/>
             </Form>

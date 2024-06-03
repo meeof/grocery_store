@@ -19,11 +19,9 @@ const Styled = styled.div`
 `
 
 const Category = observer( () => {
-    console.log('render category')
     const {item, user} = useContext(Context);
     let {categoryId} = useParams();
     const fetchItems = useCallback( (page, limit) => {
-        console.log('fetch', item.count)
         const params = {limit, page, find: item.find}
         if (categoryId !== 'all') {
             params.categoryId = uf.routeUnPrefix(categoryId);
@@ -55,7 +53,7 @@ const Category = observer( () => {
         else {
             fetchItems(1, item.limit);
         }
-    }, [item, fetchItems, user]);
+    }, [item, fetchItems, user, user.rerender]);
     return (
         <Styled>
             {item.items ?

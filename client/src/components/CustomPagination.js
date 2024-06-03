@@ -74,7 +74,7 @@ const CustomPagination = observer(({fetchItems}) => {
         }}>{i}</Pagination.Item>)
     }
     useEffect(() => {
-        setPagesAmount(Math.ceil(item.count/item.limit));
+            setPagesAmount(Math.ceil(item.count/item.limit));
     }, [item.count, item.limit]);
     return (<>
             {pagesAmount > 1 ? <Styled>

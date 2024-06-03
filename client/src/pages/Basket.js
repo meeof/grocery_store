@@ -1,18 +1,23 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
 import {authorization} from "../api";
 import styled from "styled-components";
 import BasketProductCard from "../components/cards/BasketProductCard";
-import {Button, Form} from "react-bootstrap";
+import {Form} from "react-bootstrap";
 import {breakpoints, colors, flexColumn, largeButton, marginMedium, marginSmall, marginsPage} from "../StyledGlobal";
 import {authAPI} from "../api";
+import Load from "../components/Load";
+import BasketCost from "../components/cards/BasketCost";
 
 const Styled = styled.div`
   ${marginsPage};
   display: grid;
   grid-template-columns: 5fr 2fr;
+  .card-block {
+    position: relative;
+  }
   .basket-other {
     ${flexColumn}
     button {
@@ -30,6 +35,11 @@ const Styled = styled.div`
       border-radius: 5px;
       height: 160px;
     }
+    .other-cost {
+      font-size: x-large;
+      font-weight: bold;
+      line-height: 1.2;
+    }
     .other-promo {
       margin-bottom: 10px;
       .link-promo {
@@ -42,11 +52,6 @@ const Styled = styled.div`
         margin-top: ${marginSmall}
       }
     }
-    .other-cost {
-      font-size: x-large;
-      font-weight: bold;
-      line-height: 1.2;
-    }
     @media (${breakpoints.fromSmall}) {
       margin-left: ${marginMedium};
     }
@@ -57,15 +62,23 @@ const Styled = styled.div`
 `;
 
 const Basket = observer(() => {
-    console.log('render BASKET');
     const {user, basket} = useContext(Context);
     const navigate = useNavigate();
-    const [allCost, setAllCost] = useState(0);
+    const countSumCost = useCallback( () => {
+        if (basket.getBasket) {
+            return basket.getBasket.reduce(
+                (accumulator, product) => accumulator + product.cost * product.amount,
+                0,
+            );
+        }
+        else return 0;
+    }, [basket.getBasket]);
     const deleteBasketItemHandle = (userId, itemId) => {
         if (user.isAuth) {
             authAPI( 'delete', '/api/basket', {userId, itemId}).then(data => {
                 authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
                     basket.setBasket(data);
+                    basket.setAllCost(countSumCost());
                 }).catch(err => {
                     console.log(err);
                 })
@@ -74,40 +87,42 @@ const Basket = observer(() => {
             })
         }
     }
-    const cards = basket.getBasket.map(product => {
-        return <BasketProductCard key={product.itemId} product={product} allCost={allCost}
-                                  setAllCost={setAllCost} deleteBasketItemHandle={deleteBasketItemHandle}/>
-    });
     useEffect(() => {
-        if (!user.isAuth) {
-            authorization().then(data => {
-                user.setAuth(data);
-            }).catch(() => {
-                user.setAuth(false);
-                navigate(`/profile/login`);
-            })
-        }
-    }, [navigate, user]);
-    useEffect(() => {
-        if (user.isAuth) {
+        const fetchBasket = () => {
             authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
                 basket.setBasket(data);
+                basket.setAllCost(countSumCost());
             }).catch(err => {
                 console.log(err);
             });
+        };
+        if (!basket.getBasket) {
+            if (!user.isAuth) {
+                authorization().then(data => {
+                    user.setAuth(data);
+                    fetchBasket();
+                }).catch(() => {
+                    user.setAuth(false);
+                    navigate(`/profile/login`);
+                })
+            }
+            else {
+                fetchBasket();
+            }
         }
-    }, [user.isAuth, basket]);
-    useEffect(() => {
-        const sumCostAmount = basket.getBasket.reduce(
-            (accumulator, product) => accumulator + product.cost * product.amount,
-            0,
-        );
-        setAllCost(sumCostAmount);
-    }, [basket.getBasket]);
+    }, [navigate, basket, user]); // eslint-disable-line
     return (
         <Styled>
             <div className={'card-block'}>
-                {cards.length !== 0 ? cards : <h2>Корзина пуста</h2>}
+                {
+                    basket.getBasket ? <>{basket.getBasket.length !== 0 ?
+                                basket.getBasket.map(product => {
+                                    return <BasketProductCard key={product.itemId} product={product}
+                                                               deleteBasketItemHandle={deleteBasketItemHandle}/>
+                                }) :
+                                <h2>Корзина пуста</h2>}</> :
+                        <Load/>
+                }
             </div>
             <div className={'basket-other'}>
                 <div className={'other-block other-promo'}>
@@ -115,11 +130,7 @@ const Basket = observer(() => {
                     <Form.Control placeholder={'Промокод'}/>
                     <div role={"button"} className={'link-promo'}>Активировать</div>
                 </div>
-                <div className={'other-block'}>
-                    <div className={'other-cost'}>Итого к оплате:</div>
-                    <div className={'other-cost'}>{allCost} ₽</div>
-                    <Button variant={colors.bootstrapMainVariant} disabled={cards.length === 0} onClick={() => navigate('order')}>Оформить заказ</Button>
-                </div>
+                <BasketCost/>
             </div>
         </Styled>
     );

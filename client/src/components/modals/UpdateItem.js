@@ -131,7 +131,7 @@ const UpdateItem = observer(  ({product, page, fetchItems, right}) => {
                                 variant={'outline-secondary'}
                                 title={selected?.name || 'Категории отсутствуют'}
                             >
-                                {category?.categories.map((category, index) => {
+                                {category?.categories?.map((category, index) => {
                                     return <Dropdown.Item key={index} eventKey={index}>{category?.name}</Dropdown.Item>
                                 })}
                             </DropdownButton>

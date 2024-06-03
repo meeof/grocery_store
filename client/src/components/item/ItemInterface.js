@@ -115,7 +115,7 @@ const ItemInterface = observer(({product}) => {
     let width = useWindowSize();
     const navigate = useNavigate();
     const delItem = (id) => {
-        authAPI('delete', '/api/item', {id}).then((data) => {
+        authAPI('delete', '/api/item', {id}).then(() => {
             navigate(-1);
         }).catch(err => {
             console.log(err.response.data);

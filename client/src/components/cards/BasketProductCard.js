@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import * as uf from "../../usefulFunctions";
 import noImage from "../../assets/icon_no_image.svg";
@@ -39,11 +39,8 @@ const Styled = styled.div`
   }
 `;
 
-const BasketProductCard = ({product, allCost, setAllCost, deleteBasketItemHandle}) => {
-    const [allProductCost, setAllProductCost] = useState(0);
-    useEffect(() => {
-        setAllProductCost(product.cost * product.amount)
-    }, [product.amount, product.cost]);
+const BasketProductCard = ({product, deleteBasketItemHandle}) => {
+    const [allProductCost, setAllProductCost] = useState(product.cost * product.amount);
     const navigate = useNavigate();
     const navigateProductHandle = () => {
         navigate(
@@ -57,8 +54,8 @@ const BasketProductCard = ({product, allCost, setAllCost, deleteBasketItemHandle
             <div className={'basket-card-body'}>
                 <h2 onClick={navigateProductHandle}><b>{product.name}</b></h2>
                 <p>{product.cost} ₽</p>
-                <ButtonBuy productId={product.itemId} cost={product.cost} basket={true}
-                           allCost={allCost} setAllCost={setAllCost} allProductCost={allProductCost} setAllProductCost={setAllProductCost}/>
+                <ButtonBuy productId={product.itemId} cost={product.cost} place={'basket'}
+                           allProductCost={allProductCost} setAllProductCost={setAllProductCost}/>
             </div>
             <div className={'basket-card-end'}>
                 <CloseButton className={'button-close'} onClick={() => deleteBasketItemHandle(product.userId, product.itemId)}/>

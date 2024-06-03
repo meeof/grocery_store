@@ -56,17 +56,15 @@ const Styled = styled.div`
     }
   }
 `
-const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCost,
+const ButtonBuy = observer( ({productId, cost, place, fixed,
                                  allProductCost, setAllProductCost}) => {
     const navigate = useNavigate();
     const [productAmount, setProductAmount] = useState(0);
-    const {user} = useContext(Context);
+    const {user, basket} = useContext(Context);
     let width = useWindowSize();
     let scrollBar = useGetScrollBar();
     const outherCostsHandler = (cost, operator) => {
-        if (allCost && setAllCost) {
-            setAllCost(allCost + (operator * cost));
-        }
+        basket.setAllCost(basket.allCost + (operator * cost))
         if (allProductCost && setAllProductCost) {
             setAllProductCost(allProductCost + (operator * cost));
         }
@@ -86,12 +84,15 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
         })
     }, [productId, user.isAuth.id]);
     return (
-        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={basket} onClick={e => e.stopPropagation()}>
+        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={place === 'basket'} onClick={e => e.stopPropagation()}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
-                        if (basket && productAmount <= 1) {
+                        if (place === 'basket' && productAmount <= 1) {
                             return
+                        }
+                        if (place !== 'basket') {
+                            basket.setBasket(null);
                         }
                         outherCostsHandler(cost, -1);
                         setProductAmount(productAmount - 1);
@@ -106,6 +107,9 @@ const ButtonBuy = observer( ({productId, cost, basket, fixed,  allCost, setAllCo
 
                     </Button>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                        if (place !== 'basket') {
+                            basket.setBasket(null);
+                        }
                         setProductAmount(productAmount + 1);
                         outherCostsHandler(cost, 1);
                         handleBuy(user.isAuth.id, productId, productAmount + 1);
