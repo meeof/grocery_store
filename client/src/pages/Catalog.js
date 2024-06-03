@@ -40,20 +40,30 @@ const Catalog = observer( () => {
         })
     };
     const handlerShowAll = () => {
+        item.setItems(null);
         item.setFind('');
         navigate(`all`)
     }
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-        }).finally(() => {
-            API('get', '/api/categories').then(data => {
-                category.setCategories(data);
-            });
-        })
-    }, [item, category, user]);
+        if (!category.categories) {
+            if (!user.isAuth) {
+                authorization().then(data => {
+                    user.setAuth(data);
+                }).catch(() => {
+                    user.setAuth(false);
+                }).finally(() => {
+                    API('get', '/api/categories').then(data => {
+                        category.setCategories(data);
+                    });
+                })
+            }
+            else {
+                API('get', '/api/categories').then(data => {
+                    category.setCategories(data);
+                });
+            }
+        }
+    }, [category, user]);
     return (
         <>
             {category.categories ? <Styled>

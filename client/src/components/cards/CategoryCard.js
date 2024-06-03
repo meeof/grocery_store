@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Card} from "react-bootstrap";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
@@ -7,6 +7,8 @@ import DelButton from "../buttons/DelButton";
 import UpdateCategory from "../modals/UpdateCategory";
 import * as uf from "../../usefulFunctions";
 import {breakpoints, itemCategoryCard} from "../../StyledGlobal";
+import {observer} from "mobx-react-lite";
+import {Context} from "../../index";
 
 const Styled = styled.div`
   ${itemCategoryCard};
@@ -17,11 +19,15 @@ const Styled = styled.div`
   }
 `
 
-const CategoryCard = ({...props}) => {
+const CategoryCard = observer(({...props}) => {
     const navigate = useNavigate();
+    const {item} = useContext(Context);
     return (
         <Styled>
-            <Card onClick={() => navigate(uf.routePrefix('category', props.id))}>
+            <Card onClick={() => {
+                item.setItems(null);
+                navigate(uf.routePrefix('category', props.id))
+            }}>
                 <Card.Img variant="top" src={props.img ? process.env.REACT_APP_API_URL + props.img : noImage} />
                 <Card.Body>
                     <Card.Title>{props.name}</Card.Title>
@@ -31,6 +37,6 @@ const CategoryCard = ({...props}) => {
             </Card>
         </Styled>
     );
-};
+});
 
 export default CategoryCard;
