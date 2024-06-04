@@ -18,7 +18,7 @@ import {
 } from "../StyledGlobal";
 import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
-import {authAPI, authorization} from "../api";
+import {authAPI} from "../api";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -83,7 +83,7 @@ const Styled = styled.div`
 `
 const Profile = observer( () => {
     console.log('render PROFILE');
-    const {user} = useContext(Context);
+    const {user, basket} = useContext(Context);
     const navigate = useNavigate();
     const [changeCategories, setChangeCategories] = useState(false);
     const roles = {
@@ -138,14 +138,7 @@ const Profile = observer( () => {
         })
     }
     useEffect(() => {
-        if (!user.isAuth) {
-            authorization().then(data => {
-                user.setAuth(data);
-            }).catch(() => {
-                user.setAuth(false);
-                navigate('/profile/login');
-            })
-        }
+        user.checkAuthUser(()=>{}, navigate);
     }, [user, navigate]);
     useEffect(() => {
         if (user.isAuth) {
@@ -177,7 +170,10 @@ const Profile = observer( () => {
                 <div className={'profile-buttons'}>
                     <AddCategory setChangeCategories={setChangeCategories}/>
                     <AddItem changeCategories={changeCategories} setChangeCategories={setChangeCategories}/>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => navigate('orders')}>Мои заказы</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                        basket.setOrders(null);
+                        navigate('orders');
+                    }}>Мои заказы</Button>
                     <Button variant={'secondary'} onClick={handleExit}>Выйти</Button>
                 </div>
             </div>

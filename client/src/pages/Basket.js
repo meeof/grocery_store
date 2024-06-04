@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
@@ -64,53 +64,31 @@ const Styled = styled.div`
 const Basket = observer(() => {
     const {user, basket} = useContext(Context);
     const navigate = useNavigate();
-    const countSumCost = useCallback( () => {
-        if (basket.getBasket) {
-            return basket.getBasket.reduce(
-                (accumulator, product) => accumulator + product.cost * product.amount,
-                0,
-            );
-        }
-        else return 0;
-    }, [basket.getBasket]);
     const deleteBasketItemHandle = (userId, itemId) => {
         if (user.isAuth) {
-            authAPI( 'delete', '/api/basket', {userId, itemId}).then(data => {
-                authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
-                    basket.setBasket(data);
-                    basket.setAllCost(countSumCost());
-                }).catch(err => {
-                    console.log(err);
-                })
+            authAPI( 'delete', '/api/basket', {userId, itemId}).then(() => {
+                basket.fetchBasket(user.isAuth.id);
             }).catch(err => {
                 console.log(err)
             })
         }
     }
     useEffect(() => {
-        const fetchBasket = () => {
-            authAPI('get', '/api/basket', {userId: user.isAuth.id}).then(data => {
-                basket.setBasket(data);
-                basket.setAllCost(countSumCost());
-            }).catch(err => {
-                console.log(err);
-            });
-        };
         if (!basket.getBasket) {
             if (!user.isAuth) {
                 authorization().then(data => {
                     user.setAuth(data);
-                    fetchBasket();
+                    basket.fetchBasket(user.isAuth.id);
                 }).catch(() => {
                     user.setAuth(false);
                     navigate(`/profile/login`);
                 })
             }
             else {
-                fetchBasket();
+                basket.fetchBasket(user.isAuth.id)
             }
         }
-    }, [navigate, basket, user]); // eslint-disable-line
+    }, [navigate, basket, user]);
     return (
         <Styled>
             <div className={'card-block'}>

@@ -117,8 +117,11 @@ const ButtonBuy = observer( ({productId, cost, place, fixed,
                 </div> :
                 <Button variant={colors.bootstrapMainVariant} onClick={() => {
                     if (user.isAuth) {
-                        setProductAmount(1)
+                        setProductAmount(1);
                         handleBuy(user.isAuth.id, productId, 1);
+                        if (place !== 'basket') {
+                            basket.setBasket(null);
+                        }
                     }
                     else {
                         navigate('/profile/login')

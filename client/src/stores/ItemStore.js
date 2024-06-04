@@ -5,7 +5,7 @@ class ItemStore {
         this._items = null;
         this._showItem = null;
         this._count = 0;
-        this._limit = 4;
+        this._limit = 6;
         this._itemInfo = [];
         this._find = '';
         makeAutoObservable(this)

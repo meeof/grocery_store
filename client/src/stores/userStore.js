@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx";
+import {authorization} from "../api";
 
 class UserStore {
     constructor() {
@@ -24,6 +25,20 @@ class UserStore {
     }
     get userInfo() {
         return this._userInfo;
+    }
+    checkAuthUser(callback, navigate) {
+        if (!this.isAuth) {
+            authorization().then(data => {
+                this.setAuth(data);
+                callback && callback();
+            }).catch(() => {
+                this.setAuth(false);
+                navigate && navigate('/profile/login');
+            })
+        }
+        else {
+            callback && callback();
+        }
     }
 }
 export default UserStore;

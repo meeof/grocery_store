@@ -5,7 +5,7 @@ import {observer} from "mobx-react-lite";
 import AddReview from "./AddReview";
 import ReviewCard from "../cards/ReviewCard";
 import {marginMedium, marginsPage} from "../../StyledGlobal";
-import {API, authAPI, authorization} from "../../api";
+import {API, authAPI} from "../../api";
 const Styled = styled.div`
   ${marginsPage};
   margin-bottom: ${marginMedium};
@@ -20,8 +20,7 @@ const Reviews = observer(({itemId}) => {
     const [wasReviewed, setWasReviewed] = useState(false);
     const [reviews, setReviews] = useState([]);
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
+        user.checkAuthUser(() => {
             authAPI('get', '/api/basket/bought', {userId: user.isAuth.id, itemId}).then(data => {
                 setWasBought(data);
             }).catch(err => {
@@ -32,8 +31,6 @@ const Reviews = observer(({itemId}) => {
             }).catch(err => {
                 console.log(err);
             })
-        }).catch((err) => {
-            user.setAuth(false);
         })
     }, [user, itemId, wasBought, user.rerender]);
     useEffect(() => {

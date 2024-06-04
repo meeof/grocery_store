@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {authorization} from "../api";
 import {Context} from "../index";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
@@ -8,6 +7,7 @@ import {observer} from "mobx-react-lite";
 import OrderForm from "../components/OrderForm";
 import AlertOrdered from "../components/alerts/AlertOrdered";
 import {marginMedium, marginsPage} from "../StyledGlobal";
+import Load from "../components/Load";
 
 const Styled = styled.div`
   display: grid;
@@ -28,39 +28,34 @@ const Styled = styled.div`
 `;
 
 const Order = observer( () => {
-    console.log('render ORDER');
     const navigate = useNavigate();
     const {user, basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-            navigate(`/profile/login`);
-        })
-    }, [navigate, user]);
-    let allCost = 0;
-    const cards = basket.getBasket.map(product => {
-        allCost += product.cost * product.amount;
-        return <OrderProductCard key={product.itemId} product={product}/>
-    });
+        user.checkAuthUser(() => {basket.fetchBasket(user.isAuth.id)}, navigate)
+    }, [navigate, user, basket]);
     return (
         <>
-            <Styled>
-                <div className={'order-left'}>
-                    <h2>Оформление заказа</h2>
-                    <OrderForm setShowAlert={setShowAlert} field={'page'}/>
-                </div>
-                <div className={'order-right'}>
-                    {cards}
-                    <div className={'order-cost'}>
-                        <h1>Итого:</h1>
-                        <h1>{allCost} ₽</h1>
-                    </div>
-                </div>
-            </Styled>
-            <AlertOrdered field={'page'} showAlert={showAlert} setShowAlert={setShowAlert}/>
+            {
+                basket.getBasket ? <>
+                    <Styled>
+                        <div className={'order-left'}>
+                            <h2>Оформление заказа</h2>
+                            <OrderForm setShowAlert={setShowAlert} field={'page'}/>
+                        </div>
+                        <div className={'order-right'}>
+                            {basket.getBasket.map(product => {
+                                return <OrderProductCard key={product.itemId} product={product}/>
+                            })}
+                            <div className={'order-cost'}>
+                                <h1>Итого:</h1>
+                                <h1>{basket.allCost} ₽</h1>
+                            </div>
+                        </div>
+                    </Styled>
+                    <AlertOrdered field={'page'} showAlert={showAlert} setShowAlert={setShowAlert}/>
+                </> : <Load/>
+            }
         </>
     );
 });

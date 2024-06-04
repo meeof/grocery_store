@@ -5,7 +5,6 @@ import CommonBar from "./components/CommonBar";
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
-import {authorization} from "./api";
 
 const Styled = styled.div`
 
@@ -13,11 +12,7 @@ const Styled = styled.div`
 const App = observer( () => {
     const {user} = useContext(Context);
     useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-        })
+        user.checkAuthUser();
     }, [user]);
     return (
         <Styled>

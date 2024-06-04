@@ -229,7 +229,7 @@ class BasketController {
         try {
             const basketId = await getBasketId(req.query.userId);
             const limit = req.query.limit;
-            const orders = await models.Orders.findAll({
+            const orders = await models.Orders.findAndCountAll({
                 attributes: ['id', 'name', 'surname', 'phone', 'point', 'delivery', 'address', 'comment', 'sms', 'full_price',
                 'items', 'status', 'delivery_date', 'createdAt'],
                 where: {

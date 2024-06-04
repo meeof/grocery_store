@@ -13,7 +13,10 @@ const BasketCost = observer (() => {
             <div className={'other-cost'}>Итого к оплате:</div>
             <div className={'other-cost'}>{basket.allCost} ₽</div>
             <Button variant={colors.bootstrapMainVariant} disabled={basket.getBasket?.length === 0}
-                    onClick={() => navigate('order')}>Оформить заказ</Button>
+                    onClick={() => {
+                        basket.setBasket(null);
+                        navigate('order')
+                    }}>Оформить заказ</Button>
         </div>
     );
 });
