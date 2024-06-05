@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-import {authorization} from "../api";
+import {authAPI, authorization} from "../api";
 
 class UserStore {
     constructor() {
@@ -25,6 +25,18 @@ class UserStore {
     }
     get userInfo() {
         return this._userInfo;
+    }
+    fetchUserInfo() {
+        authAPI('get', '/api/user/info', {userId : this.isAuth.id}).then(data => {
+            this.setUserInfo(data);
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    userExit(navigate) {
+        localStorage.setItem('token', '');
+        this.setAuth(false);
+        navigate('/');
     }
     checkAuthUser(callback, navigate) {
         if (!this.isAuth) {

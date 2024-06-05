@@ -8,8 +8,8 @@ import useWindowSize from "../../hooks/useWindowSize";
 import {colors} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 
-const AddItem = observer( ({changeCategories, setChangeCategories}) => {
-    const {item, category} = useContext(Context);
+const AddItem = observer( () => {
+    const {category} = useContext(Context);
     const [show, setShow] = useState(false);
 
     let width = useWindowSize();
@@ -87,12 +87,11 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
         setSelected(category?.categories?.[key]);
     };
     useEffect(() => {
-        setChangeCategories(false);
         API('get', '/api/categories').then(data => {
             category.setCategories(data);
             setSelected(category?.categories?.[0]);
         })
-    }, [item, category, changeCategories, setChangeCategories]);
+    }, [category, category.categories]);
     return (
         <>
             <Button variant={colors.bootstrapMainVariant} ref={target} onClick={() => setShow(true)}>
@@ -124,7 +123,7 @@ const AddItem = observer( ({changeCategories, setChangeCategories}) => {
                                 variant={'outline-secondary'}
                                 title={selected?.name || 'Категории отсутствуют'}
                             >
-                                {category?.categories.map((category, index) => {
+                                {category.categories?.map((category, index) => {
                                     return <Dropdown.Item key={index} eventKey={index}>{category?.name}</Dropdown.Item>
                                 })}
                             </DropdownButton>

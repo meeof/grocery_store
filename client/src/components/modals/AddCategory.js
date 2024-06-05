@@ -4,8 +4,9 @@ import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import useWindowSize from "../../hooks/useWindowSize";
 import {colors} from "../../StyledGlobal";
 import {authAPI} from "../../api";
+import {observer} from "mobx-react-lite";
 
-const AddCategory = ({setChangeCategories}) => {
+const AddCategory = observer(() => {
     const [showModal, setShowModal] = useState(false);
     const [categoryName, setCategoryName] = useState('');
 
@@ -41,7 +42,6 @@ const AddCategory = ({setChangeCategories}) => {
             setOverlayColor(colors.opacityRed);
         })
         overlayHandle();
-        setChangeCategories(true);
     }
     return (
         <>
@@ -79,6 +79,6 @@ const AddCategory = ({setChangeCategories}) => {
             </Modal>
         </>
     );
-};
+});
 
 export default AddCategory;

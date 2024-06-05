@@ -87,18 +87,21 @@ const Orders = observer(() => {
     return (
         <>
             {basket.getOrders ? <Styled $showMore={basket.ordersCount > basket.ordersLimit}>
-                <div className={'orders-block'}>
-                    {basket.getOrders.map(order => {
-                        return <OrderCard order={order} months={months} key={order.id}/>
-                    })}
-                </div>
+                <>
+                    {basket.getOrders.length === 0 ? <div style={{marginLeft: 'auto', marginRight: 'auto'}}>Ничего нет</div> :
+                        <div className={'orders-block'}>
+                            {basket.getOrders.map(order => {
+                                return <OrderCard order={order} months={months} key={order.id}/>
+                            })}
+                    </div>}
+                </>
                 <div className={'buttons-block'}>
                     <Button variant={colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
                         basket.setOrdersLimit(basket.ordersLimit * 2);
                         basket.setOrders(0);
                         fetchOrders(user.isAuth.id, basket.ordersLimit);
                     }}>Показывать больше</Button>
-                    <Button className={'clear-orders'} variant={"secondary"}
+                    <Button className={'clear-orders'} variant={"secondary"} disabled={basket.getOrders.length === 0}
                             onClick={() => setShowAlert(true)}>Очистить историю</Button>
                 </div>
                 <AlertClearHistory showAlert={showAlert} setShowAlert={setShowAlert}

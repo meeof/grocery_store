@@ -18,7 +18,7 @@ import {
 } from "../StyledGlobal";
 import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
-import {authAPI} from "../api";
+import Load from "../components/Load";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -82,105 +82,47 @@ const Styled = styled.div`
   }
 `
 const Profile = observer( () => {
-    console.log('render PROFILE');
-    const {user, basket} = useContext(Context);
     const navigate = useNavigate();
-    const [changeCategories, setChangeCategories] = useState(false);
+    const {user, basket} = useContext(Context);
     const roles = {
         ADMIN : 'Администратор',
         USER : 'Пользователь'
     }
     const [change, setChange] = useState(false);
-
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [image, setImage] = useState(null);
-    const [status, setStatus] = useState('');
-    const [about, setAbout] = useState('');
-
-    const handleModal = (value) => {
-        setChange(value);
-    }
-    const setUserInfo = (userId) => {
-        authAPI('get', '/api/user/info', {userId}).then(data => {
-            user.setUserInfo(data);
-
-            user.userInfo.name && setName(user.userInfo.name);
-            user.userInfo.surname && setSurname(user.userInfo.surname);
-            user.userInfo.status && setStatus(user.userInfo.status);
-            user.userInfo.about && setAbout(user.userInfo.about);
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
-    const handlerChangeUserInfo = (userId) => {
-        const formData = new FormData();
-        userId && formData.append('userId', userId);
-        name && formData.append('name', name);
-        surname && formData.append('surname', surname);
-        status && formData.append('status', status);
-        about && formData.append('about', about);
-        image && formData.append(`${image[0].name}`, image[0]);
-        authAPI('patch', '/api/user/info', formData).then(data => {
-            setUserInfo(userId)
-            setChange(false);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
-    const deleteUserHandler = (userId) => {
-        authAPI('delete', '/api/user', {userId}).then(data => {
-            user.setAuth(false);
-            localStorage.setItem('token', '');
-            navigate('/');
-        }).catch(err => {
-            console.log(err)
-        })
-    }
     useEffect(() => {
-        user.checkAuthUser(()=>{}, navigate);
+        user.checkAuthUser(() => user.fetchUserInfo(), navigate);
     }, [user, navigate]);
-    useEffect(() => {
-        if (user.isAuth) {
-            setUserInfo(user.isAuth.id);
-        }
-    }, [user.isAuth]);// eslint-disable-line
-    function handleExit() {
-        localStorage.setItem('token', '');
-        user.setAuth(false);
-        navigate('/');
-    }
     return (
-        <Styled>
-            <h2>Личный кабинет</h2>
-            <h4>{roles[user.isAuth.role]} {user.isAuth.email}</h4>
-            <div className={'profile-container'}>
-                <div className={'profile-card'}>
-                    <Image src={user.userInfo.img ?
-                        process.env.REACT_APP_API_URL + user.userInfo.img : noImage}
-                           roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <h2>{user.userInfo.name} {user.userInfo.surname}</h2>
-                        <h2>{user.userInfo.phone}</h2>
-                        <h3>{user.userInfo.status}</h3>
-                        <p>{user.userInfo.about}</p>
+        <>
+            {user.isAuth ? <Styled>
+                <h2>Личный кабинет</h2>
+                <h4>{roles[user.isAuth.role]} {user.isAuth.email}</h4>
+                <div className={'profile-container'}>
+                    {user.userInfo ? <div className={'profile-card'}>
+                        <Image src={user.userInfo.img ?
+                            process.env.REACT_APP_API_URL + user.userInfo.img : noImage}
+                               roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
+                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <h2>{user.userInfo.name} {user.userInfo.surname}</h2>
+                            <h2>{user.userInfo.phone}</h2>
+                            <h3>{user.userInfo.status}</h3>
+                            <p>{user.userInfo.about}</p>
+                        </div>
+                        <UpdateButton handleModal={setChange} right={'5px'}/>
+                    </div> : <Load/>}
+                    <div className={'profile-buttons'}>
+                        <AddCategory/>
+                        <AddItem/>
+                        <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                            basket.setOrders(null);
+                            navigate('orders');
+                        }}>Мои заказы</Button>
+                        <Button variant={'secondary'} onClick={() => user.userExit(navigate)}>Выйти</Button>
                     </div>
-                    <UpdateButton handleModal={handleModal} isActive={change} right={'5px'}/>
                 </div>
-                <div className={'profile-buttons'}>
-                    <AddCategory setChangeCategories={setChangeCategories}/>
-                    <AddItem changeCategories={changeCategories} setChangeCategories={setChangeCategories}/>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
-                        basket.setOrders(null);
-                        navigate('orders');
-                    }}>Мои заказы</Button>
-                    <Button variant={'secondary'} onClick={handleExit}>Выйти</Button>
-                </div>
-            </div>
-            <ViewProfile deleteUserHandler={deleteUserHandler} change={change} setChange={setChange} name={name} surname={surname}
-                         status={status} about={about} setName={setName} setSurname={setSurname} setImage={setImage}
-                         setStatus={setStatus} setAbout={setAbout} handlerChangeUserInfo={handlerChangeUserInfo}/>
-        </Styled>
+                {change && <ViewProfile change={change} setChange={setChange}/>}
+            </Styled> : <Load/>}
+        </>
     );
 });
 export default Profile;
