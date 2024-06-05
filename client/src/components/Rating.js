@@ -20,11 +20,11 @@ const Styled = styled.div`
   }
 `
 
-const Rating = ({disabled, big, itemsId}) => {
+const Rating = ({disabled, setShowModalAll, itemsId}) => {
     const {user} = useContext(Context);
     const [rating, setRating] = useState(0);
     useEffect(() => {
-        if (big) {
+        if (setShowModalAll) {
             return
         }
         if (disabled) {
@@ -41,10 +41,15 @@ const Rating = ({disabled, big, itemsId}) => {
                 console.log(err);
             });
         }
-    }, [big, itemsId, user.isAuth.id, disabled]);
+    }, [setShowModalAll, itemsId, user.isAuth.id, disabled]);
     const handleSetRating = (rate) => {
-        authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(data => {
-
+        authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(() => {
+            if (!setShowModalAll) {
+                setRating(rate);
+            }
+            else {
+                setShowModalAll(false);
+            }
         }).catch(err => {
             console.log(err);
         })
@@ -59,7 +64,7 @@ const Rating = ({disabled, big, itemsId}) => {
         }}/>)
     }
     return (
-        <Styled $disabled={disabled} $big={big}>
+        <Styled $disabled={disabled} $big={setShowModalAll}>
             {imgStars}
             {disabled && <span>{rating}</span>}
         </Styled>

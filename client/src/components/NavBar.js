@@ -61,10 +61,10 @@ const Styled = styled.div`
 `
 
 const NavBar = () => {
+    const width = useWindowSize();
     const navigate = useNavigate();
     const {user} = useContext(Context);
     const [radioValue, setRadioValue] = useState('RU');
-    let width = useWindowSize();
     const contacts = <div className={"contacts"}>
         <div className={"me-3"}>Доставка с 8:00 до 23:00</div>
         <div className={"me-3"} role={"button"}>+7(800) 800-80-80</div>

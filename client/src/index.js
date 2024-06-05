@@ -10,6 +10,7 @@ import ItemStore from "./stores/ItemStore";
 import BasketStore from "./stores/basketStore";
 import OverlayStore from "./stores/overlayStore";
 import CategoryStore from "./stores/categoryStore";
+import ReviewStore from "./stores/reviewStore";
 
 export const Context = createContext(null);
 
@@ -21,6 +22,7 @@ root.render(
         basket: new BasketStore(),
         overlay: new OverlayStore(),
         category: new CategoryStore(),
+        review: new ReviewStore(),
     }}>
         <BrowserRouter>
             <App/>

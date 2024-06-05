@@ -33,6 +33,7 @@ const Styled = styled.div`
 `
 
 const CustomPagination = observer(({fetchItems}) => {
+    const width = useWindowSize();
     const paginationLimits = {
         small: 5,
         middle: 7,
@@ -45,7 +46,6 @@ const CustomPagination = observer(({fetchItems}) => {
         setPage(val);
         fetchItems(val, item.limit)
     }
-    const width = useWindowSize();
     let paginationLimit = paginationLimits.large;
     if (width < 576) {
         paginationLimit = paginationLimits.small
@@ -54,11 +54,10 @@ const CustomPagination = observer(({fetchItems}) => {
         paginationLimit = paginationLimits.middle
     }
     const offset = Math.floor( paginationLimit/2);
-    let pages = [];
     let [start, end] = [1, pagesAmount];
     if (pagesAmount > paginationLimit) {
         if (page - offset < 1) {
-           end = page + offset + (offset - page) + 1
+           end = page + offset + (offset - page) + 1;
         }
         else if (page + offset > pagesAmount) {
             start = page - offset - ((page + offset) - pagesAmount)
@@ -68,6 +67,7 @@ const CustomPagination = observer(({fetchItems}) => {
             end = page + offset
         }
     }
+    let pages = [];
     for (let i= start; i<=end; i++) {
         pages.push(<Pagination.Item active={page === i} key={i} onClick={() => {
             clickPage(i);

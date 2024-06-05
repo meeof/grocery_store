@@ -8,3 +8,9 @@ export const routeUnPrefix = (route) => {
 export const getPriceDiscount = (price, discount) => {
     return Math.round(price / 100 * (100 - discount)).toFixed(0)
 }
+export const addImagesToFormData = (formData, images) => {
+    for (const [key, value] of Object.entries(images)) {
+        formData.append(`${key}_${value.name}`, value)
+    }
+    return formData;
+}

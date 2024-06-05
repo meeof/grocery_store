@@ -7,6 +7,7 @@ import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {breakpoints, colors, flexColumn, iconsSize, marginsCenter} from "../../StyledGlobal";
 import {authAPI} from "../../api";
+import {addImagesToFormData} from "../../usefulFunctions";
 
 let Styled = styled.div`
   ${flexColumn};
@@ -48,35 +49,23 @@ let Styled = styled.div`
 
 const AddReview = observer(({userId, itemId}) => {
     const {user} = useContext(Context);
-    let [write, setWrite] = useState(false);
-    let [review, setReview] = useState('');
-    const [images, setImages] = useState([]);
     const width = useWindowSize();
-    function handlerWriteButton() {
-        setWrite(true);
-    }
-
-    function handlerTextArea(e) {
-        setReview(e.target.value);
-    }
+    const [write, setWrite] = useState(false);
+    const [review, setReview] = useState('');
+    const [images, setImages] = useState([]);
 
     function handlerAddReview() {
-        const formData = new FormData();
+        let formData = new FormData();
         formData.append('userId', userId);
         formData.append('itemId', itemId);
         review && formData.append('review', review);
-        for (const [key, value] of Object.entries(images)) {
-            formData.append(`${key}_${value.name}`, value)
-        }
-        authAPI('post', '/api/basket/review', formData).then(data => {
-            setWrite(false);
-            setImages([]);
+        formData = addImagesToFormData(formData, images);
+        authAPI('post', '/api/basket/review', formData).then(() => {
             user.forceUpdate();
         }).catch((err) => {
             console.log(err);
         })
     }
-
     return <Styled>
         {write ? <div className={'review-button-block'}>
                 <Button variant={colors.bootstrapMainVariant} onClick={()=> {
@@ -85,15 +74,13 @@ const AddReview = observer(({userId, itemId}) => {
                 }}>Добавить отзыв</Button>
                 {width < 576 && <CloseButton onClick={() => setWrite(false)}/>}
             </div>
-            : <Button variant={colors.bootstrapMainVariant} onClick={()=> handlerWriteButton()}>Написать отзыв</Button>
+            : <Button variant={colors.bootstrapMainVariant} onClick={()=> setWrite(true)}>Написать отзыв</Button>
         }
-        {
-            write ? <><textarea onFocus={(e) => {e.target.scrollIntoView()}}
-                                autoFocus={true} className="addReviewArea" placeholder={`Напишите отзыв ...`}
-                                value={review} onChange={(e)=> handlerTextArea(e)}></textarea>
-                <AddImagesButton setImages={setImages} count={images?.length} big={width < 576}/>
-                {width >= 576 && <CloseButton onClick={() => setWrite(false)}/>}</> : <></>
-        }
+        {write && <><textarea onFocus={(e) => {e.target.scrollIntoView()}}
+                              autoFocus={true} className="addReviewArea" placeholder={`Напишите отзыв ...`}
+                              value={review} onChange={(e)=> setReview(e.target.value)}></textarea>
+            <AddImagesButton setImages={setImages} count={images?.length} big={width < 576}/>
+            {width >= 576 && <CloseButton onClick={() => setWrite(false)}/>}</>}
     </Styled>
 });
 export default AddReview;

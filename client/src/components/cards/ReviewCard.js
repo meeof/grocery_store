@@ -49,6 +49,7 @@ const Styled = styled.div`
 `
 
 const ReviewCard = ({reviewObj, userId}) => {
+    console.log('CARD');
     const {user} = useContext(Context);
     const [index, setIndex] = useState(0);
     let [review, setReview] = useState(reviewObj.review);

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import * as uf from "../../usefulFunctions";
 import noImage from "../../assets/icon_no_image.svg";
@@ -6,6 +6,8 @@ import {useNavigate} from "react-router-dom";
 import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";
 import {flexColumn, marginSmall} from "../../StyledGlobal";
+import {observer} from "mobx-react-lite";
+import {Context} from "../../index";
 
 const Styled = styled.div`
   height: 10rem;
@@ -39,13 +41,16 @@ const Styled = styled.div`
   }
 `;
 
-const BasketProductCard = ({product, deleteBasketItemHandle}) => {
+const BasketProductCard = observer(({product, deleteBasketItemHandle}) => {
     const [allProductCost, setAllProductCost] = useState(product.cost * product.amount);
+    const {review, item} = useContext(Context);
     const navigate = useNavigate();
     const navigateProductHandle = () => {
         navigate(
             `/catalog/${uf.routePrefix('category', product.categoryId)}/${uf.routePrefix('product', product.itemId)}`
         )
+        item.setOneItem(null);
+        review.setReviews(null);
     }
     return (
         <Styled>
@@ -65,6 +70,6 @@ const BasketProductCard = ({product, deleteBasketItemHandle}) => {
             </div>
         </Styled>
     );
-};
+});
 
 export default BasketProductCard;

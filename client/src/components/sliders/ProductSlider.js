@@ -17,20 +17,18 @@ const Styled = styled.div`
 `
 
 const ProductSlider = ({...props}) => {
-    let width = useWindowSize();
-    let carouselItems = props.images?.map((img, index) => {
-        return <Carousel.Item key={index}>
-            <Image src={process.env.REACT_APP_API_URL + img} style={{width: '100%'}}/>
-        </Carousel.Item>
-    })
+    const width = useWindowSize();
     return (
         <Styled $previews={props.previews}>
             <Carousel activeIndex={props.slideIndex} onSelect={props.handleSlideSelect} interval={null} variant={colors.bootstrapOtherVariant}
                       indicators={width < 992}>
-                {carouselItems}
-                {!props.images?.[0] && <Carousel.Item>
+                {props.images.length === 0 ? <Carousel.Item>
                     <Image src={noImage} style={{width: '100%'}}/>
-                </Carousel.Item>}
+                </Carousel.Item> : props.images?.map((img, index) => {
+                    return <Carousel.Item key={index}>
+                        <Image src={process.env.REACT_APP_API_URL + img} style={{width: '100%'}}/>
+                    </Carousel.Item>
+                })}
             </Carousel>
         </Styled>
     );

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import {Accordion, Button, Modal, OverlayTrigger, Tooltip} from "react-bootstrap";
 import noImage from "../../assets/icon_no_image.svg";
@@ -6,6 +6,9 @@ import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
 import SetProductRatingCard from "./SetProductRatingCard";
 import {breakpoints, colors, flexColumn, marginMedium, marginSmall} from "../../StyledGlobal";
+import * as uf from "../../usefulFunctions";
+import {observer} from "mobx-react-lite";
+import {Context} from "../../index";
 const Styled = styled.div`
   ${flexColumn};
   border-radius: 5px;
@@ -78,7 +81,8 @@ const Styled = styled.div`
   }
 `
 
-const OrderCard = ({order, months}) => {
+const OrderCard = observer(({order, months}) => {
+    const {review, item} = useContext(Context);
     const [showModalAll, setShowModalAll] = useState(false);
     const [showModalOne, setShowModalOne] = useState(false);
     const dataCreate = new Date(order.createdAt);
@@ -94,18 +98,20 @@ const OrderCard = ({order, months}) => {
             {props.name}
         </Tooltip>
     };
-    const images = JSON.parse(order.items).map(item => {
-        return <div className={'img-item'} key={item.itemId}>
+    const images = JSON.parse(order.items).map(itemObj => {
+        return <div className={'img-item'} key={itemObj.itemId}>
             <OverlayTrigger
                 placement="right"
                 delay={{ show: 250, hide: 400 }}
-                overlay={renderTooltip({name:item.name})}
+                overlay={renderTooltip({name:itemObj.name})}
             >
-                <img alt={''} src={item.img ? process.env.REACT_APP_API_URL + item.img : noImage} onClick={() => {
-                    navigate(`/catalog/all/product_${item.itemId}`)
+                <img alt={''} src={itemObj.img ? process.env.REACT_APP_API_URL + itemObj.img : noImage} onClick={() => {
+                    navigate(uf.routePrefix(`/catalog/category_${itemObj.categoryId}/product`, itemObj.itemId));
+                    item.setOneItem(null);
+                    review.setReviews(null);
                 }}/>
             </OverlayTrigger>
-            <div className={'img-item-label'}>{item.cost} ₽ x {item.amount} шт.</div>
+            <div className={'img-item-label'}>{itemObj.cost} ₽ x {itemObj.amount} шт.</div>
         </div>
     });
     return (
@@ -163,7 +169,7 @@ const OrderCard = ({order, months}) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Rating big={true} itemsId={JSON.parse(order.items).map(item => item.itemId)}/>
+                    <Rating setShowModalAll={setShowModalAll} itemsId={JSON.parse(order.items).map(item => item.itemId)}/>
                 </Modal.Body>
             </Modal>
             <Modal
@@ -185,6 +191,6 @@ const OrderCard = ({order, months}) => {
             </Modal>
         </>
     );
-};
+});
 
 export default OrderCard;

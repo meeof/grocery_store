@@ -65,7 +65,7 @@ const StyledImg = styled.img`
 
 const Item = observer (() => {
     const width = useWindowSize();
-    const {item} = useContext(Context);
+    const {item, review} = useContext(Context);
     const id = uf.routeUnPrefix(useParams().productId);
     const [slideIndex, setSlideIndex] = useState(0);
     const handleSlideSelect = (selectedIndex) => {
@@ -75,7 +75,7 @@ const Item = observer (() => {
         API('get','/api/item/one', {id}).then(data => {
             item.setOneItem(data);
         })
-    }, [item, id]);
+    }, [item, id, review]);
     return (
         <>
             {item.oneItem ? <Styled>

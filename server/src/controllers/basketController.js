@@ -28,18 +28,19 @@ const getAllBasketItems = async (basketId) => {
 }
 const getOneItem = async (itemId, amount, basketItemId) => {
     const oneItem = await models.Item.findOne({
-        attributes: ['id', 'name', 'price', 'discount', 'images'],
+        attributes: ['id', 'name', 'price', 'discount', 'images', "categoryId"],
         where: {
             id: itemId,
         }
     });
     return {
         basketItemId: basketItemId,
+        categoryId: oneItem.categoryId,
         itemId: oneItem.dataValues.id,
         amount,
         name: oneItem.dataValues.name,
         cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
-        img: JSON.parse(oneItem.dataValues.images)[0],
+        img: oneItem.dataValues.images ? JSON.parse(oneItem.dataValues.images)[0] : null,
     }
 }
 const wasReviewed = async (userId, itemId) => {
@@ -127,7 +128,7 @@ class BasketController {
                     itemId: item.dataValues.itemId,
                     name: oneItem.dataValues.name,
                     cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
-                    image: JSON.parse(oneItem.dataValues.images)[0],
+                    image: oneItem.dataValues.images ? JSON.parse(oneItem.dataValues.images)[0] : null,
                     categoryId: oneItem.dataValues.categoryId,
                     userId: req.query.userId,
                 }

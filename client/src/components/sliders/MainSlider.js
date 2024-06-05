@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Carousel, Image} from "react-bootstrap";
-/*import slideLow from "../images/slider_low.webp";*/
 import slideHigh from "../../images/slider_high.jpg";
 import styled from "styled-components";
 import {breakpoints} from "../../StyledGlobal";

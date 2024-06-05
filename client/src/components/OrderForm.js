@@ -52,6 +52,7 @@ const StyledForm = styled.form`
     .link-map {
       color: ${colors.main};
       text-decoration: underline;
+      position: ${(props) => props.$LinkMapActive ? 'relative' : 'static'}
     }
   }
   textarea {
@@ -74,16 +75,18 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     const [orderAddress, setOrderAddress] = useState('');
     const [subscription, setSubscription] = useState(false);
     const [autoContact, setAutoContact] = useState(false);
-    /*useEffect(() => {
-        authorization().then(data => {
-            user.setAuth(data);
-        }).catch(() => {
-            user.setAuth(false);
-        })
-    }, [navigate, user]);*/
     const handlerOrder = (e) => {
         e.preventDefault();
         const formData = new FormData();
+        const postOrder = (path, then) => {
+            authAPI('post', path, formData).then(data => {
+                if (data === 'success') {
+                    then();
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
         formData.append('name', name);
         formData.append('surname', surname);
         formData.append('phone', phone);
@@ -94,27 +97,16 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
         formData.append('sms', subscription);
         formData.append('userId', user.isAuth.id);
         if (field === 'page') {
-            authAPI('post', '/api/basket/formBasketOrder', formData).then(data => {
-                if (data === 'success') {
-                    setShowAlert(true);
-                }
-            }).catch(err => {
-                console.log(err);
-            })
+            postOrder('/api/basket/formBasketOrder', () => setShowAlert(true));
         }
         else if (field === 'modal') {
             formData.append('itemId', itemId);
-            authAPI('post', '/api/basket/formFastOrder', formData).then(data => {
-                if (data === 'success') {
-                    setShowModal(false);
-                    setShowAlert(true);
-                    user.forceUpdate();
-                }
-            }).catch(err => {
-                console.log(err);
-            })
+            postOrder('/api/basket/formFastOrder', () => {
+                setShowModal(false);
+                setShowAlert(true);
+                user.forceUpdate();
+            });
         }
-
     };
     const autoContactHandler = () => {
         if (autoContact) {
@@ -136,10 +128,10 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     }
     return (
         <>
-            <StyledForm onSubmit={(e) => handlerOrder(e)}>
+            <StyledForm $LinkMapActive={deliveryValue === 'point'} onSubmit={(e) => handlerOrder(e)}>
                 <b>Контактные данные</b>
                 <Form.Group className="mb-3 check-block" controlId="formOrderAutoContact">
-                    <Form.Check value={autoContact} onChange={autoContactHandler}/>
+                    <Form.Check checked={autoContact} onChange={autoContactHandler}/>
                     <Form.Label className="check-label"></Form.Label>
                     <div>
                         <div className={'other-labels'}>Как в профиле</div>
@@ -214,7 +206,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                               onChange={(e) => setOrderComment(e.target.value)}></textarea>
                 </Form.Group>
                 <Form.Group className="mb-3 check-block" controlId="formOrderSubscription">
-                    <Form.Check value={subscription} onChange={() => setSubscription(!subscription)}/>
+                    <Form.Check checked={subscription} onChange={() => setSubscription(!subscription)}/>
                     <Form.Label className="check-label"></Form.Label>
                     <div>
                         <div className={'other-labels'}>Подписаться на SMS рассылку</div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from "styled-components";
 import {Card} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
@@ -8,6 +8,8 @@ import noImage from '../../assets/icon_no_image.svg';
 import DelButton from "../buttons/DelButton";
 import UpdateItem from "../modals/UpdateItem";
 import {breakpoints, colors, itemCategoryCard} from "../../StyledGlobal";
+import {observer} from "mobx-react-lite";
+import {Context} from "../../index";
 const Styled = styled.div`
   ${itemCategoryCard};
   .body-block {
@@ -40,11 +42,16 @@ const Styled = styled.div`
   }
 `
 
-const ItemCard = ({...props}) => {
+const ItemCard = observer(({...props}) => {
+    const {review, item} = useContext(Context);
     const navigate = useNavigate();
     return (
         <Styled $disc={props.product.discount}>
-            <Card onClick={() => navigate(uf.routePrefix('product', props.product.id))}>
+            <Card onClick={() => {
+                navigate(uf.routePrefix('product', props.product.id));
+                review.setReviews(null);
+                item.setOneItem(null);
+            }}>
                 <Card.Img variant="top" src={props.product.images?.[0] ?
                     process.env.REACT_APP_API_URL + props.product.images?.[0] : noImage} />
                 <Card.Body>
@@ -63,6 +70,6 @@ const ItemCard = ({...props}) => {
             </Card>
         </Styled>
     );
-};
+});
 
 export default ItemCard;

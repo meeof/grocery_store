@@ -2,7 +2,6 @@ import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
-import {authorization} from "../api";
 import styled from "styled-components";
 import BasketProductCard from "../components/cards/BasketProductCard";
 import {Form} from "react-bootstrap";
@@ -75,18 +74,7 @@ const Basket = observer(() => {
     }
     useEffect(() => {
         if (!basket.getBasket) {
-            if (!user.isAuth) {
-                authorization().then(data => {
-                    user.setAuth(data);
-                    basket.fetchBasket(user.isAuth.id);
-                }).catch(() => {
-                    user.setAuth(false);
-                    navigate(`/profile/login`);
-                })
-            }
-            else {
-                basket.fetchBasket(user.isAuth.id)
-            }
+            user.checkAuthUser(() => basket.fetchBasket(user.isAuth.id), navigate)
         }
     }, [navigate, basket, user]);
     return (

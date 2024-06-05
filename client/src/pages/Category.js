@@ -65,7 +65,7 @@ const Category = observer( () => {
                                              product={product} fetchItems={fetchItems}/>
                         }) : 'Ничего нет'}
                 </div> : <Load/>}
-            <CustomPagination fetchItems={fetchItems}/>
+            {item.count > item.limit && <CustomPagination fetchItems={fetchItems}/>}
         </Styled>
     );
 });

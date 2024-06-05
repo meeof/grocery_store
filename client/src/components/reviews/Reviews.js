@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import styled from "styled-components";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
@@ -6,6 +6,7 @@ import AddReview from "./AddReview";
 import ReviewCard from "../cards/ReviewCard";
 import {marginMedium, marginsPage} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
+import Load from "../Load";
 const Styled = styled.div`
   ${marginsPage};
   margin-bottom: ${marginMedium};
@@ -15,44 +16,40 @@ const Styled = styled.div`
 `
 
 const Reviews = observer(({itemId}) => {
-    const {user} = useContext(Context);
-    const [wasBought, setWasBought] = useState(false);
-    const [wasReviewed, setWasReviewed] = useState(false);
-    const [reviews, setReviews] = useState([]);
+    const {user, review} = useContext(Context);
     useEffect(() => {
+        console.log('render reviews');
         user.checkAuthUser(() => {
             authAPI('get', '/api/basket/bought', {userId: user.isAuth.id, itemId}).then(data => {
-                setWasBought(data);
+                review.setBought(data);
             }).catch(err => {
                 console.log(err);
-            });
-            authAPI('get', '/api/basket/reviewed', {userId: user.isAuth.id, itemId}).then(data => {
-                setWasReviewed(data);
-            }).catch(err => {
-                console.log(err);
+            }).finally(() => {
+                authAPI('get', '/api/basket/reviewed', {userId: user.isAuth.id, itemId}).then(data => {
+                    review.setReviewed(data);
+                }).catch(err => {
+                    console.log(err);
+                }).finally(() => {
+                    API('get', '/api/basket/reviews', {itemId}).then(data => {
+                        review.setReviews(data);
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                })
             })
         })
-    }, [user, itemId, wasBought, user.rerender]);
-    useEffect(() => {
-        if (itemId) {
-            API('get', '/api/basket/reviews', {itemId}).then(data => {
-                setReviews(data)
-            }).catch((err) => {
-                console.log(err);
-            })
-        }
-    }, [itemId, user.rerender]);
-    const reviewsElements = reviews.map(obj => {
-        return <ReviewCard key={obj.id} reviewObj={obj} userId={user.isAuth.id}/>
-    })
+    }, [review, user, user.rerender, itemId]);
     return (
         <Styled>
-            {reviewsElements.length > 0 ?
-                reviewsElements : <>
+            {review.reviews ? <>{review.reviews.length > 0 ?
+                review.reviews.map(obj => {
+                    return <ReviewCard key={obj.id} reviewObj={obj} userId={user.isAuth.id}/>
+                }) : <>
                     <h2>Отзывы</h2>
                     <div>Отзывов еще никто не оставлял</div>
                 </>}
-            {(wasBought && !wasReviewed) && <AddReview userId={user.isAuth.id} itemId={itemId}/>}
+            </> : <Load/>}
+            {(review.bought && !review.reviewed) && <AddReview userId={user.isAuth.id} itemId={itemId}/>}
         </Styled>
     );
 });
