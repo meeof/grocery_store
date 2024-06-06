@@ -4,11 +4,11 @@ import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import noImage from '../../assets/icon_no_image.svg';
 import DelButton from "../buttons/DelButton";
-import UpdateCategory from "../modals/UpdateCategory";
 import * as uf from "../../usefulFunctions";
 import {breakpoints, itemCategoryCard} from "../../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
+import CategoryAddUpdate from "../modals/CategoryAddUpdate";
 
 const Styled = styled.div`
   ${itemCategoryCard};
@@ -33,7 +33,7 @@ const CategoryCard = observer(({...props}) => {
                     <Card.Title>{props.name}</Card.Title>
                 </Card.Body>
                 {props.isAuth && <DelButton delFun={props.delCategory} id={props.id} name={props.name}/>}
-                {props.isAuth && <UpdateCategory id={props.id} name={props.name}/>}
+                {props.isAuth && <CategoryAddUpdate id={props.id} name={props.name}/>}
             </Card>
         </Styled>
     );

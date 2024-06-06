@@ -4,7 +4,6 @@ import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {Button, Image} from "react-bootstrap";
 import styled from "styled-components";
-import AddCategory from "../components/modals/AddCategory";
 import AddItem from "../components/modals/AddItem";
 import ViewProfile from "../components/modals/ViewProfile";
 import {
@@ -19,6 +18,7 @@ import {
 import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
 import Load from "../components/Load";
+import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -111,7 +111,7 @@ const Profile = observer( () => {
                         <UpdateButton handleModal={setChange} right={'5px'}/>
                     </div> : <Load/>}
                     <div className={'profile-buttons'}>
-                        <AddCategory/>
+                        <CategoryAddUpdate/>
                         <AddItem/>
                         <Button variant={colors.bootstrapMainVariant} onClick={() => {
                             basket.setOrders(null);

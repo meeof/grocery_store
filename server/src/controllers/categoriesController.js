@@ -72,7 +72,7 @@ class CategoriesController {
                             },
                         }
                         );
-                    res.json('success');
+                    res.json(categoryName);
                 }
             }
         } catch (error) {
