@@ -26,6 +26,7 @@ const CategoryCard = observer(({...props}) => {
         <Styled>
             <Card onClick={() => {
                 item.setItems(null);
+                item.setPage(1);
                 navigate(uf.routePrefix('category', props.id))
             }}>
                 <Card.Img variant="top" src={props.img ? process.env.REACT_APP_API_URL + props.img : noImage} />

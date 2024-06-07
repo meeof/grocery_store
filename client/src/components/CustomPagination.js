@@ -32,7 +32,7 @@ const Styled = styled.div`
   }
 `
 
-const CustomPagination = observer(({fetchItems}) => {
+const CustomPagination = observer(() => {
     const width = useWindowSize();
     const paginationLimits = {
         small: 5,
@@ -40,11 +40,10 @@ const CustomPagination = observer(({fetchItems}) => {
         large: 9
     }
     const {item} = useContext(Context);
-    const [page, setPage] = useState(1);
     const [pagesAmount, setPagesAmount] = useState(1);
     const clickPage = (val) => {
-        setPage(val);
-        fetchItems(val, item.limit)
+        item.setPage(val);
+        item.fetchItems(val);
     }
     let paginationLimit = paginationLimits.large;
     if (width < 576) {
@@ -56,20 +55,20 @@ const CustomPagination = observer(({fetchItems}) => {
     const offset = Math.floor( paginationLimit/2);
     let [start, end] = [1, pagesAmount];
     if (pagesAmount > paginationLimit) {
-        if (page - offset < 1) {
-           end = page + offset + (offset - page) + 1;
+        if (item.page - offset < 1) {
+           end = item.page + offset + (offset - item.page) + 1;
         }
-        else if (page + offset > pagesAmount) {
-            start = page - offset - ((page + offset) - pagesAmount)
+        else if (item.page + offset > pagesAmount) {
+            start = item.page - offset - ((item.page + offset) - pagesAmount)
         }
         else {
-            start = page - offset;
-            end = page + offset
+            start = item.page - offset;
+            end = item.page + offset
         }
     }
     let pages = [];
     for (let i= start; i<=end; i++) {
-        pages.push(<Pagination.Item active={page === i} key={i} onClick={() => {
+        pages.push(<Pagination.Item active={item.page === i} key={i} onClick={() => {
             clickPage(i);
         }}>{i}</Pagination.Item>)
     }
@@ -78,18 +77,18 @@ const CustomPagination = observer(({fetchItems}) => {
     }, [item.count, item.limit]);
     return (<>
             {pagesAmount > 1 ? <Styled>
-                {page === 1 && <div className={'show-more'}>
+                {item.page === 1 && <div className={'show-more'}>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
-                        fetchItems(1, item.limit * 2);
                         item.setLimit(item.limit * 2);
+                        item.fetchItems();
                     }}>Показывать больше</Button>
                 </div>}
                 <Pagination size={paginationLimit === paginationLimits.small ? 'sm' : ''}>
-                    <Pagination.First onClick={() => clickPage(1)} disabled={page === 1}/>
-                    <Pagination.Prev disabled={page === 1} onClick={() => clickPage(page - 1)}/>
+                    <Pagination.First onClick={() => clickPage(1)} disabled={item.page === 1}/>
+                    <Pagination.Prev disabled={item.page === 1} onClick={() => clickPage(item.page - 1)}/>
                     {pages}
-                    <Pagination.Next disabled={page === pagesAmount} onClick={() => clickPage(page + 1)}/>
-                    <Pagination.Last onClick={() => clickPage(pagesAmount)} disabled={page === pagesAmount}/>
+                    <Pagination.Next disabled={item.page === pagesAmount} onClick={() => clickPage(item.page + 1)}/>
+                    <Pagination.Last onClick={() => clickPage(pagesAmount)} disabled={item.page === pagesAmount}/>
                 </Pagination>
             </Styled> : <></>}
     </>

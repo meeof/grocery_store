@@ -1,4 +1,6 @@
 import {makeAutoObservable} from "mobx";
+import * as uf from "../usefulFunctions";
+import {API} from "../api";
 
 class ItemStore {
     constructor() {
@@ -8,7 +10,21 @@ class ItemStore {
         this._limit = 6;
         this._itemInfo = [];
         this._find = '';
+        this._categoryId = 'all';
+        this._page = 1;
         makeAutoObservable(this)
+    }
+    setPage(val) {
+        this._page = val;
+    }
+    get page () {
+        return this._page;
+    }
+    setCategoryId (val) {
+        this._categoryId = val;
+    }
+    get categoryId () {
+        return this._categoryId;
     }
     setFind(data) {
         this._find = data
@@ -39,6 +55,18 @@ class ItemStore {
     }
     get oneItem() {
         return this._showItem;
+    }
+    fetchItems (page) {
+        const params = {limit: this.limit, page: page || 1, find: this.find};
+        if (this._categoryId !== 'all') {
+            params.categoryId = uf.routeUnPrefix(this._categoryId);
+        }
+        API('get', '/api/item', params).then(data => {
+            if (this._items !== data.rows) {
+                this.setItems(data.rows);
+                this.setCount(data.count);
+            }
+        });
     }
 }
 export default ItemStore;

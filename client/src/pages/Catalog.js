@@ -41,6 +41,7 @@ const Catalog = observer( () => {
     };
     const handlerShowAll = () => {
         item.setItems(null);
+        item.setPage(1);
         item.setFind('');
         navigate(`all`);
     }

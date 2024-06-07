@@ -6,10 +6,10 @@ import * as uf from '../../usefulFunctions';
 import ButtonBuy from "../buttons/ButtonBuy";
 import noImage from '../../assets/icon_no_image.svg';
 import DelButton from "../buttons/DelButton";
-import UpdateItem from "../modals/UpdateItem";
 import {breakpoints, colors, itemCategoryCard} from "../../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
+import ItemAddUpdate from "../modals/ItemAddUpdate";
 const Styled = styled.div`
   ${itemCategoryCard};
   .body-block {
@@ -66,7 +66,7 @@ const ItemCard = observer(({...props}) => {
                 <ButtonBuy productId={props.product.id}/>
                 {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
                 {props.isAuth && <DelButton delFun={props.delItem} id={props.product.id} name={props.product.name}/>}
-                {props.isAuth && <UpdateItem product={props.product} fetchItems={props.fetchItems}/>}
+                {props.isAuth && <ItemAddUpdate product={props.product}/>}
             </Card>
         </Styled>
     );

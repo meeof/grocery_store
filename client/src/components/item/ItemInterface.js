@@ -11,10 +11,10 @@ import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
 import DelButton from "../buttons/DelButton";
-import UpdateItem from "../modals/UpdateItem";
 import OneClickBuy from "../buttons/OneClickBuy";
 import {breakpoints, colors, flexColumn, freeButtonWidth, marginMedium, marginSmall} from "../../StyledGlobal";
 import {authAPI} from "../../api";
+import ItemAddUpdate from "../modals/ItemAddUpdate";
 
 const Styled = styled.div`
   .delivery {
@@ -127,7 +127,7 @@ const ItemInterface = observer(({product}) => {
             <div className={'item-head'}>
                 <h1>
                     {product.name}
-                    {user.isAuth && <UpdateItem right={'64px'} product={product} page={true}/>}
+                    {user.isAuth && <ItemAddUpdate right={'64px'} product={product} fullForm={true}/>}
                     {user.isAuth && <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>}
                 </h1>
                 <div className={'rating-comparison'}>

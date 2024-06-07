@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {useParams} from "react-router-dom";
 import ItemCard from "../components/cards/ItemCard";
@@ -6,7 +6,7 @@ import * as uf from "../usefulFunctions";
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
 import CustomPagination from "../components/CustomPagination";
-import {API, authAPI, authorization} from "../api";
+import {authAPI, authorization} from "../api";
 import {customGrid, flexColumn, marginsPage} from "../StyledGlobal";
 import Load from "../components/Load";
 
@@ -20,22 +20,10 @@ const Styled = styled.div`
 
 const Category = observer( () => {
     const {item, user} = useContext(Context);
-    let {categoryId} = useParams();
-    const fetchItems = useCallback( (page, limit) => {
-        const params = {limit, page, find: item.find}
-        if (categoryId !== 'all') {
-            params.categoryId = uf.routeUnPrefix(categoryId);
-        }
-        API('get', '/api/item', params).then(data => {
-            if (item.items !== data.rows) {
-                item.setItems(data.rows);
-                item.setCount(data.count);
-            }
-        });
-    }, [categoryId, item])
+    const {categoryId} = useParams();
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then(() => {
-            fetchItems(1, item.limit);
+            item.fetchItems();
         }).catch(err => {
             console.log(err.response.data);
         })
@@ -47,13 +35,15 @@ const Category = observer( () => {
             }).catch(() => {
                 user.setAuth(false);
             }).finally(() => {
-                fetchItems(1, item.limit);
+                item.setCategoryId(categoryId)
+                item.fetchItems();
             })
         }
         else {
-            fetchItems(1, item.limit);
+            item.setCategoryId(categoryId)
+            item.fetchItems();
         }
-    }, [item, fetchItems, user, user.rerender]);
+    }, [item, user, user.rerender, categoryId]);
     return (
         <Styled>
             {item.items ?
@@ -62,10 +52,10 @@ const Category = observer( () => {
                         item.items.map(product => {
                             return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delItem}
                                              isAuth={user.isAuth}
-                                             product={product} fetchItems={fetchItems}/>
+                                             product={product}/>
                         }) : 'Ничего нет'}
                 </div> : <Load/>}
-            {item.count > item.limit && <CustomPagination fetchItems={fetchItems}/>}
+            {item.count > item.limit && <CustomPagination/>}
         </Styled>
     );
 });
