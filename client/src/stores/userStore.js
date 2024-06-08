@@ -5,14 +5,7 @@ class UserStore {
     constructor() {
         this._isAuth = null;
         this._userInfo = null;
-        this._rerender = null;
         makeAutoObservable(this)
-    }
-    get rerender () {
-        return this._rerender;
-    }
-    forceUpdate () {
-        this._rerender = (!this._rerender)
     }
     setAuth(data) {
         this._isAuth = data;
@@ -28,24 +21,24 @@ class UserStore {
     }
     fetchUserInfo() {
         authAPI('get', '/api/user/info', {userId : this.isAuth.id}).then(data => {
-            this.setUserInfo(data);
+            this._userInfo = data;
         }).catch((err) => {
             console.log(err)
         })
     }
     userExit(navigate) {
         localStorage.setItem('token', '');
-        this.setUserInfo(false);
-        this.setAuth(false);
+        this._userInfo = false;
+        this._isAuth = false;
         navigate('/');
     }
     checkAuthUser(callback, navigate) {
-        if (!this.isAuth) {
+        if (!this._isAuth) {
             authorization().then(data => {
-                this.setAuth(data);
+                this._isAuth = data;
                 callback && callback();
             }).catch(() => {
-                this.setAuth(false);
+                this._isAuth = false;
                 navigate && navigate('/profile/login');
             })
         }

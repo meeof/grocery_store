@@ -15,11 +15,14 @@ class OverlayStore {
     get color() {
         return this._color;
     }
-    setColor(value) {
-        this._color = value;
+    setColor(val) {
+        this._color = val;
     }
     get show() {
         return this._show;
+    }
+    setShow(val) {
+        this._show = val;
     }
     get target() {
         return this._target;
@@ -38,9 +41,6 @@ class OverlayStore {
         setTimeout(() => {
             this._show = false
         }, 2000);
-    }
-    setShow(val) {
-        this._show = val;
     }
 }
 export default OverlayStore;

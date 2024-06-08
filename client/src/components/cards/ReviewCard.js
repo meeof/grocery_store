@@ -49,7 +49,7 @@ const Styled = styled.div`
 `
 
 const ReviewCard = ({reviewObj, myReview}) => {
-    const {user} = useContext(Context);
+    const {render} = useContext(Context);
     const [review, setReview] = useState(reviewObj.review);
     const [redactImages, setRedactImages] = useState([]);
     const [showRedact, setShowRedact] = useState(false);
@@ -85,7 +85,7 @@ const ReviewCard = ({reviewObj, myReview}) => {
     }
     const handlerDeleteReview = (id) => {
         authAPI( 'delete', '/api/basket/review', {id}).then(data => {
-            user.forceUpdate();
+            render.forceUpdate();
         }).catch((err) => {
             console.log(err);
         })
@@ -103,7 +103,7 @@ const ReviewCard = ({reviewObj, myReview}) => {
             formData.append(`${key}_${value.name}`, value)
         }
         authAPI('patch', '/api/basket/review', formData).then(data => {
-            user.forceUpdate();
+            render.forceUpdate();
             setRedactImages([]);
             setShowRedact(false);
         }).catch((err) => {

@@ -35,35 +35,35 @@ class ItemStore {
     setItems(data) {
         this._items = data;
     }
-    setOneItem(data) {
-        this._showItem = data
-    }
-    setLimit(value) {
-        this._limit = value;
-    }
-    setCount(value) {
-        this._count = value;
-    }
-    get limit() {
-        return this._limit;
-    }
-    get count() {
-        return this._count;
-    }
     get items() {
         return this._items;
+    }
+    setOneItem(data) {
+        this._showItem = data
     }
     get oneItem() {
         return this._showItem;
     }
+    setLimit(value) {
+        this._limit = value;
+    }
+    get limit() {
+        return this._limit;
+    }
+    setCount(value) {
+        this._count = value;
+    }
+    get count() {
+        return this._count;
+    }
     fetchItems (page) {
-        const params = {limit: this.limit, page: page || 1, find: this.find};
+        const params = {limit: this._limit, page: page || 1, find: this._find};
         if (this._categoryId !== 'all') {
             params.categoryId = uf.routeUnPrefix(this._categoryId);
         }
         API('get', '/api/item', params).then(data => {
-            this.setItems(data.rows);
-            this.setCount(data.count);
+            this._items = data.rows;
+            this._count = data.count;
         });
     }
 }

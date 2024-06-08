@@ -65,7 +65,7 @@ const StyledForm = styled.form`
 
 const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     const navigate = useNavigate();
-    const {user} = useContext(Context);
+    const {user, render} = useContext(Context);
     const [deliveryValue, setDeliveryValue] = useState('pickup');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -104,7 +104,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
             postOrder('/api/basket/formFastOrder', () => {
                 setShowModal(false);
                 setShowAlert(true);
-                user.forceUpdate();
+                render.forceUpdate();
             });
         }
     };

@@ -41,17 +41,17 @@ class BasketStore {
         return this._count;
     }
     countSumCost() {
-        if (this.getBasket) {
-            this.setAllCost(this.getBasket.reduce(
+        if (this._basket) {
+            this._allCost = (this._basket.reduce(
                 (accumulator, product) => accumulator + product.cost * product.amount,
                 0,
             ))
         }
-        else this.setAllCost(0);
+        else this._allCost = 0;
     }
     fetchBasket(userId) {
         authAPI('get', '/api/basket', {userId}).then(data => {
-            this.setBasket(data);
+            this._basket = data;
             this.countSumCost();
         }).catch(err => {
             console.log(err);

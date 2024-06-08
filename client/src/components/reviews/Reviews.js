@@ -16,7 +16,7 @@ const Styled = styled.div`
 `
 
 const Reviews = observer(({itemId}) => {
-    const {user, review} = useContext(Context);
+    const {user, review, render} = useContext(Context);
     useEffect(() => {
         user.checkAuthUser(() => {
             authAPI('get', '/api/basket/bought', {userId: user.isAuth.id, itemId}).then(data => {
@@ -37,7 +37,7 @@ const Reviews = observer(({itemId}) => {
                 })
             })
         })
-    }, [review, user, user.rerender, itemId]);
+    }, [review, user, render.rerender, itemId]);
     return (
         <Styled>
             {review.reviews ? <>{review.reviews.length > 0 ?

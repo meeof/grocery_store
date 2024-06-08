@@ -97,7 +97,7 @@ const Styled = styled.div`
 `
 
 const CommonBar = observer (() => {
-    const {item, user} = useContext(Context);
+    const {item, user, render} = useContext(Context);
     const location = useLocation();
     let width = useWindowSize();
     const navigate = useNavigate();
@@ -109,7 +109,7 @@ const CommonBar = observer (() => {
     </Link>
     const handlerFind = () => {
         if (location.pathname === '/catalog/all') {
-            user.forceUpdate();
+            render.forceUpdate();
         }
         else {
             navigate('/catalog/all');

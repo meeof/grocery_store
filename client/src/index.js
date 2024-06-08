@@ -4,13 +4,13 @@ import App from './App';
 import {BrowserRouter} from "react-router-dom";
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './style.css';
 import UserStore from "./stores/userStore";
 import ItemStore from "./stores/ItemStore";
 import BasketStore from "./stores/basketStore";
 import OverlayStore from "./stores/overlayStore";
 import CategoryStore from "./stores/categoryStore";
 import ReviewStore from "./stores/reviewStore";
+import RerenderStore from "./stores/rerenderStore";
 
 export const Context = createContext(null);
 
@@ -23,6 +23,7 @@ root.render(
         overlay: new OverlayStore(),
         category: new CategoryStore(),
         review: new ReviewStore(),
+        render: new RerenderStore(),
     }}>
         <BrowserRouter>
             <App/>

@@ -19,7 +19,7 @@ const Styled = styled.div`
 `
 
 const Category = observer( () => {
-    const {item, user} = useContext(Context);
+    const {item, user, render} = useContext(Context);
     const {categoryId} = useParams();
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then(() => {
@@ -43,7 +43,7 @@ const Category = observer( () => {
             item.setCategoryId(categoryId)
             item.fetchItems();
         }
-    }, [item, user, user.rerender, categoryId]);
+    }, [item, user, render.rerender, categoryId]);
     return (
         <Styled>
             {item.items ?

@@ -48,7 +48,7 @@ let Styled = styled.div`
 `;
 
 const AddReview = observer(({userId, itemId}) => {
-    const {user} = useContext(Context);
+    const {render} = useContext(Context);
     const width = useWindowSize();
     const [write, setWrite] = useState(false);
     const [review, setReview] = useState('');
@@ -61,7 +61,7 @@ const AddReview = observer(({userId, itemId}) => {
         review && formData.append('review', review);
         formData = addImagesToFormData(formData, images);
         authAPI('post', '/api/basket/review', formData).then(() => {
-            user.forceUpdate();
+            render.forceUpdate();
         }).catch((err) => {
             console.log(err);
         })
