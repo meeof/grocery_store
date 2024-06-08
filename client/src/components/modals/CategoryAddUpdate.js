@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import UpdateButton from "../buttons/UpdateButton";
 import {Button, Form, Modal} from "react-bootstrap";
-import {colors, freeButtonWidth} from "../../StyledGlobal";
+import {breakpoints, colors, freeButtonWidth} from "../../StyledGlobal";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -56,7 +56,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
                     setShowModal(true);
                     overlay.setTarget(e.target);
                     overlay.setShow(false);
-            }} style={width > 576 ? {width: freeButtonWidth} : {width: '100%'}}>
+            }} style={width >= breakpoints.rawFromSmall ? {width: freeButtonWidth} : {width: '100%'}}>
                 Добавить категорию
             </Button>}
             <Modal
@@ -92,8 +92,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
                     }}>{id ? 'Изменить' : 'Добавить'}</Button>
                 </Modal.Footer>
             </Modal>
-            <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target}
-                           placement={width > 576 ? "right" : "bottom-start"} message={overlay.message}/>
+            <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target} message={overlay.message}/>
         </div>
     );
 });

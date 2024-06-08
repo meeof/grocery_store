@@ -13,7 +13,7 @@ const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
   left: ${props => (props.$fixed && '8px')};
-  width: ${props => (props.$fixed ? props.$width - ((props.$scroll > 0 ? props.$scroll : 0) + 16) + 'px' : '100%')};
+  width: ${props => (props.$fixed ? props.$width - 16 - (props.$scroll > 0 ? props.$scroll : 0) + 'px' : '100%')};
   z-index: 99;
   button {
     width: 100%;
@@ -56,35 +56,36 @@ const Styled = styled.div`
     }
   }
 `
-const ButtonBuy = observer( ({productId, cost, place, fixed,
+const ButtonBuy = observer( ({itemId, cost, place, fixed,
                                  allProductCost, setAllProductCost}) => {
     const navigate = useNavigate();
+    const width = useWindowSize();
+    const scrollBar = useGetScrollBar();
     const [productAmount, setProductAmount] = useState(0);
     const {user, basket} = useContext(Context);
-    let width = useWindowSize();
-    let scrollBar = useGetScrollBar();
     const outherCostsHandler = (cost, operator) => {
         basket.setAllCost(basket.allCost + (operator * cost))
         if (allProductCost && setAllProductCost) {
             setAllProductCost(allProductCost + (operator * cost));
         }
     }
-    function handleBuy(userId, itemId, amount) {
-        authAPI( 'post', '/api/basket', {userId, itemId, amount}).catch(err => {
+    function handleBuy(amount) {
+        authAPI( 'post', '/api/basket', {userId: user.isAuth?.id, itemId, amount}).catch(err => {
             console.log(err);
         })
     }
     useEffect(() => {
-        authAPI('get', '/api/basket/one', {userId: user.isAuth.id, itemId: productId}).then(data => {
+        authAPI('get', '/api/basket/one', {userId: user.isAuth?.id, itemId}).then(data => {
             if (data) {
                 setProductAmount(data);
             }
         }).catch(err => {
             console.log(err);
         })
-    }, [productId, user.isAuth.id]);
+    }, [itemId, user.isAuth?.id]);
     return (
-        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={place === 'basket'} onClick={e => e.stopPropagation()}>
+        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={place === 'basket'}
+                onClick={e => e.stopPropagation()}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
@@ -96,15 +97,14 @@ const ButtonBuy = observer( ({productId, cost, place, fixed,
                         }
                         outherCostsHandler(cost, -1);
                         setProductAmount(productAmount - 1);
-                        handleBuy(user.isAuth.id, productId, productAmount - 1);
+                        handleBuy(productAmount - 1);
                     }}><b>-</b></Button>
                     <Button variant={colors.bootstrapMainVariant} className={'to-basket'}
                             onClick={() => navigate('/basket')}>
-                        {basket ? <b>{productAmount}</b> : <>
+                        {place === 'basket' ? <b>{productAmount}</b> : <>
                             <p>В корзине <b>{productAmount}</b></p>
                             <p>Перейти</p>
                         </>}
-
                     </Button>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
                         if (place !== 'basket') {
@@ -112,13 +112,13 @@ const ButtonBuy = observer( ({productId, cost, place, fixed,
                         }
                         setProductAmount(productAmount + 1);
                         outherCostsHandler(cost, 1);
-                        handleBuy(user.isAuth.id, productId, productAmount + 1);
+                        handleBuy(productAmount + 1);
                     }}><b>+</b></Button>
                 </div> :
                 <Button variant={colors.bootstrapMainVariant} onClick={() => {
                     if (user.isAuth) {
                         setProductAmount(1);
-                        handleBuy(user.isAuth.id, productId, 1);
+                        handleBuy(1);
                         if (place !== 'basket') {
                             basket.setBasket(null);
                         }

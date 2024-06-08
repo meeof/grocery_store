@@ -63,7 +63,7 @@ const ItemCard = observer(({...props}) => {
                         </Card.Title>
                     </div>
                 </Card.Body>
-                <ButtonBuy productId={props.product.id}/>
+                <ButtonBuy itemId={props.product.id}/>
                 {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
                 {props.isAuth && <DelButton delFun={props.delItem} id={props.product.id} name={props.product.name}/>}
                 {props.isAuth && <ItemAddUpdate product={props.product}/>}

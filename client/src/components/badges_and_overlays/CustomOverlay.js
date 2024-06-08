@@ -1,7 +1,11 @@
 import React from 'react';
 import {Overlay} from "react-bootstrap";
+import useWindowSize from "../../hooks/useWindowSize";
+import {breakpoints} from "../../StyledGlobal";
 
-const CustomOverlay = ({show, color, message, target, placement}) => {
+const CustomOverlay = ({show, color, message, target}) => {
+    const width = useWindowSize();
+    const placement = (width >= breakpoints.rawFromLarge ? "right" : "top-start")
     return (
         <Overlay target={target} show={show} placement={placement}>
             {({

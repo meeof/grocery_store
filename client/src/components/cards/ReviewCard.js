@@ -48,30 +48,18 @@ const Styled = styled.div`
   }
 `
 
-const ReviewCard = ({reviewObj, userId}) => {
-    console.log('CARD');
+const ReviewCard = ({reviewObj, myReview}) => {
     const {user} = useContext(Context);
-    const [index, setIndex] = useState(0);
-    let [review, setReview] = useState(reviewObj.review);
+    const [review, setReview] = useState(reviewObj.review);
     const [redactImages, setRedactImages] = useState([]);
-    let myReview = false;
-    if (userId === reviewObj.userId) {
-        myReview = true;
-    }
-    const handleSelect = (selectedIndex) => {
-        setIndex(selectedIndex);
-    };
-    const [showModal, setShowModal] = useState(false);
-    const handleModal = (value) => {
-        setShowModal(value);
-    }
-    function handlerTextArea(e) {
-        setReview(e.target.value);
-    }
-    const [showImages, setShowImages] = useState(false);
+    const [showRedact, setShowRedact] = useState(false);
     const [showUser, setShowUser] = useState(false);
-    const created = new Date(reviewObj.createdAt);
-    const localeStringOptions = {
+    const [showImages, setShowImages] = useState(false);
+    const [imageIndex, setImageIndex] = useState(0);
+    const handleSelectImage = (selectedIndex) => {
+        setImageIndex(selectedIndex);
+    };
+    const created = new Date(reviewObj.createdAt).toLocaleString("eu", {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -79,7 +67,7 @@ const ReviewCard = ({reviewObj, userId}) => {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric'
-    };
+    });
     let images = [];
     let slides = [];
     if (reviewObj.images) {
@@ -88,7 +76,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                                src={process.env.REACT_APP_API_URL + image}
                                onClick={() => {
                                    setShowImages(true);
-                                   handleSelect(index);
+                                   handleSelectImage(index);
                                }}/>);
             slides.push(<Carousel.Item key={`slide_${index}_${image}`}>
                 <Image src={process.env.REACT_APP_API_URL + image} style={{width: '100%'}}/>
@@ -105,7 +93,7 @@ const ReviewCard = ({reviewObj, userId}) => {
     const handleCancel = () => {
         setReview(reviewObj.review);
         setRedactImages([]);
-        setShowModal(false);
+        setShowRedact(false);
     }
     const handleUpdateReview = () => {
         const formData = new FormData();
@@ -116,50 +104,40 @@ const ReviewCard = ({reviewObj, userId}) => {
         }
         authAPI('patch', '/api/basket/review', formData).then(data => {
             user.forceUpdate();
-            handleCancel();
+            setRedactImages([]);
+            setShowRedact(false);
         }).catch((err) => {
             console.log(err);
         })
     }
     return (
-        <Styled>
-            <div className={'review-card-head'}>
-                <Image src={reviewObj.img ? process.env.REACT_APP_API_URL + reviewObj.img : noImage}
-                       roundedCircle className={'review-card-profile-image'} onClick={() => setShowUser(true)}/>
-                <h5>{reviewObj.name} {reviewObj.surname}</h5>
-                <i>{reviewObj.createdAt !== reviewObj.updatedAt ? 'Изм.' : ''} {created.toLocaleString("eu", localeStringOptions)}</i>
-                {myReview && <UpdateButton top={'20px'} handleModal={handleModal}/>}
-                {myReview && <DelButton delFun={handlerDeleteReview} id={reviewObj.id} name={'отзыв'} top={'20px'}/>}
-            </div>
-            <div className={'review-card-body'}>
-                <div className={'review-text'}>{reviewObj.review}</div>
-                {images.length > 0 && <Accordion>
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header>Изображения</Accordion.Header>
-                        <Accordion.Body>
-                            {images}
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>}
-            </div>
-            <Modal
-                show={showImages}
-                onHide={() => setShowImages(false)}
-                backdrop="static"
-                keyboard={false}
-            >
-                <Modal.Header closeButton/>
-                <Modal.Body>
-                    <Carousel variant={colors.bootstrapOtherVariant} activeIndex={index} onSelect={handleSelect} interval={null}>
-                        {slides}
-                    </Carousel>
-                </Modal.Body>
-            </Modal>
+        <>
+            <Styled>
+                <div className={'review-card-head'}>
+                    <Image src={reviewObj.img ? process.env.REACT_APP_API_URL + reviewObj.img : noImage}
+                           roundedCircle className={'review-card-profile-image'} onClick={() => setShowUser(true)}/>
+                    <h5>{reviewObj.name} {reviewObj.surname}</h5>
+                    <i>{reviewObj.createdAt !== reviewObj.updatedAt ? 'Изм.' : ''} {created}</i>
+                    {myReview && <UpdateButton top={'20px'} handleModal={setShowRedact}/>}
+                    {myReview && <DelButton delFun={handlerDeleteReview} id={reviewObj.id} name={'отзыв'} top={'20px'}/>}
+                </div>
+                <div className={'review-card-body'}>
+                    <div className={'review-text'}>{reviewObj.review}</div>
+                    {images.length > 0 && <Accordion>
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header>Изображения</Accordion.Header>
+                            <Accordion.Body>
+                                {images}
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>}
+                </div>
+            </Styled>
             <ViewUser name={reviewObj.name} surname={reviewObj.surname} about={reviewObj.about} status={reviewObj.status}
                       image={reviewObj.img} showUser={showUser} setShowUser={setShowUser}/>
             <Modal
-                show={showModal}
-                onHide={() => setShowModal(false)}
+                show={showRedact}
+                onHide={() => setShowRedact(false)}
                 backdrop="static"
                 keyboard={false}
             >
@@ -168,7 +146,7 @@ const ReviewCard = ({reviewObj, userId}) => {
                 </Modal.Header>
                 <Modal.Body style={{display: "flex", flexDirection: "column"}}>
                     <textarea autoFocus={true} className="redactReviewArea" placeholder={`Напишите отзыв ...`}
-                              value={review} onChange={(e)=> handlerTextArea(e)}
+                              value={review} onChange={(e)=> setReview(e.target.value)}
                               style={{marginBottom: '20px', minHeight: '100px'}}
                     ></textarea>
                     <input id={'reviewFileInput'} multiple type="file" accept="image/*" onChange={(event) => {
@@ -182,7 +160,20 @@ const ReviewCard = ({reviewObj, userId}) => {
                     <Button variant={colors.bootstrapMainVariant} onClick={handleUpdateReview}>Редактировать</Button>
                 </Modal.Footer>
             </Modal>
-        </Styled>
+            <Modal
+                show={showImages}
+                onHide={() => setShowImages(false)}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton/>
+                <Modal.Body>
+                    <Carousel variant={colors.bootstrapOtherVariant} activeIndex={imageIndex} onSelect={handleSelectImage} interval={null}>
+                        {slides}
+                    </Carousel>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 };
 

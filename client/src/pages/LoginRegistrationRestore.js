@@ -3,7 +3,6 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Button, Dropdown, DropdownButton, Form} from "react-bootstrap";
 import CustomOverlay from "../components/badges_and_overlays/CustomOverlay";
 import {Context} from "../index";
-import useWindowSize from "../hooks/useWindowSize";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {
@@ -72,7 +71,6 @@ const LoginRegistrationRestore = observer(() => {
     const languages = ['Русский', 'English'];
     const {user, overlay} = useContext(Context);
     const navigate = useNavigate();
-    const width = useWindowSize();
     const location = useLocation();
     //data for login page
     const [enterLogin, setEnterLogin] = useState('');
@@ -167,7 +165,7 @@ const LoginRegistrationRestore = observer(() => {
                     <div className={'button-container'}>
                         <Button onClick={e => overlay.setTarget(e.target)} type={"submit"} variant={colors.bootstrapMainVariant}>Зарегистрироваться</Button>
                         <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
-                                       target={overlay.target} placement={width > 576 ? "right" : "bottom-start"}/>
+                                       target={overlay.target}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>У меня уже есть аккаунт</div>
                     </div>
@@ -208,7 +206,7 @@ const LoginRegistrationRestore = observer(() => {
                     <div className={'button-container'}>
                         <Button onClick={e => overlay.setTarget(e.target)} variant={colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
                         <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
-                                       target={overlay.target} placement={width > 576 ? "right" : "bottom-start"}/>
+                                       target={overlay.target}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/restore')}>Восстановить пароль</div>
                         <div role={"button"} className={'link-underline'}

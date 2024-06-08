@@ -4,7 +4,7 @@ import {Accordion, Button, Modal, OverlayTrigger, Tooltip} from "react-bootstrap
 import noImage from "../../assets/icon_no_image.svg";
 import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
-import SetProductRatingCard from "./SetProductRatingCard";
+import SetItemRatingCard from "./SetItemRatingCard";
 import {breakpoints, colors, flexColumn, marginMedium, marginSmall} from "../../StyledGlobal";
 import * as uf from "../../usefulFunctions";
 import {observer} from "mobx-react-lite";
@@ -82,12 +82,12 @@ const Styled = styled.div`
 `
 
 const OrderCard = observer(({order, months}) => {
+    const navigate = useNavigate();
     const {review, item} = useContext(Context);
     const [showModalAll, setShowModalAll] = useState(false);
     const [showModalOne, setShowModalOne] = useState(false);
     const dataCreate = new Date(order.createdAt);
     const dataDelivery = new Date(order.delivery_date);
-    const navigate = useNavigate();
     const deliveryRUS = {
         'courier': 'курьером',
         'point': 'в точку самовывоза',
@@ -185,7 +185,7 @@ const OrderCard = observer(({order, months}) => {
                 </Modal.Header>
                 <Modal.Body>
                     {JSON.parse(order.items).map(item => {
-                        return <SetProductRatingCard key={item.itemId} item={item}/>
+                        return <SetItemRatingCard key={item.itemId} item={item}/>
                     })}
                 </Modal.Body>
             </Modal>

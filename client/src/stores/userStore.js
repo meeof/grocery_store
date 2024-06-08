@@ -3,9 +3,9 @@ import {authAPI, authorization} from "../api";
 
 class UserStore {
     constructor() {
-        this._isAuth = false;
-        this._userInfo = false;
-        this._rerender = false;
+        this._isAuth = null;
+        this._userInfo = null;
+        this._rerender = null;
         makeAutoObservable(this)
     }
     get rerender () {
@@ -35,6 +35,7 @@ class UserStore {
     }
     userExit(navigate) {
         localStorage.setItem('token', '');
+        this.setUserInfo(false);
         this.setAuth(false);
         navigate('/');
     }

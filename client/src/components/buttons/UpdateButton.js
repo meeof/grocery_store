@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button} from "react-bootstrap";
 import styled from "styled-components";
 import pencilImg from "../../assets/icon_redact_blue.svg";
@@ -14,25 +14,26 @@ const Styled = styled.div`
     justify-content: center;
     align-items: center;
     border-width: 3px;
+    background-image: url(${pencilImg});
+    background-size: 19px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 32px;
+    height: 32px;
   }
-  img {
-    width: 19px;
-    height: 19px;
+  button:hover {
+    background-image: url(${whitePencilImg});
   }
 `
 
 const UpdateButton = ({handleModal, isActive, top, right}) => {
-    const [hover, setHover] = useState(false)
     return (
         <Styled $top={top} $right={right}>
             <Button variant={"outline-primary"} disabled={isActive}
-                    onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleModal(true);
-                    }}>
-                <img alt={''} src={hover ? whitePencilImg : pencilImg}/>
-            </Button>
+                    }}/>
         </Styled>
     );
 };

@@ -7,16 +7,17 @@ import DelButton from "../buttons/DelButton";
 import {colors} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import {useNavigate} from "react-router-dom";
+import UpdateButton from "../buttons/UpdateButton";
 
-const ViewProfile = observer (({change, setChange}) => {
-    console.log('view');
+const ViewProfile = observer (() => {
+    const [change, setChange] = useState(false);
     const navigate = useNavigate();
     const {user} = useContext(Context);
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
+    const [name, setName] = useState(user.userInfo?.name || '');
+    const [surname, setSurname] = useState(user.userInfo?.surname || '');
     const [image, setImage] = useState(null);
-    const [status, setStatus] = useState('');
-    const [about, setAbout] = useState('');
+    const [status, setStatus] = useState(user.userInfo?.status || '');
+    const [about, setAbout] = useState(user.userInfo?.about || '');
     const handlerChangeUserInfo = (userId) => {
         const formData = new FormData();
         userId && formData.append('userId', userId);
@@ -40,69 +41,70 @@ const ViewProfile = observer (({change, setChange}) => {
         })
     }
     useEffect(() => {
-        console.log('view effect')
-        if (user.userInfo) {
-            console.log('setuserinfo')
+        if (!user.userInfo) {
             user.fetchUserInfo();
-            user.userInfo.name && setName(user.userInfo.name);
-            user.userInfo.surname && setSurname(user.userInfo.surname);
-            user.userInfo.status && setStatus(user.userInfo.status);
-            user.userInfo.about && setAbout(user.userInfo.about);
         }
     }, [user]);
     return (
-        <Modal
-            show={change}
-            backdrop="static"
-            keyboard={false}
-            onHide={() => {
-                setChange(false);
-            }}
-        >
-            <Modal.Header closeButton>
-                <Modal.Title>Ваш профиль</Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                <Image src={user.userInfo.img ?
-                    process.env.REACT_APP_API_URL + user.userInfo.img : noImage}
-                       roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
-                <div>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Form.Group className="mb-3" controlId="formProfileName" style={{marginRight: '20px'}}>
-                            <Form.Label>Имя</Form.Label>
-                            <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+        <>
+            <UpdateButton handleModal={setChange} right={'5px'}/>
+            <Modal
+                show={change}
+                backdrop="static"
+                keyboard={false}
+                onHide={() => {
+                    setChange(false);
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Редактировать профиль</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                    <Image src={user.userInfo.img ?
+                        process.env.REACT_APP_API_URL + user.userInfo.img : noImage}
+                           roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
+                    <div>
+                        <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <Form.Group className="mb-3" controlId="formProfileName" style={{marginRight: '20px'}}>
+                                <Form.Label>Имя</Form.Label>
+                                <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formProfileSurname">
+                                <Form.Label>Фамилия</Form.Label>
+                                <Form.Control type="text" value={surname} onChange={(e) => setSurname(e.target.value)}/>
+                            </Form.Group>
+                        </div>
+                        <Form.Group className="mb-3" controlId="formProfilePhoto">
+                            <Form.Label>Фото профиля</Form.Label>
+                            <Form.Control type="file" accept="image/*" onChange={(event) => {
+                                setImage(event.target.files);
+                            }}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formProfileSurname">
-                            <Form.Label>Фамилия</Form.Label>
-                            <Form.Control type="text" value={surname} onChange={(e) => setSurname(e.target.value)}/>
+                        <Form.Group className="mb-3" controlId="formProfileStatus">
+                            <Form.Label>Статус</Form.Label>
+                            <Form.Control type="text" value={status} onChange={(e) => setStatus(e.target.value)}/>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="formProfileAbout" style={{display: "flex", flexDirection: "column"}}>
+                            <label htmlFor="aboutUser" style={{marginBottom: '10px'}}>Описание профиля</label>
+                            <textarea id={'aboutUser'} value={about} style={{height: '100px', resize: 'none'}}
+                                      onChange={(e) => setAbout(e.target.value)}></textarea>
+                        </Form.Group>
+                        <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <Button style={{width: '40%'}} variant={colors.bootstrapMainVariant}
+                                    onClick={() => handlerChangeUserInfo(user.isAuth.id)}>Применить</Button>
+                            <Button variant={"secondary"} style={{width: '40%'}}
+                                    onClick={() => {
+                                        setChange(false)
+                                        user.setUserInfo(null);
+                                        user.fetchUserInfo();
+                                    }}>Отмена</Button>
+                        </div>
                     </div>
-                    <Form.Group className="mb-3" controlId="formProfilePhoto">
-                        <Form.Label>Фото профиля</Form.Label>
-                        <Form.Control type="file" accept="image/*" onChange={(event) => {
-                            setImage(event.target.files);
-                        }}/>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formProfileStatus">
-                        <Form.Label>Статус</Form.Label>
-                        <Form.Control type="text" value={status} onChange={(e) => setStatus(e.target.value)}/>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formProfileAbout" style={{display: "flex", flexDirection: "column"}}>
-                        <label htmlFor="aboutUser" style={{marginBottom: '10px'}}>Описание профиля</label>
-                        <textarea id={'aboutUser'} value={about} style={{height: '100px', resize: 'none'}}
-                                  onChange={(e) => setAbout(e.target.value)}></textarea>
-                    </Form.Group>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Button style={{width: '40%'}} variant={colors.bootstrapMainVariant}
-                                onClick={() => handlerChangeUserInfo(user.isAuth.id)}>Применить</Button>
-                        <Button variant={"secondary"} style={{width: '40%'}}
-                                onClick={() => setChange(false)}>Отмена</Button>
-                    </div>
-                </div>
-                <DelButton id={user.isAuth.id} delFun={deleteUserHandler} name={'ваш профиль'}/>
-            </Modal.Body>
-            <Modal.Footer style={{border: "none", padding: 0}}/>
-        </Modal>
+                    <DelButton id={user.isAuth.id} delFun={deleteUserHandler} name={'ваш профиль'}/>
+                </Modal.Body>
+                <Modal.Footer style={{border: "none", padding: 0}}/>
+            </Modal>
+        </>
     );
 });
 

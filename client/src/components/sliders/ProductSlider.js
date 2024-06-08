@@ -21,7 +21,7 @@ const ProductSlider = ({...props}) => {
     return (
         <Styled $previews={props.previews}>
             <Carousel activeIndex={props.slideIndex} onSelect={props.handleSlideSelect} interval={null} variant={colors.bootstrapOtherVariant}
-                      indicators={width < 992}>
+                      indicators={width < breakpoints.rawLarge}>
                 {props.images.length === 0 ? <Carousel.Item>
                     <Image src={noImage} style={{width: '100%'}}/>
                 </Carousel.Item> : props.images?.map((img, index) => {

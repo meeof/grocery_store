@@ -1,5 +1,17 @@
 import {css} from "styled-components";
 class Breakpoints {
+    get rawSmall() {
+        return 575.5;
+    }
+    get rawFromSmall() {
+        return 576;
+    }
+    get rawLarge() {
+        return 991.5;
+    }
+    get rawFromLarge() {
+        return 992;
+    }
     get small() {
         return css`
           max-width: 575.5px

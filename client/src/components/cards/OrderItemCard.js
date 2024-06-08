@@ -24,7 +24,7 @@ const Styled = styled.div`
   }
 `;
 
-const OrderProductCard = ({product}) => {
+const OrderItemCard = ({product}) => {
     return (
         <Styled>
             <img src={product.image ? process.env.REACT_APP_API_URL + product.image : noImage} alt={''}/>
@@ -36,4 +36,4 @@ const OrderProductCard = ({product}) => {
     );
 };
 
-export default OrderProductCard;
+export default OrderItemCard;

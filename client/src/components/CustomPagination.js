@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, Pagination} from "react-bootstrap";
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import {colors, flexColumn, freeButtonWidth, marginsCenter, marginSmall} from "../StyledGlobal";
+import {breakpoints, colors, flexColumn, freeButtonWidth, marginsCenter, marginSmall} from "../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 const Styled = styled.div`
@@ -46,10 +46,10 @@ const CustomPagination = observer(() => {
         item.fetchItems(val);
     }
     let paginationLimit = paginationLimits.large;
-    if (width < 576) {
+    if (width < breakpoints.rawSmall) {
         paginationLimit = paginationLimits.small
     }
-    else if (width >= 576 && width < 992) {
+    else if (width >= breakpoints.rawFromSmall && width < breakpoints.rawLarge) {
         paginationLimit = paginationLimits.middle
     }
     const offset = Math.floor( paginationLimit/2);
@@ -79,6 +79,7 @@ const CustomPagination = observer(() => {
             {pagesAmount > 1 ? <Styled>
                 {item.page === 1 && <div className={'show-more'}>
                     <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                        item.setItems(null);
                         item.setLimit(item.limit * 2);
                         item.fetchItems();
                     }}>Показывать больше</Button>

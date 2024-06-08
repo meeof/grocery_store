@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
@@ -14,7 +14,6 @@ import {
     marginSmall,
     marginsPage
 } from "../StyledGlobal";
-import UpdateButton from "../components/buttons/UpdateButton";
 import noImage from "../assets/icon_no_image.svg";
 import Load from "../components/Load";
 import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
@@ -88,7 +87,6 @@ const Profile = observer( () => {
         ADMIN : 'Администратор',
         USER : 'Пользователь'
     }
-    const [change, setChange] = useState(false);
     useEffect(() => {
         user.checkAuthUser(() => user.fetchUserInfo(), navigate);
     }, [user, navigate]);
@@ -108,7 +106,7 @@ const Profile = observer( () => {
                             <h3>{user.userInfo.status}</h3>
                             <p>{user.userInfo.about}</p>
                         </div>
-                        <UpdateButton handleModal={setChange} right={'5px'}/>
+                        {user.userInfo && <ViewProfile/>}
                     </div> : <Load/>}
                     <div className={'profile-buttons'}>
                         <CategoryAddUpdate/>
@@ -120,7 +118,6 @@ const Profile = observer( () => {
                         <Button variant={'secondary'} onClick={() => user.userExit(navigate)}>Выйти</Button>
                     </div>
                 </div>
-                {change && <ViewProfile change={change} setChange={setChange}/>}
             </Styled> : <Load/>}
         </>
     );

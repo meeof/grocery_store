@@ -41,7 +41,7 @@ const Styled = styled.div`
   }
 `;
 
-const BasketProductCard = observer(({product, deleteBasketItemHandle}) => {
+const BasketItemCard = observer(({product, deleteBasketItemHandle}) => {
     const [allProductCost, setAllProductCost] = useState(product.cost * product.amount);
     const {review, item} = useContext(Context);
     const navigate = useNavigate();
@@ -59,7 +59,7 @@ const BasketProductCard = observer(({product, deleteBasketItemHandle}) => {
             <div className={'basket-card-body'}>
                 <h2 onClick={navigateProductHandle}><b>{product.name}</b></h2>
                 <p>{product.cost} ₽</p>
-                <ButtonBuy productId={product.itemId} cost={product.cost} place={'basket'}
+                <ButtonBuy itemId={product.itemId} cost={product.cost} place={'basket'}
                            allProductCost={allProductCost} setAllProductCost={setAllProductCost}/>
             </div>
             <div className={'basket-card-end'}>
@@ -72,4 +72,4 @@ const BasketProductCard = observer(({product, deleteBasketItemHandle}) => {
     );
 });
 
-export default BasketProductCard;
+export default BasketItemCard;

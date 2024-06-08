@@ -18,7 +18,6 @@ const Styled = styled.div`
 const Reviews = observer(({itemId}) => {
     const {user, review} = useContext(Context);
     useEffect(() => {
-        console.log('render reviews');
         user.checkAuthUser(() => {
             authAPI('get', '/api/basket/bought', {userId: user.isAuth.id, itemId}).then(data => {
                 review.setBought(data);
@@ -43,7 +42,7 @@ const Reviews = observer(({itemId}) => {
         <Styled>
             {review.reviews ? <>{review.reviews.length > 0 ?
                 review.reviews.map(obj => {
-                    return <ReviewCard key={obj.id} reviewObj={obj} userId={user.isAuth.id}/>
+                    return <ReviewCard key={obj.id} reviewObj={obj} myReview={user.isAuth.id === obj.userId}/>
                 }) : <>
                     <h2>Отзывы</h2>
                     <div>Отзывов еще никто не оставлял</div>

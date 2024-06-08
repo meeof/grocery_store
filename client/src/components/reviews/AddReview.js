@@ -72,15 +72,15 @@ const AddReview = observer(({userId, itemId}) => {
                     setReview('');
                     handlerAddReview();
                 }}>Добавить отзыв</Button>
-                {width < 576 && <CloseButton onClick={() => setWrite(false)}/>}
+                {width < breakpoints.rawSmall && <CloseButton onClick={() => setWrite(false)}/>}
             </div>
             : <Button variant={colors.bootstrapMainVariant} onClick={()=> setWrite(true)}>Написать отзыв</Button>
         }
         {write && <><textarea onFocus={(e) => {e.target.scrollIntoView()}}
                               autoFocus={true} className="addReviewArea" placeholder={`Напишите отзыв ...`}
                               value={review} onChange={(e)=> setReview(e.target.value)}></textarea>
-            <AddImagesButton setImages={setImages} count={images?.length} big={width < 576}/>
-            {width >= 576 && <CloseButton onClick={() => setWrite(false)}/>}</>}
+            <AddImagesButton setImages={setImages} count={images?.length} big={width < breakpoints.rawSmall}/>
+            {width >= breakpoints.rawFromSmall && <CloseButton onClick={() => setWrite(false)}/>}</>}
     </Styled>
 });
 export default AddReview;

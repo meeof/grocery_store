@@ -26,7 +26,7 @@ const Styled = styled.div`
   }
 `
 const DeliveryVariant = ({name, price, info}) => {
-    let [showVariantInfo, setShowVariantInfo] = useState(false);
+    const [showVariantInfo, setShowVariantInfo] = useState(false);
     return (
         <Styled>
             <div className={'delivery-show'}>

@@ -117,7 +117,7 @@ const CommonBar = observer (() => {
     }
     return (
         <Styled>
-            {width >= 576 ?
+            {width >= breakpoints.rawFromSmall ?
                 <>
                     {logoElement}
                     {catalogButtonElement}

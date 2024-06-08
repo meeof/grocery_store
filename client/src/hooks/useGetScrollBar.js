@@ -1,20 +1,16 @@
 import {useEffect, useState} from "react";
 
 const useGetScrollBar = () => {
-    let [scrollBar, setScrollBar] = useState(0);
+    const [scrollBar, setScrollBar] = useState(0);
     useEffect(() => {
-        let body = document.querySelector('body');
-        const handleResize = () => {
+        const body = document.querySelector('body');
+        const check = () => {
             if (body.clientHeight > window.innerHeight) {
                 setScrollBar(window.innerWidth - body.clientWidth)
             }
             else setScrollBar(0)
         };
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
+        setTimeout(check, 0);
     }, []);
     return scrollBar;
 }

@@ -87,7 +87,7 @@ const NavBar = () => {
                             }}>
                                 Личный кабинет
                             </Nav.Link>
-                            {(width >= 992 || width < 576) && contacts}
+                            {(width >= breakpoints.rawFromLarge || width < breakpoints.rawSmall) && contacts}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
@@ -102,7 +102,7 @@ const NavBar = () => {
                     >EN</ToggleButton>
                 </ButtonGroup>
             </div>
-            {(width < 992 && width >= 576) && contacts}
+            {(width < breakpoints.rawLarge && width >= breakpoints.rawFromSmall) && contacts}
         </Styled>
     );
 };

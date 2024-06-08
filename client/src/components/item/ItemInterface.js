@@ -112,7 +112,7 @@ const Styled = styled.div`
 
 const ItemInterface = observer(({product}) => {
     const {user} = useContext(Context);
-    let width = useWindowSize();
+    const width = useWindowSize();
     const navigate = useNavigate();
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then(() => {
@@ -145,7 +145,7 @@ const ItemInterface = observer(({product}) => {
                 </div>
                 <div className={'buy'}>
                     <OneClickBuy itemId={product.id}/>
-                    {width > 575.5 && <ButtonBuy productId={product.id}/>}
+                    {width >= breakpoints.rawFromSmall && <ButtonBuy itemId={product.id}/>}
                 </div>
             </div>
             <div className={'delivery'}>

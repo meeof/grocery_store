@@ -21,7 +21,7 @@ display: flex;
   }
 `
 
-const SetProductRatingCard = ({item}) => {
+const SetItemRatingCard = ({item}) => {
     const navigate = useNavigate();
     return (
         <Styled>
@@ -34,4 +34,4 @@ const SetProductRatingCard = ({item}) => {
     );
 };
 
-export default SetProductRatingCard;
+export default SetItemRatingCard;

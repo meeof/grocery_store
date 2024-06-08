@@ -62,10 +62,8 @@ class ItemStore {
             params.categoryId = uf.routeUnPrefix(this._categoryId);
         }
         API('get', '/api/item', params).then(data => {
-            if (this._items !== data.rows) {
-                this.setItems(data.rows);
-                this.setCount(data.count);
-            }
+            this.setItems(data.rows);
+            this.setCount(data.count);
         });
     }
 }

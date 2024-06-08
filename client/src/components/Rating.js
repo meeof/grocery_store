@@ -41,7 +41,7 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
                 console.log(err);
             });
         }
-    }, [setShowModalAll, itemsId, user.isAuth.id, disabled]);
+    }, [setShowModalAll, itemsId, user.isAuth?.id, disabled]);
     const handleSetRating = (rate) => {
         authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(() => {
             if (!setShowModalAll) {

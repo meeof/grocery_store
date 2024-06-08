@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
-import OrderProductCard from "../components/cards/OrderProductCard";
+import OrderItemCard from "../components/cards/OrderItemCard";
 import {observer} from "mobx-react-lite";
 import OrderForm from "../components/OrderForm";
 import AlertOrdered from "../components/alerts/AlertOrdered";
@@ -45,7 +45,7 @@ const Order = observer( () => {
                         </div>
                         <div className={'order-right'}>
                             {basket.getBasket.map(product => {
-                                return <OrderProductCard key={product.itemId} product={product}/>
+                                return <OrderItemCard key={product.itemId} product={product}/>
                             })}
                             <div className={'order-cost'}>
                                 <h1>Итого:</h1>

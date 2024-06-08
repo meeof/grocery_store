@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
 import {API, authAPI} from "../../api";
-import {colors, freeButtonWidth} from "../../StyledGlobal";
+import {breakpoints, colors, freeButtonWidth} from "../../StyledGlobal";
 import {addImagesToFormData} from "../../usefulFunctions";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
@@ -14,7 +14,6 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
     const width = useWindowSize();
     const {item, category, overlay} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
-
     const [name, setName] = useState(product?.name || '');
     const [price, setPrice] = useState(product?.price || '');
     const [discount, setDiscount] = useState(product?.discount || '');
@@ -56,7 +55,8 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                 else {
                     item.fetchItems(item.page);
                 }
-                handleCancel();
+                setShowModal(false);
+                overlay.setShow(false);
             }
             else {
                 if (typeof data === 'object') {
@@ -111,7 +111,7 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                     setShowModal(true);
                     overlay.setTarget(e.target);
                     overlay.setShow(false);
-                }} style={width > 576 ? {width: freeButtonWidth} : {width: '100%'}}>
+                }} style={width >= breakpoints.rawFromSmall ? {width: freeButtonWidth} : {width: '100%'}}>
                     Добавить товар
                 </Button>}
 
@@ -191,8 +191,7 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target}
-                           placement={width > 576 ? "right" : "bottom-start"} message={overlay.message}/>
+            <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target} message={overlay.message}/>
         </div>
     );
 });
