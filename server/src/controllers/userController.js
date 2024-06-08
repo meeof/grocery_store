@@ -4,56 +4,37 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 import bcrypt from "bcrypt";
-import {deleteSpace} from "../usefulFunctions.js";
-import {v4 as uuidv4} from "uuid";
-import path from "path";
-import __dirname from "../__dirname.js";
+import {deleteSpace, saveImages} from "../usefulFunctions.js";
+import {Op} from "sequelize";
+import {sequelize} from "../db.js";
 const generateToken = (data) => {
     return jwt.sign(
-        {'id': data.id, 'email': data.email, 'role': data.role},
+        {'id': data.id, 'email': data.email, 'phone': data.phone, 'role': data.role},
         process.env.JWT_PRIVATE_KEY,
-        { algorithm: 'HS256', expiresIn: '12h'});
+        {algorithm: 'HS256', expiresIn: '12h'});
 }
 export const getUserInfo = async (userId) => {
-    return  await models.UserInfo.findOne({
+    return await models.UserInfo.findOne({
         where: {
             userId,
         },
     });
 }
-const findEmailPassword = async (arr) => {
-    let findEmail = null;
-    let findPhone = null;
-    for (let str of arr) {
-        findEmail = await models.User.findOne({
-            attributes: ['id', 'email', 'password', 'role'],
-            where: {
-                email: str
-            }
-        });
-        findPhone = await models.UserInfo.findOne({
-            attributes: ['phone'],
-            include: [{
-                model: models.User,
-                attributes: ['id', 'email', 'password', 'role'],
-            }],
-            where: {
-                phone: str
-            },
-        });
-        if (findEmail || findPhone) break;
-    }
-    return {
-        findEmail,
-        findPhone
-    }
+const findEmailPassword = async (phoneEmail) => {
+    return await models.User.findOne({
+        attributes: ['id', 'email', 'phone', 'password', 'role'],
+        where: {
+            [Op.or]: [{ email: phoneEmail }, { phone: phoneEmail }],
+        }
+    });
 }
 class UserController {
     async registration(req, res) {
         try {
             const {email, password, role} = req.body;
             const {name, surname, language, phone} = req.body;
-            const {findEmail, findPhone} = await findEmailPassword([email, phone]);
+            const findEmail = await findEmailPassword(email);
+            const findPhone = await findEmailPassword(phone);
             if (deleteSpace(name) === '') {
                 ErrorTemp.badRequest(res, 'Имя некорректно');
             }
@@ -76,18 +57,17 @@ class UserController {
                 ErrorTemp.badRequest(res, 'Выбранный пароль слишком простой');
             }
             else {
-                const salt = bcrypt.genSaltSync(7);
-                const hashPassword = bcrypt.hashSync(password, salt);
-                const newUser = await models.User.create(
-                    {email, "password" : hashPassword, salt, role},
-                    {fields: ['id', 'email', 'password', 'salt', 'role']});
-                const newUserInfo = await models.UserInfo.create(
-                    {name, surname, language, phone, 'userId': newUser.dataValues.id},
-                    {fields: ['name', 'surname', 'language', 'phone', 'userId']});
-                const newUserBasket = await models.Basket.create(
-                    {"userId": newUser.dataValues.id}
-                )
-                const token = generateToken(newUser.dataValues);
+                const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(7));
+                const user = await sequelize.transaction(async () => {
+                    const newUser = await models.User.create(
+                        {email, phone, "password" : hashPassword, role},
+                        {fields: ['id', 'email', 'phone', 'password', 'role']});
+                    await models.UserInfo.create(
+                        {name, surname, language, 'userId': newUser.dataValues.id},
+                        {fields: ['name', 'surname', 'language', 'userId']});
+                    return newUser;
+                })
+                const token = generateToken(user.dataValues);
                 res.json(token);
             }
         } catch (error) {
@@ -97,18 +77,13 @@ class UserController {
     async login(req, res) {
         try {
             const {enterLogin, enterPassword} = req.body;
-            const {findEmail, findPhone} = await findEmailPassword([enterLogin]);
-            if (findEmail) {
-                const token = generateToken(findEmail.dataValues);
-                bcrypt.compareSync(enterPassword, findEmail.dataValues.password) ?
+            const user = await findEmailPassword(enterLogin);
+            if (user) {
+                const token = generateToken(user.dataValues);
+                bcrypt.compareSync(enterPassword, user.dataValues.password) ?
                     res.json(token) : ErrorTemp.forbidden(res, 'неверный пароль');
             }
-            if (findPhone) {
-                const token = generateToken(findPhone.user.dataValues);
-                 bcrypt.compareSync(enterPassword, findPhone.user.dataValues.password) ?
-                     res.json(token) : ErrorTemp.forbidden(res, 'неверный пароль');
-            }
-            if (!findEmail && !findPhone) {
+            else {
                 ErrorTemp.err(res,401, 'Пользователь не зарегистрирован')
             }
         } catch (error) {
@@ -126,7 +101,7 @@ class UserController {
     }
     async getInfo(req, res) {
         try {
-            const {userId} = req.query
+            const {userId} = req.query;
             const info = await getUserInfo(userId);
             res.json(info.dataValues)
         } catch (error) {
@@ -151,17 +126,9 @@ class UserController {
                 itemFields.about = about
             }
             if (req?.files) {
-                let imgName = ''
-                for (let key in req.files) {
-                    imgName = uuidv4() + '.jpg';
-                    await req.files[key].mv(`${path.resolve(__dirname, 'static', imgName)}`)
-                }
-                itemFields.img = imgName;
+                itemFields.img = await saveImages(req.files);
             }
-            if (Object.keys(itemFields).length === 0) {
-                res.json('success');
-            }
-            else {
+            if (Object.keys(itemFields).length !== 0) {
                 await models.UserInfo.update(
                     itemFields,
                     {
@@ -172,7 +139,9 @@ class UserController {
                 );
                 res.json('success');
             }
-
+            else {
+                res.json('success');
+            }
         } catch (error) {
             ErrorTemp.badRequest(res)
         }
@@ -180,18 +149,19 @@ class UserController {
     async deleteUser(req, res){
         try {
             const {userId} = req.query
-            await models.UserInfo.destroy({
-                where: {
-                    userId,
-                },
-            });
-            await models.User.destroy({
-                where: {
-                    id: userId,
-                },
-            });
+            await sequelize.transaction(async () => {
+                await models.UserInfo.destroy({
+                    where: {
+                        userId,
+                    },
+                });
+                await models.User.destroy({
+                    where: {
+                        id: userId,
+                    },
+                });
+            })
             res.json('delete success');
-
         } catch (error) {
             ErrorTemp.err();
         }

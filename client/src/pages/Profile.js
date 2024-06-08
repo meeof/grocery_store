@@ -102,7 +102,7 @@ const Profile = observer( () => {
                                roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
                         <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                             <h2>{user.userInfo.name} {user.userInfo.surname}</h2>
-                            <h2>{user.userInfo.phone}</h2>
+                            <h2>{user.isAuth.phone}</h2>
                             <h3>{user.userInfo.status}</h3>
                             <p>{user.userInfo.about}</p>
                         </div>

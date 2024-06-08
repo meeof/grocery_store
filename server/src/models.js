@@ -4,8 +4,8 @@ import {sequelize} from "./db.js";
 const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email : {type: DataTypes.STRING, allowNull: false, unique: true},
+    phone : {type: DataTypes.STRING, allowNull: false},
     password : {type: DataTypes.STRING, allowNull: false},
-    salt: {type: DataTypes.STRING, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue: 'ADMIN'}
 });
 const UserInfo = sequelize.define('user_info', {
@@ -13,13 +13,9 @@ const UserInfo = sequelize.define('user_info', {
     name : {type: DataTypes.STRING, allowNull: false},
     surname : {type: DataTypes.STRING, allowNull: false},
     language : {type: DataTypes.STRING, defaultValue: 'RU'},
-    phone : {type: DataTypes.STRING, allowNull: false},
     img: {type: DataTypes.STRING},
     status: {type: DataTypes.STRING},
     about: {type: DataTypes.STRING},
-});
-const Basket = sequelize.define('basket', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 });
 const BasketItem = sequelize.define('basket_item', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -65,20 +61,12 @@ const Orders = sequelize.define('orders', {
 });
 const WasBought = sequelize.define('was_bought', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    userId: {type: DataTypes.INTEGER, allowNull: false},
-    itemId: {type: DataTypes.INTEGER, allowNull: false},
 });
 const Reviews = sequelize.define('reviews' , {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    userId: {type: DataTypes.INTEGER, allowNull: false},
-    itemId: {type: DataTypes.INTEGER, allowNull: false},
     images: {type: DataTypes.JSON},
     review: {type: DataTypes.STRING, allowNull: false},
 })
-
-
-User.hasOne(Basket);
-Basket.belongsTo(User);
 
 User.hasOne(UserInfo);
 UserInfo.belongsTo(User);
@@ -89,8 +77,8 @@ Rating.belongsTo(User);
 User.hasOne(Comparison);
 Comparison.belongsTo(User);
 
-Basket.hasMany(BasketItem);
-BasketItem.belongsTo(Basket);
+User.hasMany(BasketItem);
+BasketItem.belongsTo(User);
 
 Item.hasOne(BasketItem);
 BasketItem.belongsTo(Item);
@@ -104,7 +92,17 @@ ItemInfo.belongsTo(Item);
 Categories.hasMany(Item);
 Item.belongsTo(Categories);
 
-Basket.hasMany(Orders);
-Orders.belongsTo(Basket);
+User.hasMany(Orders);
+Orders.belongsTo(User);
 
-export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, Basket, UserInfo, User, Orders, WasBought, Reviews};
+User.hasMany(WasBought);
+WasBought.belongsTo(User);
+Item.hasMany(WasBought);
+WasBought.belongsTo(Item);
+
+User.hasMany(Reviews);
+Reviews.belongsTo(User);
+Item.hasMany(Reviews);
+Reviews.belongsTo(Item);
+
+export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews};

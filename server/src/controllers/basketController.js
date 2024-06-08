@@ -7,20 +7,11 @@ import path from "path";
 import __dirname from "../__dirname.js";
 import {getUserInfo} from "./userController.js";
 
-const getBasketId = async (userId) => {
-    const basket = await models.Basket.findOne({
-        attributes: ['id', 'userId'],
-        where: {
-            userId
-        }
-    })
-    return basket.dataValues.id
-}
-const getAllBasketItems = async (basketId) => {
+const getAllBasketItems = async (userId) => {
     return await models.BasketItem.findAll({
         attributes: ['id', 'amount', 'itemId'],
         where: {
-            basketId,
+            userId,
             itemId: {[Op.not]: null},
             amount: {[Op.gt]: 0},
         }
@@ -71,12 +62,11 @@ class BasketController {
     async addItem (req, res) {
         try {
             const {userId, itemId, amount} = req.body;
-            const basketId = await getBasketId(userId);
             const update = await models.BasketItem.update(
                 {amount},
                 {
                     where: {
-                        basketId,
+                        userId,
                         itemId,
                     }
                 }
@@ -98,11 +88,10 @@ class BasketController {
     async getOneAmount (req, res) {
         try {
             const {userId, itemId} = req.query;
-            const basketId = await getBasketId(userId);
             const oneBasketItem = await models.BasketItem.findOne({
                 attributes: ['amount'],
                 where: {
-                    basketId,
+                    userId,
                     itemId,
                 }
             });
@@ -113,8 +102,8 @@ class BasketController {
     }
     async getAll (req, res) {
         try {
-            const basketId = await getBasketId(req.query.userId);
-            const allBasketItems = await getAllBasketItems(basketId);
+            const {userId} = req.query;
+            const allBasketItems = await getAllBasketItems(userId);
             const response = await Promise.all(allBasketItems.map(async (item) => {
                 const oneItem = await models.Item.findOne({
                     attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
@@ -142,11 +131,10 @@ class BasketController {
     async deleteItem (req, res) {
         try {
             const {userId, itemId} = req.query;
-            const basketId = await getBasketId(userId);
             await models.BasketItem.destroy({
                 where: {
                     itemId,
-                    basketId
+                    userId
                 },
             });
             res.json('delete success');
@@ -171,15 +159,14 @@ class BasketController {
     async formFastOrder(req, res) {
         try {
             let {name, surname, phone, point, delivery, address, comment, sms, userId, itemId} = req.body;
-            const basketId = await getBasketId(userId);
             const item = await getOneItem(itemId, 1, null);
             const dateDelivery = new Date();
             dateDelivery.setDate(dateDelivery.getDate() + 5);
             const newOrder = await models.Orders.create(
-                {name, surname, phone, point, delivery, address, comment, sms, basketId,
+                {name, surname, phone, point, delivery, address, comment, sms, userId,
                     items: JSON.stringify([item]), full_price: item.cost, status: 'В обработке', delivery_date: dateDelivery},
                 {fields: ['name', 'surname', 'phone', 'point', 'delivery',
-                        'address', 'comment', 'sms', 'basketId', 'items', 'full_price', 'status', 'delivery_date']});
+                        'address', 'comment', 'sms', 'userId', 'items', 'full_price', 'status', 'delivery_date']});
             const firstTime = await wasBought.getWasBought(userId, itemId);
             if (!firstTime) {
                 await wasBought.setWasBought(userId, itemId);
@@ -193,8 +180,7 @@ class BasketController {
     async formBasketOrder(req, res){
         try {
             let {name, surname, phone, point, delivery, address, comment, sms, userId} = req.body;
-            const basketId = await getBasketId(userId);
-            const allBasketItems = await getAllBasketItems(basketId);
+            const allBasketItems = await getAllBasketItems(userId);
             const items = await Promise.all(allBasketItems.map(async (item) => {
                 const firstTime = await wasBought.getWasBought(userId, item.dataValues.itemId);
                 if (!firstTime) {
@@ -209,15 +195,15 @@ class BasketController {
             const dateDelivery = new Date();
             dateDelivery.setDate(dateDelivery.getDate() + 5);
             const newOrder = await models.Orders.create(
-                {name, surname, phone, point, delivery, address, comment, sms, basketId,
+                {name, surname, phone, point, delivery, address, comment, sms, userId,
                     items: JSON.stringify(items), full_price: fullPrice, status: 'В обработке', delivery_date: dateDelivery},
                 {fields: ['name', 'surname', 'phone', 'point', 'delivery',
-                        'address', 'comment', 'sms', 'basketId', 'items', 'full_price', 'status', 'delivery_date']});
+                        'address', 'comment', 'sms', 'userId', 'items', 'full_price', 'status', 'delivery_date']});
             for (const item of items) {
                 const  del = await models.BasketItem.destroy({
                     where: {
                         id: item.basketItemId,
-                        basketId
+                        userId
                     },
                 });
             }
@@ -228,13 +214,13 @@ class BasketController {
     }
     async getOrders(req, res) {
         try {
-            const basketId = await getBasketId(req.query.userId);
+            const {userId} = req.query;
             const limit = req.query.limit;
             const orders = await models.Orders.findAndCountAll({
                 attributes: ['id', 'name', 'surname', 'phone', 'point', 'delivery', 'address', 'comment', 'sms', 'full_price',
                 'items', 'status', 'delivery_date', 'createdAt'],
                 where: {
-                    basketId,
+                    userId,
                 },
                 limit: limit ? limit : 3,
                 order: [
@@ -248,12 +234,12 @@ class BasketController {
     }
     async clearOrders(req, res) {
         try {
-            const basketId = await getBasketId(req.query.userId);
+            const {userId} = req.query;
             await models.Orders.update(
                 {basketId: null},
                 {
                     where: {
-                        basketId,
+                        userId,
                     }
                 }
             )
