@@ -1,24 +1,22 @@
 import * as models from "../models.js";
 import ErrorTemp from "../errors/errorsTemplate.js";
 const findOneRating = async (userId, itemId) => {
-    return await models.Rating.findOne({
+    const rating = await models.Rating.findOne({
         attributes: ['rate'],
         where: {
             userId,
             itemId
         },
     });
+    return rating ? rating.dataValues.rate : 0;
 }
 
 class RatingController {
-    async getRatingForUser (req, res) {
+    async getRatingOneUser (req, res) {
         try {
             const {itemId, userId} = req.query;
-            console.log("\x1b[35m", itemId, userId, "\x1b[0m");
-            if (itemId && userId) {
-                const rateObj = await findOneRating(userId, itemId);
-                rateObj ? res.json(rateObj.dataValues.rate) : res.json(0)
-            }
+            const rate = await findOneRating(userId, itemId);
+            res.json(rate);
         } catch (err) {
             ErrorTemp.badRequest(res)
         }

@@ -84,7 +84,7 @@ const Item = observer (() => {
                 {(typeof item.oneItem === 'object') ?
                     <Styled>
                         <div className={'item-container'}>
-                            {width >= breakpoints.fromLarge ?
+                            {width >= breakpoints.rawFromLarge ?
                                 <div className={'icons'}>
                                     {item.oneItem.images?.map((img, index) => {
                                         return <StyledImg src={process.env.REACT_APP_API_URL + img} key={index}

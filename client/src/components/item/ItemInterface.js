@@ -127,7 +127,8 @@ const ItemInterface = observer(({product}) => {
             <div className={'item-head'}>
                 <h1>
                     {product.name}
-                    {user.isAuth && <ItemAddUpdate right={'64px'} product={product} fullForm={true}/>}
+                    {user.isAuth && <ItemAddUpdate right={'64px'} product={product} fullForm={true}
+                                                   itemInfo={JSON.stringify(product.info)}/>}
                     {user.isAuth && <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>}
                 </h1>
                 <div className={'rating-comparison'}>

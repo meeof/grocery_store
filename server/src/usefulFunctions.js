@@ -12,7 +12,6 @@ export const saveImages = async (files, multiple) => {
         await files[key].mv(`${path.resolve(__dirname, 'static', name)}`);
         imgNames.push(name);
     }
-    console.log(imgNames);
     if (multiple) {
         return imgNames;
     }

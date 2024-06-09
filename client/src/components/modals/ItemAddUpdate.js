@@ -10,7 +10,7 @@ import ItemInfoField from "../item/ItemInfoField";
 import UpdateButton from "../buttons/UpdateButton";
 import {observer} from "mobx-react-lite";
 
-const ItemAddUpdate = observer(({product, fullForm, right}) => {
+const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
     const width = useWindowSize();
     const {item, category, overlay} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
@@ -18,14 +18,14 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
     const [price, setPrice] = useState(product?.price || '');
     const [discount, setDiscount] = useState(product?.discount || '');
     const [selected, setSelected] = useState({});
-    const [info, setInfo] = useState(product?.info || []);
+    const [info, setInfo] = useState(itemInfo ? JSON.parse(itemInfo) : []);
     const [images, setImages] = useState([]);
 
     const handleCancel = () => {
         setName(product?.name || '');
         setPrice(product?.price || '');
         setDiscount(product?.discount || '');
-        setInfo(product?.info || []);
+        setInfo(itemInfo ? JSON.parse(itemInfo) : []);
         let indexThisCategory = 0;
         if (product) {
             indexThisCategory = category.categories.findIndex(({id}) => id === product.categoryId)
@@ -41,11 +41,11 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
         product?.price !== Number(price) && formData.append('price', price);
         product?.discount !== Number(discount) && formData.append('discount', discount);
         (fullForm && product?.categoryId !== selected.id) && formData.append('categoryId', selected.id);
-        (fullForm && JSON.stringify(product?.info) !== JSON.stringify(info)) && formData.append('info', JSON.stringify(info));
+        (fullForm && JSON.stringify(itemInfo) !== JSON.stringify(info)) && formData.append('info', JSON.stringify(info));
         if (fullForm) {
             formData = addImagesToFormData(formData, images);
         }
-        authAPI(product ? 'patch' : 'post', '/api/item', formData).then(data => {
+        authAPI('post', '/api/item', formData).then(data => {
             if (product) {
                 if (fullForm) {
                     API('get','/api/item/one', {id: product.id}).then(data => {
@@ -59,21 +59,16 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                 overlay.setShow(false);
             }
             else {
-                if (typeof data === 'object') {
-                    overlay.setMessage(`Товар "${data.name}" успешно добавлен`);
-                    overlay.setColor(colors.opacityPrimary);
-                    handleCancel();
-                }
-                else {
-                    overlay.setMessage(data);
-                    overlay.setColor(colors.opacityRed);
-                    setShowModal(false);
-                }
+                overlay.setMessage(`Товар "${data}" успешно добавлен`);
+                overlay.setColor(colors.opacityPrimary);
+                handleCancel();
                 overlay.handlerOverlay();
             }
         }).catch(err => {
             overlay.setMessage(err.response?.data || 'Непредвиденная ошибка');
+            overlay.setColor(colors.opacityRed);
             overlay.handlerOverlay();
+            !product && setShowModal(false);
         })
     }
     const deleteInfo = (delIndex) => {
@@ -164,7 +159,7 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                                 setImages(event.target.files);
                             }}/>
                         </Form.Group>}
-                        {fullForm && <Form.Group className="mb-3" controlId="formAddUpdateItemChar" style={{display: "flex", flexDirection: "column"}}>
+                        {fullForm && <div className="mb-3" style={{display: "flex", flexDirection: "column"}}>
                             <div className={'mb-2'}>Характеристики</div>
                             {info.map((infoObj, index) => {
                                 return <ItemInfoField
@@ -176,7 +171,7 @@ const ItemAddUpdate = observer(({product, fullForm, right}) => {
                             })}
                             <Button variant={colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
                                     style={{width: '50%', alignSelf: "center"}}>Добавить характеристику</Button>
-                        </Form.Group>}
+                        </div>}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
