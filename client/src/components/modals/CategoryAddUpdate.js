@@ -19,33 +19,25 @@ const CategoryAddUpdate = observer(({id, name}) => {
         overlay.setShow(false);
     }
     const handlerCategory = () => {
-        const handlerError = (text) => {
-            !id && setShowModal(false);
-            overlay.setMessage(text);
-            overlay.setColor(colors.opacityRed);
-            overlay.handlerOverlay();
-        }
-        authAPI(id ? 'patch' : 'post', '/api/categories', {id, categoryName}).then((data) => {
-            if (data === categoryName) {
-                if (id) {
-                    setShowModal(false);
-                    API('get', '/api/categories').then(data => {
-                        category.setCategories(data);
-                    });
-                }
-                else {
-                    overlay.setMessage(`Категория "${data}" успешно добавлена`);
-                    overlay.setColor(colors.opacityPrimary);
-                    overlay.handlerOverlay();
-                    setCategoryName('');
-                    setShowModal(false);
-                }
+        authAPI('post', '/api/categories', {id, categoryName}).then((data) => {
+            if (id) {
+                setShowModal(false);
+                API('get', '/api/categories').then(data => {
+                    category.setCategories(data);
+                });
             }
             else {
-                handlerError(data);
+                overlay.setMessage(`Категория "${data}" успешно добавлена`);
+                overlay.setColor(colors.opacityPrimary);
+                overlay.handlerOverlay();
+                setCategoryName('');
+                setShowModal(false);
             }
         }).catch(err => {
-            handlerError('Непредвиденная ошибка');
+            !id && setShowModal(false);
+            overlay.setMessage(err.response?.data || 'Непредвиденная ошибка');
+            overlay.setColor(colors.opacityRed);
+            overlay.handlerOverlay();
         })
     }
     return (

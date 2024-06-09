@@ -1,32 +1,38 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
 import {Op} from 'sequelize';
-import {deleteSpace} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace} from "../usefulFunctions.js";
 
 class CategoriesController {
-    async create(req, res) {
+    async createUpdate(req, res) {
         try {
-            let {categoryName} = req.body;
+            let {id, categoryName} = req.body;
             categoryName = deleteSpace(categoryName)
             if (categoryName === '') {
-                res.json('Некорректное имя категории');
+                return ErrorTemp.badRequest(res, 'Некорректное имя категории')
+            }
+            const categoryExist = await checkCategoryExist(categoryName, id);
+            if (categoryExist) {
+                return ErrorTemp.badRequest(res, 'Категория с таким именем уже существует');
+            }
+            if (id) {
+                await models.Categories.update(
+                    {
+                        name: categoryName,
+                    },
+                    {
+                        where: {
+                            id: id,
+                        },
+                    }
+                );
             }
             else {
-                const categoryExist = await models.Categories.findOne({
-                    where: {
-                        name: categoryName
-                    },
-                });
-                if (categoryExist) {
-                    res.json('Категория с таким именем уже существует');
-                }
-                else {
-                    const newCategory = await models.Categories.create(
-                        {name: categoryName},
-                        {fields: ['name']});
-                    res.json(newCategory.dataValues.name);
-                }
+                await models.Categories.create(
+                    {name: categoryName},
+                    {fields: ['name']});
             }
+            res.json(categoryName);
         } catch (error) {
             ErrorTemp.badRequest(res)
         }
@@ -39,42 +45,7 @@ class CategoriesController {
                     id,
                 },
             });
-            res.json('delete success');
-        } catch (error) {
-            ErrorTemp.badRequest(res)
-        }
-    }
-    async update(req, res){
-        try {
-            let {id, categoryName} = req.body;
-            categoryName = deleteSpace(categoryName)
-            if (categoryName === '') {
-                res.json('Некорректное имя категории');
-            }
-            else {
-                const categoryExist = await models.Categories.findOne({
-                    where: {
-                        id: {[Op.not]: id},
-                        name: categoryName
-                    },
-                });
-                if (categoryExist) {
-                    res.json('Категория с таким именем уже существует');
-                }
-                else {
-                    await models.Categories.update(
-                        {
-                            name: categoryName,
-                        },
-                        {
-                            where: {
-                                id: id,
-                            },
-                        }
-                        );
-                    res.json(categoryName);
-                }
-            }
+            res.json('deleted');
         } catch (error) {
             ErrorTemp.badRequest(res)
         }
@@ -87,20 +58,16 @@ class CategoriesController {
                     ['id', 'ASC'],
                 ],
             });
-            for (let elem of categories) {
-                let imageObj = await models.Item.findOne({
+            for (const category of categories) {
+                const itemForPreview = await models.Item.findOne({
                     attributes: ['images'],
                     where: {
-                        categoryId: elem.dataValues.id,
+                        categoryId: category.dataValues.id,
                         images: {[Op.not]: null},
                     },
                 });
-                if (imageObj?.dataValues.images) {
-                    elem.dataValues.image = JSON.parse(imageObj?.dataValues.images)?.[0];
-                }
-                else {
-                    elem.dataValues.image = null
-                }
+                category.dataValues.image = null
+                itemForPreview && (category.dataValues.image = JSON.parse(itemForPreview.dataValues.images)[0]);
             }
             res.json(categories);
         } catch (error) {

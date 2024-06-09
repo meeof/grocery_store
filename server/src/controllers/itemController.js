@@ -1,6 +1,6 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {deleteSpace, saveImages} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, saveImages} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
@@ -30,7 +30,7 @@ const getItems = async (categoryId, limit, page, find) => {
 class ItemController {
     async createUpdate(req, res) {
         try {
-            let {id, name, price, discount, categoryId, info} = req.body;
+            let {id, name, price, discount, categoryId, categoryName, info} = req.body;
             const itemFields = {};
             if (typeof name === 'string') {
                 name = deleteSpace(name);
@@ -66,11 +66,7 @@ class ItemController {
                 }
             }
             if (typeof categoryId === 'string') {
-                const categoryExist = await models.Categories.findOne({
-                    where: {
-                        id: categoryId
-                    },
-                });
+                const categoryExist = checkCategoryExist(categoryName);
                 if (categoryExist) {
                     itemFields.categoryId = Number(categoryId)
                 }

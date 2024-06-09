@@ -40,8 +40,11 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
         product?.name !== name && formData.append('name', name);
         product?.price !== Number(price) && formData.append('price', price);
         product?.discount !== Number(discount) && formData.append('discount', discount);
-        (fullForm && product?.categoryId !== selected.id) && formData.append('categoryId', selected.id);
         (fullForm && JSON.stringify(itemInfo) !== JSON.stringify(info)) && formData.append('info', JSON.stringify(info));
+        if (fullForm && product?.categoryId !== selected.id) {
+            formData.append('categoryName', selected.name);
+            formData.append('categoryId', selected.id);
+        }
         if (fullForm) {
             formData = addImagesToFormData(formData, images);
         }
