@@ -78,15 +78,6 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
     const handlerOrder = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        const postOrder = (path, then) => {
-            authAPI('post', path, formData).then(data => {
-                if (data === 'success') {
-                    then();
-                }
-            }).catch(err => {
-                console.log(err);
-            })
-        }
         formData.append('name', name);
         formData.append('surname', surname);
         formData.append('phone', phone);
@@ -96,17 +87,16 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
         formData.append('comment', orderComment);
         formData.append('sms', subscription);
         formData.append('userId', user.isAuth.id);
-        if (field === 'page') {
-            postOrder('/api/basket/formBasketOrder', () => setShowAlert(true));
-        }
-        else if (field === 'modal') {
-            formData.append('itemId', itemId);
-            postOrder('/api/basket/formFastOrder', () => {
+        (field === 'modal') && formData.append('itemId', itemId);
+        authAPI('post', '/api/basket/formOrder', formData).then(() => {
+            setShowAlert(true);
+            if (field === 'modal') {
                 setShowModal(false);
-                setShowAlert(true);
                 render.forceUpdate();
-            });
-        }
+            }
+        }).catch(err => {
+            console.log(err);
+        })
     };
     const autoContactHandler = () => {
         if (autoContact) {
@@ -116,10 +106,10 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
             setPhone('');
         }
         else {
-            authAPI( 'get', '/api/basket/orderContacts', {userId: user.isAuth.id}).then(data => {
+            authAPI( 'get', '/api/basket/getContacts', {userId: user.isAuth.id}).then(data => {
                 setName(data.name);
                 setSurname(data.surname);
-                setPhone(data.phone);
+                setPhone(user.isAuth.phone);
             }).catch(err => {
                 console.log(err);
             })

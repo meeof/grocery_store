@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 import bcrypt from "bcrypt";
-import {deleteSpace, saveImages} from "../usefulFunctions.js";
+import {deleteSpace, getUserInfo, saveImages} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 const generateToken = (data) => {
@@ -12,13 +12,6 @@ const generateToken = (data) => {
         {'id': data.id, 'email': data.email, 'phone': data.phone, 'role': data.role},
         process.env.JWT_PRIVATE_KEY,
         {algorithm: 'HS256', expiresIn: '12h'});
-}
-export const getUserInfo = async (userId) => {
-    return await models.UserInfo.findOne({
-        where: {
-            userId,
-        },
-    });
 }
 const findEmailPassword = async (phoneEmail) => {
     return await models.User.findOne({

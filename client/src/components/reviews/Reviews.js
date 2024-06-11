@@ -7,6 +7,7 @@ import ReviewCard from "../cards/ReviewCard";
 import {marginMedium, marginsPage} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 import Load from "../Load";
+import {addImagesToFormData} from "../../usefulFunctions";
 const Styled = styled.div`
   ${marginsPage};
   margin-bottom: ${marginMedium};
@@ -17,19 +18,29 @@ const Styled = styled.div`
 
 const Reviews = observer(({itemId}) => {
     const {user, review, render} = useContext(Context);
+    const handlerAddUpdate = (text, images, id, then) => {
+        let formData = new FormData();
+        if (id) {
+            formData.append('id', id);
+        }
+        else {
+            formData.append('userId', user.isAuth.id);
+            formData.append('itemId', itemId);
+        }
+        text && formData.append('review', text);
+        images && (formData = addImagesToFormData(formData, images));
+        authAPI('post', '/api/reviews', formData).then(() => {
+            then && then();
+            render.forceUpdate();
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     useEffect(() => {
         user.checkAuthUser(() => {
-            authAPI('get', '/api/basket/bought', {userId: user.isAuth.id, itemId}).then(data => {
-                review.setBought(data);
-            }).catch(err => {
-                console.log(err);
-            }).finally(() => {
-                authAPI('get', '/api/basket/reviewed', {userId: user.isAuth.id, itemId}).then(data => {
-                    review.setReviewed(data);
-                }).catch(err => {
-                    console.log(err);
-                }).finally(() => {
-                    API('get', '/api/basket/reviews', {itemId}).then(data => {
+            review.check(user.isAuth.id, itemId, 'bought', (data) => review.setBought(data), () => {
+                review.check(user.isAuth.id, itemId, 'reviewed',(data) => review.setReviewed(data), () => {
+                    API('get', '/api/reviews', {itemId}).then(data => {
                         review.setReviews(data);
                     }).catch((err) => {
                         console.log(err);
@@ -42,13 +53,14 @@ const Reviews = observer(({itemId}) => {
         <Styled>
             {review.reviews ? <>{review.reviews.length > 0 ?
                 review.reviews.map(obj => {
-                    return <ReviewCard key={obj.id} reviewObj={obj} myReview={user.isAuth.id === obj.userId}/>
+                    return <ReviewCard key={obj.id} reviewObj={obj} myReview={user.isAuth.id === obj.userId}
+                                       handlerAddUpdate={handlerAddUpdate}/>
                 }) : <>
                     <h2>Отзывы</h2>
                     <div>Отзывов еще никто не оставлял</div>
                 </>}
             </> : <Load/>}
-            {(review.bought && !review.reviewed) && <AddReview userId={user.isAuth.id} itemId={itemId}/>}
+            {(review.bought && !review.reviewed) && <AddReview handlerAddUpdate={handlerAddUpdate}/>}
         </Styled>
     );
 });

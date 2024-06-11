@@ -26,3 +26,48 @@ export const checkCategoryExist = async (name, id) => {
         where
     });
 }
+export const getOneItem = async (id) => {
+    return await models.Item.findOne({
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
+        where: {
+            id,
+        }
+    });
+}
+export const getUserInfo = async (userId) => {
+    return await models.UserInfo.findOne({
+        where: {
+            userId,
+        },
+    });
+}
+
+export const getWasBought = async (userId, itemId, table) => {
+    const check = await table.findOne({
+        attributes: ['id'],
+        where: {
+            userId,
+            itemId,
+        }
+    })
+    return !!check;
+}
+export const checkBoughtReviewed = async (userId, itemId, field) => {
+    let table;
+    switch (field) {
+        case 'bought':
+            table = models.WasBought;
+            break
+        case 'reviewed':
+            table = models.Reviews;
+            break
+    }
+    const check = await table.findOne({
+        attributes: ['id'],
+        where: {
+            userId,
+            itemId,
+        }
+    })
+    return !!check;
+}

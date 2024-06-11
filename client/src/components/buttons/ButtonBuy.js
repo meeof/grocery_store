@@ -75,7 +75,7 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
         })
     }
     useEffect(() => {
-        authAPI('get', '/api/basket/one', {userId: user.isAuth?.id, itemId}).then(data => {
+        authAPI('get', '/api/basket/amount', {userId: user.isAuth?.id, itemId}).then(data => {
             if (data) {
                 setProductAmount(data);
             }

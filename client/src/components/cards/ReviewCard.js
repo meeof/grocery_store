@@ -48,7 +48,7 @@ const Styled = styled.div`
   }
 `
 
-const ReviewCard = ({reviewObj, myReview}) => {
+const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
     const {render} = useContext(Context);
     const [review, setReview] = useState(reviewObj.review);
     const [redactImages, setRedactImages] = useState([]);
@@ -84,7 +84,7 @@ const ReviewCard = ({reviewObj, myReview}) => {
         })
     }
     const handlerDeleteReview = (id) => {
-        authAPI( 'delete', '/api/basket/review', {id}).then(data => {
+        authAPI( 'delete', '/api/reviews', {id}).then(data => {
             render.forceUpdate();
         }).catch((err) => {
             console.log(err);
@@ -94,21 +94,6 @@ const ReviewCard = ({reviewObj, myReview}) => {
         setReview(reviewObj.review);
         setRedactImages([]);
         setShowRedact(false);
-    }
-    const handleUpdateReview = () => {
-        const formData = new FormData();
-        formData.append('id', reviewObj.id);
-        review && formData.append('review', review);
-        for (const [key, value] of Object.entries(redactImages)) {
-            formData.append(`${key}_${value.name}`, value)
-        }
-        authAPI('patch', '/api/basket/review', formData).then(data => {
-            render.forceUpdate();
-            setRedactImages([]);
-            setShowRedact(false);
-        }).catch((err) => {
-            console.log(err);
-        })
     }
     return (
         <>
@@ -157,7 +142,14 @@ const ReviewCard = ({reviewObj, myReview}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={handleUpdateReview}>Редактировать</Button>
+                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                        handlerAddUpdate(review, redactImages, reviewObj.id, () => {
+                            setRedactImages([]);
+                            setShowRedact(false);
+                        })
+                    }}>
+                        Редактировать
+                    </Button>
                 </Modal.Footer>
             </Modal>
             <Modal

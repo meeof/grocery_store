@@ -75,11 +75,9 @@ const Orders = observer(() => {
         user.checkAuthUser(() => fetchOrders(user.isAuth.id, basket.ordersLimit), navigate)
     }, [basket, navigate, user, fetchOrders]);
     const clearOrdersHandler = () => {
-        authAPI('delete', '/api/basket/clearOrders', {userId: user.isAuth.id}).then(data => {
-            if (data === 'success') {
-                setShowAlert(false);
-                fetchOrders(user.isAuth.id, basket.ordersLimit);
-            }
+        authAPI('delete', '/api/basket/clearOrders', {userId: user.isAuth.id}).then(() => {
+            setShowAlert(false);
+            fetchOrders(user.isAuth.id, basket.ordersLimit);
         }).catch(err => {
             console.log(err);
         })

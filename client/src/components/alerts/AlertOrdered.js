@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {colors, smallButtonWidth} from "../../StyledGlobal";
+import {Context} from "../../index";
 
 const AlertOrdered = ({field, showAlert, setShowAlert}) => {
     const navigate = useNavigate();
+    const {basket} = useContext(Context);
     return (
         <Modal
             show={showAlert}
@@ -21,6 +23,7 @@ const AlertOrdered = ({field, showAlert, setShowAlert}) => {
                     <Button onClick={async () => {
                         setShowAlert(false);
                         if (field === 'page') {
+                            basket.setBasket(null);
                             navigate('/catalog');
                         }
                     }} variant={colors.bootstrapMainVariant} style={{width: smallButtonWidth}}>

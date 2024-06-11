@@ -1,13 +1,10 @@
 import styled from "styled-components";
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Button, CloseButton} from "react-bootstrap";
 import useWindowSize from "../../hooks/useWindowSize";
 import AddImagesButton from "../buttons/AddImagesButton";
-import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {breakpoints, colors, flexColumn, iconsSize, marginsCenter} from "../../StyledGlobal";
-import {authAPI} from "../../api";
-import {addImagesToFormData} from "../../usefulFunctions";
 
 let Styled = styled.div`
   ${flexColumn};
@@ -47,30 +44,16 @@ let Styled = styled.div`
   }
 `;
 
-const AddReview = observer(({userId, itemId}) => {
-    const {render} = useContext(Context);
+const AddReview = observer(({handlerAddUpdate}) => {
     const width = useWindowSize();
     const [write, setWrite] = useState(false);
     const [review, setReview] = useState('');
     const [images, setImages] = useState([]);
-
-    function handlerAddReview() {
-        let formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('itemId', itemId);
-        review && formData.append('review', review);
-        formData = addImagesToFormData(formData, images);
-        authAPI('post', '/api/basket/review', formData).then(() => {
-            render.forceUpdate();
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
     return <Styled>
         {write ? <div className={'review-button-block'}>
                 <Button variant={colors.bootstrapMainVariant} onClick={()=> {
                     setReview('');
-                    handlerAddReview();
+                    handlerAddUpdate(review, images);
                 }}>Добавить отзыв</Button>
                 {width < breakpoints.rawSmall && <CloseButton onClick={() => setWrite(false)}/>}
             </div>

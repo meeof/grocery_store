@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx";
+import {authAPI} from "../api";
 
 class ReviewStore {
     constructor() {
@@ -24,6 +25,15 @@ class ReviewStore {
     }
     setReviewed (value) {
         this._reviewed = value;
+    }
+    check (userId, itemId, field, thenCallback, finallyCallback) {
+        authAPI('get', '/api/reviews/check', {userId, itemId, field}).then(data => {
+            thenCallback && thenCallback(data);
+        }).catch(err => {
+            console.log(err);
+        }).finally(() => {
+            finallyCallback && finallyCallback();
+        })
     }
 }
 export default ReviewStore;

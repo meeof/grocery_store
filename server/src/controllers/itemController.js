@@ -1,6 +1,6 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {checkCategoryExist, deleteSpace, saveImages} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, getOneItem, saveImages} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
@@ -153,12 +153,7 @@ class ItemController {
         try {
             const {id} = req.query;
             const response =  await sequelize.transaction(async () => {
-                const oneItem = await models.Item.findOne({
-                    attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
-                    where: {
-                        id,
-                    }
-                });
+                const oneItem = await getOneItem(id);
                 const itemInfos = await models.ItemInfo.findAll({
                     attributes: ['id', 'title', 'description'],
                     where: {
