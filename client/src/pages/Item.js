@@ -112,7 +112,7 @@ const Item = observer (() => {
                             })}
                         </div>}
                         <Reviews itemId={item.oneItem.id}/>
-                        {width < breakpoints.small && <ButtonBuy itemId={item.oneItem.id} fixed={true}/>}
+                        {width < breakpoints.rawSmall && <ButtonBuy itemId={item.oneItem.id} fixed={true}/>}
                     </Styled> : <div style={{textAlign: "center"}}>{item.oneItem}</div>}
             </>  : <Load/>}
         </>

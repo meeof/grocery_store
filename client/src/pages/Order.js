@@ -6,7 +6,7 @@ import OrderItemCard from "../components/cards/OrderItemCard";
 import {observer} from "mobx-react-lite";
 import OrderForm from "../components/OrderForm";
 import AlertOrdered from "../components/alerts/AlertOrdered";
-import {marginMedium, marginsPage} from "../StyledGlobal";
+import {breakpoints, marginMedium, marginsPage} from "../StyledGlobal";
 import Load from "../components/Load";
 
 const Styled = styled.div`
@@ -23,6 +23,14 @@ const Styled = styled.div`
       box-shadow: 0 2px 2px  rgba(0, 0, 0, 0.1), 0 2px 2px inset rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-between;
+    }
+  }
+  @media (${breakpoints.small}) {
+    display: flex;
+    flex-direction: column-reverse;
+    .order-left, .order-right {
+      padding: 0;
+      box-shadow: none;
     }
   }
 `;

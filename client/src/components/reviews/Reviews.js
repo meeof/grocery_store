@@ -9,6 +9,7 @@ import {API, authAPI} from "../../api";
 import Load from "../Load";
 import {addImagesToFormData} from "../../usefulFunctions";
 const Styled = styled.div`
+  position: relative;
   ${marginsPage};
   margin-bottom: ${marginMedium};
   button {
@@ -38,15 +39,22 @@ const Reviews = observer(({itemId}) => {
     }
     useEffect(() => {
         user.checkAuthUser(() => {
-            review.check(user.isAuth.id, itemId, 'bought', (data) => review.setBought(data), () => {
-                review.check(user.isAuth.id, itemId, 'reviewed',(data) => review.setReviewed(data), () => {
-                    API('get', '/api/reviews', {itemId}).then(data => {
-                        review.setReviews(data);
-                    }).catch((err) => {
-                        console.log(err);
-                    })
-                })
+            authAPI('get', '/api/reviews/check', {userId : user.isAuth.id, itemId, field: 'bought'}).then(data => {
+                review.setBought(data)
+            }).catch(err => {
+                console.log(err);
+            }).finally(() => {
+                authAPI('get', '/api/reviews/check', {userId : user.isAuth.id, itemId, field: 'reviewed'}).then(data => {
+                    review.setReviewed(data)
+                }).catch(err => {
+                    console.log(err);
+                });
             })
+        });
+        API('get', '/api/reviews', {itemId}).then(data => {
+            review.setReviews(data);
+        }).catch((err) => {
+            console.log(err);
         })
     }, [review, user, render.rerender, itemId]);
     return (

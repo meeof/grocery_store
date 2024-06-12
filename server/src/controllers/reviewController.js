@@ -56,7 +56,7 @@ class ReviewController {
                     ["createdAt", 'ASC'],
                 ],
             });
-            const reviewsAndUsersInfos = await Promise.all(reviews.map(async (review) => {
+            await Promise.all(reviews.map(async (review) => {
                 const {userId} = review.dataValues;
                 try {
                     const userInfo = await getUserInfo(userId);
