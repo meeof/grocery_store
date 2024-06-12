@@ -33,8 +33,9 @@ const CategoryCard = observer(({...props}) => {
                 <Card.Body>
                     <Card.Title>{props.name}</Card.Title>
                 </Card.Body>
-                {props.isAuth && <DelButton delFun={props.delCategory} id={props.id} name={props.name}/>}
-                {props.isAuth && <CategoryAddUpdate id={props.id} name={props.name}/>}
+                {props.isAuth?.role === 'ADMIN' && <DelButton delFun={props.delCategory} id={props.id} name={props.name}/>}
+                {(props.isAuth?.id === props.creator || props.isAuth?.role === 'ADMIN') &&
+                    <CategoryAddUpdate id={props.id} name={props.name}/>}
             </Card>
         </Styled>
     );

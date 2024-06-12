@@ -105,4 +105,10 @@ Reviews.belongsTo(User);
 Item.hasMany(Reviews);
 Reviews.belongsTo(Item);
 
+User.hasMany(Categories);
+Categories.belongsTo(User);
+
+User.hasMany(Item);
+Item.belongsTo(User);
+
 export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews};

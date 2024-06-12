@@ -19,11 +19,12 @@ class UserStore {
     get userInfo() {
         return this._userInfo;
     }
-    fetchUserInfo() {
-        authAPI('get', '/api/user/info', {userId : this.isAuth.id}).then(data => {
+    fetchUserInfo(navigate) {
+        authAPI('get', '/api/user/info').then(data => {
             this._userInfo = data;
         }).catch((err) => {
-            console.log(err)
+            console.log(err);
+            navigate && navigate('/profile/login');
         })
     }
     userExit(navigate) {

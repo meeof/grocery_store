@@ -18,23 +18,22 @@ const ViewProfile = observer (() => {
     const [image, setImage] = useState(null);
     const [status, setStatus] = useState(user.userInfo?.status || '');
     const [about, setAbout] = useState(user.userInfo?.about || '');
-    const handlerChangeUserInfo = (userId) => {
+    const handlerChangeUserInfo = () => {
         const formData = new FormData();
-        userId && formData.append('userId', userId);
         name && formData.append('name', name);
         surname && formData.append('surname', surname);
         status && formData.append('status', status);
         about && formData.append('about', about);
         image && formData.append(`${image[0].name}`, image[0]);
-        authAPI('patch', '/api/user/info', formData).then(data => {
+        authAPI('patch', '/api/user/info', formData).then(() => {
             user.fetchUserInfo();
             setChange(false);
         }).catch((err) => {
             console.log(err);
         })
     }
-    const deleteUserHandler = (userId) => {
-        authAPI('delete', '/api/user', {userId}).then(data => {
+    const deleteUserHandler = () => {
+        authAPI('delete', '/api/user').then(data => {
             user.userExit(navigate);
         }).catch(err => {
             console.log(err)
@@ -91,7 +90,7 @@ const ViewProfile = observer (() => {
                         </Form.Group>
                         <div style={{display: "flex", justifyContent: "space-between"}}>
                             <Button style={{width: '40%'}} variant={colors.bootstrapMainVariant}
-                                    onClick={() => handlerChangeUserInfo(user.isAuth.id)}>Применить</Button>
+                                    onClick={handlerChangeUserInfo}>Применить</Button>
                             <Button variant={"secondary"} style={{width: '40%'}}
                                     onClick={() => {
                                         setChange(false)
@@ -100,7 +99,7 @@ const ViewProfile = observer (() => {
                                     }}>Отмена</Button>
                         </div>
                     </div>
-                    <DelButton id={user.isAuth.id} delFun={deleteUserHandler} name={'ваш профиль'}/>
+                    <DelButton delFun={deleteUserHandler} name={'ваш профиль'}/>
                 </Modal.Body>
                 <Modal.Footer style={{border: "none", padding: 0}}/>
             </Modal>

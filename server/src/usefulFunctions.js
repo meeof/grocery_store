@@ -28,7 +28,7 @@ export const checkCategoryExist = async (name, id) => {
 }
 export const getOneItem = async (id) => {
     return await models.Item.findOne({
-        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId'],
         where: {
             id,
         }
@@ -70,4 +70,13 @@ export const checkBoughtReviewed = async (userId, itemId, field) => {
         }
     })
     return !!check;
+}
+export const verifySeller = async (table, userId, id) => {
+    const check = await table.findOne({
+        attributes: ['userId'],
+        where: {
+            id
+        }
+    });
+    return userId === check.dataValues.userId;
 }

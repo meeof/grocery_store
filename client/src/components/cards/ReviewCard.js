@@ -103,7 +103,7 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                            roundedCircle className={'review-card-profile-image'} onClick={() => setShowUser(true)}/>
                     <h5>{reviewObj.name} {reviewObj.surname}</h5>
                     <i>{reviewObj.createdAt !== reviewObj.updatedAt ? 'Изм.' : ''} {created}</i>
-                    {myReview && <UpdateButton top={'20px'} handleModal={setShowRedact}/>}
+                    {myReview && <UpdateButton right={'40px'} top={'20px'} handleModal={setShowRedact}/>}
                     {myReview && <DelButton delFun={handlerDeleteReview} id={reviewObj.id} name={'отзыв'} top={'20px'}/>}
                 </div>
                 <div className={'review-card-body'}>

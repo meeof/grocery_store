@@ -1,13 +1,14 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
 import {Op} from 'sequelize';
-import {checkCategoryExist, deleteSpace} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, verifySeller} from "../usefulFunctions.js";
 
 class CategoriesController {
     async createUpdate(req, res) {
         try {
             let {id, categoryName} = req.body;
-            categoryName = deleteSpace(categoryName)
+            const {role} = req.user;
+            categoryName = deleteSpace(categoryName);
             if (categoryName === '') {
                 return ErrorTemp.badRequest(res, 'Некорректное имя категории')
             }
@@ -16,6 +17,10 @@ class CategoriesController {
                 return ErrorTemp.badRequest(res, 'Категория с таким именем уже существует');
             }
             if (id) {
+                if (role === 'SELLER') {
+                    const verify = await verifySeller(models.Categories, req.user.id, id);
+                    if (!verify) return ErrorTemp.badRequest(res);
+                }
                 await models.Categories.update(
                     {
                         name: categoryName,
@@ -29,8 +34,8 @@ class CategoriesController {
             }
             else {
                 await models.Categories.create(
-                    {name: categoryName},
-                    {fields: ['name']});
+                    {name: categoryName, userId: req.user.id},
+                    {fields: ['name', 'userId']});
             }
             res.json(categoryName);
         } catch (error) {
@@ -53,7 +58,7 @@ class CategoriesController {
     async getAll(req, res) {
         try {
             const categories = await models.Categories.findAll({
-                attributes: ['id', 'name'],
+                attributes: ['id', 'name', "userId"],
                 order: [
                     ['id', 'ASC'],
                 ],

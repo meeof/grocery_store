@@ -88,7 +88,7 @@ const Profile = observer( () => {
         USER : 'Пользователь'
     }
     useEffect(() => {
-        user.checkAuthUser(() => user.fetchUserInfo(), navigate);
+        user.fetchUserInfo(navigate);
     }, [user, navigate]);
     return (
         <>

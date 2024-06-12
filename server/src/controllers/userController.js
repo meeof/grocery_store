@@ -94,8 +94,8 @@ class UserController {
     }
     async getInfo(req, res) {
         try {
-            const {userId} = req.query;
-            const info = await getUserInfo(userId);
+            const {id} = req.user;
+            const info = await getUserInfo(id);
             res.json(info.dataValues)
         } catch (error) {
             ErrorTemp.err();
@@ -104,8 +104,9 @@ class UserController {
     async updateInfo(req, res) {
         try {
             const {userId, name, surname, status, about} = req.body;
+            const {id} = req.user;
             let itemFields = {};
-            const info = await getUserInfo(userId);
+            const info = await getUserInfo(id);
             if (name && name !== info.dataValues.name) {
                 itemFields.name = name
             }
@@ -126,7 +127,7 @@ class UserController {
                     itemFields,
                     {
                         where: {
-                            userId,
+                            userId: id,
                         },
                     }
                 );
@@ -141,16 +142,16 @@ class UserController {
     }
     async deleteUser(req, res){
         try {
-            const {userId} = req.query
+            const {id} = req.user
             await sequelize.transaction(async () => {
                 await models.UserInfo.destroy({
                     where: {
-                        userId,
+                        userId: id,
                     },
                 });
                 await models.User.destroy({
                     where: {
-                        id: userId,
+                        id,
                     },
                 });
             })

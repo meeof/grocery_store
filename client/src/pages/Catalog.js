@@ -52,17 +52,11 @@ const Catalog = observer( () => {
                     user.setAuth(data);
                 }).catch(() => {
                     user.setAuth(false);
-                }).finally(() => {
-                    API('get', '/api/categories').then(data => {
-                        category.setCategories(data);
-                    });
                 })
             }
-            else {
-                API('get', '/api/categories').then(data => {
-                    category.setCategories(data);
-                });
-            }
+            API('get', '/api/categories').then(data => {
+                category.setCategories(data);
+            });
         }
     }, [category, user]);
     return (
@@ -73,8 +67,8 @@ const Catalog = observer( () => {
                 >Показать все</Button>}
                 <div className={'card_container'}>
                     {category.categories.map(category => {
-                        return <CategoryCard key={category.id} delCategory={delCategory}
-                                             img={category.image} name={category.name} id={category.id} isAuth={user.isAuth}/>
+                        return <CategoryCard key={category.id} delCategory={delCategory} img={category.image}
+                                              creator={category.userId} name={category.name} id={category.id} isAuth={user.isAuth}/>
                     })}
                 </div>
             </Styled> : <Load/>}

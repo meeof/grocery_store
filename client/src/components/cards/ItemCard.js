@@ -65,8 +65,10 @@ const ItemCard = observer(({...props}) => {
                 </Card.Body>
                 <ButtonBuy itemId={props.product.id}/>
                 {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
-                {props.isAuth && <DelButton delFun={props.delItem} id={props.product.id} name={props.product.name}/>}
-                {props.isAuth && <ItemAddUpdate product={props.product}/>}
+                {(props.isAuth?.id === props.product?.userId || props.isAuth?.role === 'ADMIN') && <>
+                    <DelButton delFun={props.delItem} id={props.product.id} name={props.product.name}/>
+                    <ItemAddUpdate product={props.product}/>
+                    </>}
             </Card>
         </Styled>
     );

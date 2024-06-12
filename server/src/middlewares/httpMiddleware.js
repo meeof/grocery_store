@@ -16,9 +16,21 @@ class HttpMiddleware {
             /*ErrorTemp.forbidden(res);*/
         }
     }
+    isSeller(req, res, next) {
+        try {
+            const decoded = decodeToken(req);
+            !decoded && ErrorTemp.forbidden(res);
+            req.user = decoded;
+            (decoded.role !== 'ADMIN' && decoded.role !== 'SELLER') ? ErrorTemp.forbidden(res) : next();
+        } catch (error) {
+            ErrorTemp.forbidden(res);
+        }
+    }
     isAdmin(req, res, next) {
         try {
             const decoded = decodeToken(req);
+            !decoded && ErrorTemp.forbidden(res);
+            req.user = decoded;
             decoded.role !== 'ADMIN' ? ErrorTemp.forbidden(res) : next();
         } catch (error) {
             ErrorTemp.forbidden(res);

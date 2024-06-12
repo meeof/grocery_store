@@ -1,6 +1,6 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {checkCategoryExist, deleteSpace, getOneItem, saveImages} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, getOneItem, saveImages, verifySeller} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
@@ -12,7 +12,7 @@ const getItems = async (categoryId, limit, page, find) => {
     categoryId && (where.categoryId = categoryId);
     find && (where.name = {[Op.iRegexp]: find});
     const allItems = await models.Item.findAndCountAll({
-        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId'],
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId'],
         where, limit, offset, order: [
             ['id', 'DESC'],
         ],
@@ -31,6 +31,7 @@ class ItemController {
     async createUpdate(req, res) {
         try {
             let {id, name, price, discount, categoryId, categoryName, info} = req.body;
+            const {role} = req.user;
             const itemFields = {};
             if (typeof name === 'string') {
                 name = deleteSpace(name);
@@ -78,6 +79,10 @@ class ItemController {
                 const images = await saveImages(req.files, true);
                 itemFields.images = JSON.stringify(images);
             }
+            if (id && role === 'SELLER') {
+                const verify = await verifySeller(models.Item, req.user.id, id);
+                if (!verify) return ErrorTemp.badRequest(res);
+            }
             let response = '';
             await sequelize.transaction(async () => {
                 if (id) {
@@ -91,8 +96,9 @@ class ItemController {
                     );
                 }
                 else {
+                    itemFields.userId = req.user.id;
                     const created = await models.Item.create(
-                        itemFields, {fields: ['name', 'price', 'discount', 'images', 'categoryId']},
+                        itemFields, {fields: ['name', 'price', 'discount', 'images', 'categoryId', 'userId']},
                     );
                     response = created.dataValues.name;
                 }
@@ -122,8 +128,13 @@ class ItemController {
     }
     async delete(req, res) {
         try {
+            const {id} = req.query;
+            const {role} = req.user;
+            if (role === 'SELLER') {
+                const verify = await verifySeller(models.Item, req.user.id, id);
+                if (!verify) return ErrorTemp.badRequest(res);
+            }
             await sequelize.transaction(async () => {
-                const {id} = req.query;
                 await models.ItemInfo.destroy({
                     where: {
                         itemId: id,
