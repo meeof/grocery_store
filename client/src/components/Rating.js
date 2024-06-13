@@ -4,6 +4,7 @@ import starImgFill from '../assets/icon_star_black.svg';
 import styled from "styled-components";
 import {Context} from "../index";
 import {API, authAPI} from "../api";
+import {useNavigate} from "react-router-dom";
 const Styled = styled.div`
   display: flex;
   align-items: center;
@@ -21,6 +22,7 @@ const Styled = styled.div`
 `
 
 const Rating = ({disabled, setShowModalAll, itemsId}) => {
+    const navigate = useNavigate();
     const {user} = useContext(Context);
     const [rating, setRating] = useState(0);
     useEffect(() => {
@@ -35,7 +37,7 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
             });
         }
         else  {
-            authAPI('get', '/api/rating/user', {itemId: itemsId[0], userId: user.isAuth.id}).then(data => {
+            authAPI('get', '/api/rating/user', {itemId: itemsId[0]}).then(data => {
                 setRating(data);
             }).catch((err) => {
                 console.log(err);
@@ -43,7 +45,7 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
         }
     }, [setShowModalAll, itemsId, user.isAuth?.id, disabled]);
     const handleSetRating = (rate) => {
-        authAPI('post', '/api/rating', {rate, userId: user.isAuth.id, itemsId}).then(() => {
+        authAPI('post', '/api/rating', {rate, itemsId}).then(() => {
             if (!setShowModalAll) {
                 setRating(rate);
             }
@@ -52,6 +54,7 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
             }
         }).catch(err => {
             console.log(err);
+            navigate('/profile/login');
         })
     }
     let imgStars = [];

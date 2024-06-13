@@ -1,7 +1,7 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
 import {Op} from 'sequelize';
-import {checkCategoryExist, deleteSpace, verifySeller} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, verifyCreator} from "../usefulFunctions.js";
 
 class CategoriesController {
     async createUpdate(req, res) {
@@ -18,7 +18,7 @@ class CategoriesController {
             }
             if (id) {
                 if (role === 'SELLER') {
-                    const verify = await verifySeller(models.Categories, req.user.id, id);
+                    const verify = await verifyCreator(models.Categories, req.user.id, id);
                     if (!verify) return ErrorTemp.badRequest(res);
                 }
                 await models.Categories.update(

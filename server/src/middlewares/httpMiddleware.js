@@ -5,6 +5,9 @@ const decodeToken = (req) => {
     return jwt.verify(token, process.env.JWT_PRIVATE_KEY);
 }
 class HttpMiddleware {
+    /*template(req, res, next, error) {
+
+    }*/
     isAuth(req, res, next) {
         try {
             const decoded = decodeToken(req);
@@ -12,7 +15,6 @@ class HttpMiddleware {
             req.user = decoded;
             next();
         } catch (error) {
-            /*res.json('Unauthorized')*/
             ErrorTemp.err(res, 401, 'Unauthorized');
         }
     }

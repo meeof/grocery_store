@@ -14,8 +14,8 @@ const findOneRating = async (userId, itemId) => {
 class RatingController {
     async getRatingOneUser (req, res) {
         try {
-            const {itemId, userId} = req.query;
-            const rate = await findOneRating(userId, itemId);
+            const {itemId} = req.query;
+            const rate = await findOneRating(req.user.id, itemId);
             res.json(rate);
         } catch (err) {
             ErrorTemp.badRequest(res)
@@ -43,15 +43,15 @@ class RatingController {
     }
     async setRatings (req, res) {
         try {
-            const {rate, userId, itemsId} = req.body;
+            const {rate, itemsId} = req.body;
             await Promise.all(itemsId.map(async itemId => {
-                const rateExist = await findOneRating(userId, itemId);
+                const rateExist = await findOneRating(req.user.id, itemId);
                 if (rateExist) {
                     return await models.Rating.update(
                         {rate},
                         {
                             where: {
-                                userId,
+                                userId: req.user.id,
                                 itemId
                             },
                         }
@@ -59,7 +59,7 @@ class RatingController {
                 }
                 else {
                     return await models.Rating.create(
-                        {rate, userId, itemId},
+                        {rate, userId: req.user.id, itemId},
                         {fields: ['rate', 'userId', 'itemId']});
                 }
             }));

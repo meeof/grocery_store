@@ -1,6 +1,6 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {checkCategoryExist, deleteSpace, getOneItem, saveImages, verifySeller} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, getOneItem, saveImages, verifyCreator} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
@@ -80,7 +80,7 @@ class ItemController {
                 itemFields.images = JSON.stringify(images);
             }
             if (id && role === 'SELLER') {
-                const verify = await verifySeller(models.Item, req.user.id, id);
+                const verify = await verifyCreator(models.Item, req.user.id, id);
                 if (!verify) return ErrorTemp.badRequest(res);
             }
             let response = '';
@@ -131,7 +131,7 @@ class ItemController {
             const {id} = req.query;
             const {role} = req.user;
             if (role === 'SELLER') {
-                const verify = await verifySeller(models.Item, req.user.id, id);
+                const verify = await verifyCreator(models.Item, req.user.id, id);
                 if (!verify) return ErrorTemp.badRequest(res);
             }
             await sequelize.transaction(async () => {

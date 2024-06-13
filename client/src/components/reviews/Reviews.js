@@ -38,18 +38,15 @@ const Reviews = observer(({itemId}) => {
         })
     }
     useEffect(() => {
-        user.checkAuthUser(() => {
-            authAPI('get', '/api/reviews/check', {userId : user.isAuth.id, itemId, field: 'bought'}).then(data => {
-                review.setBought(data)
+        authAPI('get', '/api/reviews/check', {itemId, field: 'bought'}).then(data => {
+            review.setBought(data);
+            authAPI('get', '/api/reviews/check', {itemId, field: 'reviewed'}).then(data => {
+                review.setReviewed(data)
             }).catch(err => {
                 console.log(err);
-            }).finally(() => {
-                authAPI('get', '/api/reviews/check', {userId : user.isAuth.id, itemId, field: 'reviewed'}).then(data => {
-                    review.setReviewed(data)
-                }).catch(err => {
-                    console.log(err);
-                });
-            })
+            });
+        }).catch(err => {
+            console.log(err);
         });
         API('get', '/api/reviews', {itemId}).then(data => {
             review.setReviews(data);
@@ -59,16 +56,16 @@ const Reviews = observer(({itemId}) => {
     }, [review, user, render.rerender, itemId]);
     return (
         <Styled>
+            {(review.bought && !review.reviewed) && <AddReview handlerAddUpdate={handlerAddUpdate}/>}
             {review.reviews ? <>{review.reviews.length > 0 ?
                 review.reviews.map(obj => {
-                    return <ReviewCard key={obj.id} reviewObj={obj} myReview={user.isAuth.id === obj.userId}
-                                       handlerAddUpdate={handlerAddUpdate}/>
+                    return <ReviewCard key={obj.id} reviewObj={obj} handlerAddUpdate={handlerAddUpdate}
+                                       myReview={(user.isAuth.role === 'ADMIN' || user.isAuth.id === obj.userId)}/>
                 }) : <>
                     <h2>Отзывы</h2>
                     <div>Отзывов еще никто не оставлял</div>
                 </>}
             </> : <Load/>}
-            {(review.bought && !review.reviewed) && <AddReview handlerAddUpdate={handlerAddUpdate}/>}
         </Styled>
     );
 });

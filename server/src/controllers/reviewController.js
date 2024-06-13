@@ -1,12 +1,12 @@
-import {checkBoughtReviewed, getUserInfo, getWasBought, saveImages} from "../usefulFunctions.js";
+import {checkBoughtReviewed, getUserInfo, getWasBought, saveImages, verifyCreator} from "../usefulFunctions.js";
 import ErrorTemp from "../errors/errorsTemplate.js";
 import * as models from "../models.js";
 
 class ReviewController {
     async check (req, res) {
         try {
-            const {userId, itemId, field} = req.query;
-            const bought = await checkBoughtReviewed(userId, itemId, field);
+            const {itemId, field} = req.query;
+            const bought = await checkBoughtReviewed(req.user.id, itemId, field);
             res.json(bought);
         } catch (err) {
             ErrorTemp.badRequest(res);
@@ -14,7 +14,8 @@ class ReviewController {
     }
     async addUpdateReview (req, res) {
         try {
-            const {id, userId, itemId, review} = req.body;
+            const {id, itemId, review} = req.body;
+            const {role} = req.user;
             let fields = {};
             let images = null;
             if (req?.files) {
@@ -23,6 +24,10 @@ class ReviewController {
             review && (fields.review = review);
             images && (fields.images = JSON.stringify(images))
             if (id) {
+                if (role !== 'ADMIN') {
+                    const verify = await verifyCreator(models.Reviews, req.user.id, id);
+                    if (!verify) return ErrorTemp.badRequest(res);
+                }
                 await models.Reviews.update(
                     fields,
                     {
@@ -33,7 +38,7 @@ class ReviewController {
                 );
             }
             else {
-                fields.userId = userId;
+                fields.userId = req.user.id;
                 fields.itemId = itemId;
                 await models.Reviews.create(
                     fields,
@@ -53,7 +58,7 @@ class ReviewController {
                     itemId
                 },
                 order: [
-                    ["createdAt", 'ASC'],
+                    ["createdAt", 'DESC'],
                 ],
             });
             await Promise.all(reviews.map(async (review) => {
@@ -81,9 +86,14 @@ class ReviewController {
     }
     async deleteReview(req, res) {
         try {
+            const {id} = req.query;
+            if (req.user.role !== 'ADMIN') {
+                const verify = await verifyCreator(models.Reviews, req.user.id, id);
+                if (!verify) return ErrorTemp.badRequest(res);
+            }
             await models.Reviews.destroy({
                 where: {
-                    id: req.query.id
+                    id
                 },
             });
             res.json('success');

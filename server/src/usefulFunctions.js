@@ -71,7 +71,7 @@ export const checkBoughtReviewed = async (userId, itemId, field) => {
     })
     return !!check;
 }
-export const verifySeller = async (table, userId, id) => {
+export const verifyCreator = async (table, userId, id) => {
     const check = await table.findOne({
         attributes: ['userId'],
         where: {
