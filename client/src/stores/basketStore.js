@@ -49,12 +49,13 @@ class BasketStore {
         }
         else this._allCost = 0;
     }
-    fetchBasket(userId) {
-        authAPI('get', '/api/basket', {userId}).then(data => {
+    fetchBasket(navigate) {
+        authAPI('get', '/api/basket').then(data => {
             this._basket = data;
             this.countSumCost();
         }).catch(err => {
             console.log(err);
+            navigate && navigate('/profile/login');
         });
     }
 }

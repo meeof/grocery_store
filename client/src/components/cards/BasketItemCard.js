@@ -63,7 +63,7 @@ const BasketItemCard = observer(({product, deleteBasketItemHandle}) => {
                            allProductCost={allProductCost} setAllProductCost={setAllProductCost}/>
             </div>
             <div className={'basket-card-end'}>
-                <CloseButton className={'button-close'} onClick={() => deleteBasketItemHandle(product.userId, product.itemId)}/>
+                <CloseButton className={'button-close'} onClick={() => deleteBasketItemHandle(product.itemId)}/>
                 <div className={'cost-summary'}>
                     {allProductCost} ₽
                 </div>

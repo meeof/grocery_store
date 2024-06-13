@@ -60,24 +60,25 @@ const Styled = styled.div`
 const Orders = observer(() => {
     const months = ['Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря'];
     const navigate = useNavigate();
-    const {user, basket} = useContext(Context);
+    const {basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
-    const fetchOrders = useCallback((userId, limit) => {
-        authAPI( 'get', '/api/basket/orders', {userId, limit})
+    const fetchOrders = useCallback((limit) => {
+        authAPI( 'get', '/api/basket/orders', {limit})
             .then(data => {
                 basket.setOrders(data.rows);
                 basket.setOrdersCount(data.count);
             }).catch(err => {
-            console.log(err);
+                console.log(err);
+                navigate('/profile/login')
         })
-    }, [basket]);
+    }, [basket, navigate]);
     useEffect(() => {
-        user.checkAuthUser(() => fetchOrders(user.isAuth.id, basket.ordersLimit), navigate)
-    }, [basket, navigate, user, fetchOrders]);
+        fetchOrders(basket.ordersLimit)
+    }, [basket, fetchOrders]);
     const clearOrdersHandler = () => {
-        authAPI('delete', '/api/basket/clearOrders', {userId: user.isAuth.id}).then(() => {
+        authAPI('delete', '/api/basket/clearOrders').then(() => {
             setShowAlert(false);
-            fetchOrders(user.isAuth.id, basket.ordersLimit);
+            fetchOrders(basket.ordersLimit);
         }).catch(err => {
             console.log(err);
         })
@@ -97,7 +98,7 @@ const Orders = observer(() => {
                     <Button variant={colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
                         basket.setOrdersLimit(basket.ordersLimit * 2);
                         basket.setOrders(0);
-                        fetchOrders(user.isAuth.id, basket.ordersLimit);
+                        fetchOrders(basket.ordersLimit);
                     }}>Показывать больше</Button>
                     <Button className={'clear-orders'} variant={"secondary"} disabled={basket.getOrders.length === 0}
                             onClick={() => setShowAlert(true)}>Очистить историю</Button>

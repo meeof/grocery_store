@@ -15,6 +15,7 @@ const Styled = styled.div`
   left: ${props => (props.$fixed && '8px')};
   width: ${props => (props.$fixed ? props.$width - 16 - (props.$scroll > 0 ? props.$scroll : 0) + 'px' : '100%')};
   z-index: 99;
+  ${props => (props.$basket && `width: 100px`)};
   button {
     width: 100%;
     height: ${props => (props.$basket && '30px')};
@@ -70,19 +71,20 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
         }
     }
     function handleBuy(amount) {
-        authAPI( 'post', '/api/basket', {userId: user.isAuth?.id, itemId, amount}).catch(err => {
+        authAPI( 'post', '/api/basket', {itemId, amount}).catch(err => {
             console.log(err);
+            navigate('/profile/login');
         })
     }
     useEffect(() => {
-        authAPI('get', '/api/basket/amount', {userId: user.isAuth?.id, itemId}).then(data => {
+        authAPI('get', '/api/basket/amount', {itemId}).then(data => {
             if (data) {
                 setProductAmount(data);
             }
         }).catch(err => {
             console.log(err);
         })
-    }, [itemId, user.isAuth?.id]);
+    }, [itemId]);
     return (
         <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={place === 'basket'}
                 onClick={e => e.stopPropagation()}>

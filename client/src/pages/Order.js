@@ -37,11 +37,11 @@ const Styled = styled.div`
 
 const Order = observer( () => {
     const navigate = useNavigate();
-    const {user, basket} = useContext(Context);
+    const {basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
     useEffect(() => {
-        user.checkAuthUser(() => {basket.fetchBasket(user.isAuth.id)}, navigate)
-    }, [navigate, user, basket]);
+        basket.fetchBasket(navigate)
+    }, [navigate, basket]);
     return (
         <>
             {

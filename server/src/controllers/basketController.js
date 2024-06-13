@@ -50,12 +50,12 @@ const setWasBought = async (userId, itemId) => {
 class BasketController {
     async addItem (req, res) {
         try {
-            const {userId, itemId, amount} = req.body;
+            const {itemId, amount} = req.body;
             const update = await models.BasketItem.update(
                 {amount},
                 {
                     where: {
-                        userId,
+                        userId: req.user.id,
                         itemId,
                     }
                 }
@@ -64,7 +64,7 @@ class BasketController {
                 await models.BasketItem.create(
                     {
                         amount,
-                        userId,
+                        userId: req.user.id,
                         itemId,
                     },
                     {fields: ['amount', 'userId', 'itemId']});
@@ -76,11 +76,11 @@ class BasketController {
     }
     async getOneAmount (req, res) {
         try {
-            const {userId, itemId} = req.query;
+            const {itemId} = req.query;
             const oneBasketItem = await models.BasketItem.findOne({
                 attributes: ['amount'],
                 where: {
-                    userId,
+                    userId: req.user.id,
                     itemId,
                 }
             });
@@ -91,8 +91,7 @@ class BasketController {
     }
     async getAll (req, res) {
         try {
-            const {userId} = req.query;
-            const allBasketItems = await getAllBasketItems(userId);
+            const allBasketItems = await getAllBasketItems(req.user.id);
             const response = await Promise.all(allBasketItems.map(async (item) => {
                 const oneItem = await getOneItem(item.dataValues.itemId);
                 return {
@@ -103,7 +102,7 @@ class BasketController {
                     cost: oneItem.cost,
                     image: oneItem.img ? oneItem.img : null,
                     categoryId: oneItem.categoryId,
-                    userId,
+                    userId: req.user.id,
                 }
             }));
             res.json(response);
@@ -114,8 +113,8 @@ class BasketController {
     }
     async deleteItem (req, res) {
         try {
-            const {userId, itemId} = req.query;
-            await deleteBasketItem(userId, itemId);
+            const {itemId} = req.query;
+            await deleteBasketItem(req.user.id, itemId);
             res.json('deleted');
         } catch (err) {
             ErrorTemp.badRequest(res)
@@ -123,11 +122,10 @@ class BasketController {
     }
     async getContacts (req, res) {
         try {
-            const {userId} = req.query;
             const contacts = await models.UserInfo.findOne({
                 attributes: ['name', 'surname'],
                 where: {
-                    userId
+                    userId: req.user.id,
                 }
             });
             res.json(contacts.dataValues);
@@ -143,7 +141,7 @@ class BasketController {
                     await setWasBought(userId, itemId);
                 }
             }
-            const {name, surname, phone, point, delivery, address, comment, sms, userId, itemId} = req.body;
+            const {name, surname, phone, point, delivery, address, comment, sms, itemId} = req.body;
             const dateDelivery = new Date();
             dateDelivery.setDate(dateDelivery.getDate() + 5);
             let items = [];
@@ -153,20 +151,20 @@ class BasketController {
                     const item = await getOneItem(itemId, 1, null);
                     items.push(item);
                     fullPrice = item.cost;
-                    await checkFirstBuy(userId, itemId);
+                    await checkFirstBuy(req.user.id, itemId);
                 }
                 else {
-                    const allBasketItems = await getAllBasketItems(userId);
+                    const allBasketItems = await getAllBasketItems(req.user.id);
                     items = await Promise.all(allBasketItems.map(async (basketItem) => {
                         const item = await getOneItem(basketItem.dataValues.itemId, basketItem.dataValues.amount, basketItem.dataValues.id);
-                        await checkFirstBuy(userId, basketItem.dataValues.itemId);
+                        await checkFirstBuy(req.user.id, basketItem.dataValues.itemId);
                         fullPrice += (item.cost * basketItem.dataValues.amount);
-                        await deleteBasketItem(userId, basketItem.dataValues.itemId);
+                        await deleteBasketItem(req.user.id, basketItem.dataValues.itemId);
                         return item;
                     }));
                 }
                 await models.Orders.create(
-                    {name, surname, phone, point, delivery, address, comment, sms, userId,
+                    {name, surname, phone, point, delivery, address, comment, sms, userId: req.user.id,
                         items: JSON.stringify(items), full_price: fullPrice, status: 'В обработке', delivery_date: dateDelivery},
                     {fields: ['name', 'surname', 'phone', 'point', 'delivery',
                             'address', 'comment', 'sms', 'userId', 'items', 'full_price', 'status', 'delivery_date']});
@@ -178,12 +176,12 @@ class BasketController {
     }
     async getOrders(req, res) {
         try {
-            const {userId, limit} = req.query;
+            const {limit} = req.query;
             const orders = await models.Orders.findAndCountAll({
                 attributes: ['id', 'name', 'surname', 'phone', 'point', 'delivery', 'address', 'comment', 'sms', 'full_price',
                 'items', 'status', 'delivery_date', 'createdAt'],
                 where: {
-                    userId,
+                    userId: req.user.id,
                 },
                 limit: limit ? limit : 3,
                 order: [
@@ -197,12 +195,11 @@ class BasketController {
     }
     async clearOrders(req, res) {
         try {
-            const {userId} = req.query;
             await models.Orders.update(
                 {userId: null},
                 {
                     where: {
-                        userId,
+                        userId: req.user.id,
                     }
                 }
             )

@@ -24,7 +24,7 @@ const Styled = styled.div`
   }
   .discount {
     position: absolute;
-    top: 5px;
+    top: 40px;
     left: 5px;
     background-color: ${colors.opacityRed};
     color: white;

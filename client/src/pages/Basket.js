@@ -24,20 +24,21 @@ const Styled = styled.div`
 const Basket = observer(() => {
     const {user, basket} = useContext(Context);
     const navigate = useNavigate();
-    const deleteBasketItemHandle = (userId, itemId) => {
+    const deleteBasketItemHandle = (itemId) => {
         if (user.isAuth) {
-            authAPI( 'delete', '/api/basket', {userId, itemId}).then(() => {
+            authAPI( 'delete', '/api/basket', {itemId}).then(() => {
                 basket.fetchBasket(user.isAuth.id);
             }).catch(err => {
-                console.log(err)
+                console.log(err);
+                navigate('/profile/login');
             })
         }
     }
     useEffect(() => {
         if (!basket.getBasket) {
-            user.checkAuthUser(() => basket.fetchBasket(user.isAuth.id), navigate)
+            basket.fetchBasket(navigate);
         }
-    }, [navigate, basket, user]);
+    }, [navigate, basket]);
     return (
         <Styled>
             <div className={'card-block'}>
