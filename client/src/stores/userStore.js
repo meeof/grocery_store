@@ -5,7 +5,35 @@ class UserStore {
     constructor() {
         this._isAuth = null;
         this._userInfo = null;
+        this._statement = null;
+        this._statements = null;
+        this._statementsCount = 0;
+        this._statementsLimit = 6;
         makeAutoObservable(this)
+    }
+    setAllStatementsLimit(data) {
+        this._statementsLimit = data;
+    }
+    get allStatementsLimit() {
+        return this._statementsLimit;
+    }
+    setAllStatementsCount(data) {
+        this._statementsCount = data;
+    }
+    get allStatementsCount() {
+        return this._statementsCount;
+    }
+    setAllStatements(data) {
+        this._statements = data;
+    }
+    get allStatements() {
+        return this._statements;
+    }
+    setStatement(data) {
+        this._statement = data;
+    }
+    get statement() {
+        return this._statement;
     }
     setAuth(data) {
         this._isAuth = data;

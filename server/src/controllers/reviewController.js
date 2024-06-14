@@ -68,6 +68,7 @@ class ReviewController {
                     review.dataValues.name = userInfo.name;
                     review.dataValues.surname = userInfo.surname;
                     review.dataValues.img = userInfo.img;
+                    review.dataValues.profileCreated = review.dataValues.createdAt;
                     if (review.dataValues.images) {
                         review.dataValues.images = JSON.parse(review.dataValues.images)
                     }

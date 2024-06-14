@@ -18,6 +18,8 @@ import noImage from "../assets/icon_no_image.svg";
 import Load from "../components/Load";
 import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
 import ItemAddUpdate from "../components/modals/ItemAddUpdate";
+import SellerStatement from "../components/modals/SellerStatement";
+import {dateString} from "../usefulFunctions";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -102,6 +104,7 @@ const Profile = observer( () => {
                                roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
                         <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                             <h2>{user.userInfo.name} {user.userInfo.surname}</h2>
+                            <i>{dateString(user.userInfo.createdAt, true)}</i>
                             <h2>{user.isAuth.phone}</h2>
                             <h3>{user.userInfo.status}</h3>
                             <p>{user.userInfo.about}</p>
@@ -109,8 +112,13 @@ const Profile = observer( () => {
                         {user.userInfo && <ViewProfile/>}
                     </div> : <Load/>}
                     <div className={'profile-buttons'}>
-                        <CategoryAddUpdate/>
-                        <ItemAddUpdate fullForm={true}/>
+                        {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <CategoryAddUpdate/>}
+                        {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <ItemAddUpdate fullForm={true}/>}
+                        {(user.isAuth.role === 'USER') && <SellerStatement/>}
+                        {(user.isAuth.role === 'ADMIN') &&
+                            <Button variant={colors.bootstrapMainVariant} onClick={() => navigate('/statements')}>
+                            Заявки
+                        </Button>}
                         <Button variant={colors.bootstrapMainVariant} onClick={() => {
                             basket.setOrders(null);
                             navigate('orders');

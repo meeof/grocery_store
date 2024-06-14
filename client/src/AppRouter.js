@@ -9,6 +9,7 @@ import Basket from "./pages/Basket";
 import Order from "./pages/Order";
 import Orders from "./pages/Orders";
 import LoginRegistrationRestore from "./pages/LoginRegistrationRestore";
+import Statements from "./pages/Statements";
 
 const AppRouter = () => {
     return (
@@ -24,6 +25,7 @@ const AppRouter = () => {
             <Route path="/profile/orders" element={<Orders/>} />
             <Route path="/basket" element={<Basket/>} />
             <Route path="/basket/order" element={<Order/>} />
+            <Route path="/statements" element={<Statements/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );

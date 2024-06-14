@@ -14,3 +14,19 @@ export const addImagesToFormData = (formData, images) => {
     }
     return formData;
 }
+export const dateString = (createdAt, short) => {
+    let options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        timezone: 'UTC',
+    }
+    if (!short) {
+        options = {...options, ...{
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric'
+            }}
+    }
+    return new Date(createdAt).toLocaleString("eu", options);
+}

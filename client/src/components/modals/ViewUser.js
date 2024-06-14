@@ -1,7 +1,9 @@
 import React from 'react';
 import noImage from "../../assets/icon_no_image.svg";
 import {Image, Modal} from "react-bootstrap";
-const ViewUser = ({showUser, setShowUser, name, surname, status, about, image}) => {
+import {dateString} from "../../usefulFunctions";
+const ViewUser = ({showUser, setShowUser, name, surname, status, about, image, profileCreated}) => {
+    const created = dateString(profileCreated, true);
     return (
         <Modal
             show={showUser}
@@ -18,6 +20,7 @@ const ViewUser = ({showUser, setShowUser, name, surname, status, about, image}) 
                         process.env.REACT_APP_API_URL + image : noImage}
                            roundedCircle style={{width: '50%', left: "auto", right: 'auto', alignSelf: "center"}}/>
                     <h2>{name} {surname}</h2>
+                    <i>{created}</i>
                     <h3>{status}</h3>
                     <p>{about}</p>
                 </div>

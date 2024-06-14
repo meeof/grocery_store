@@ -6,7 +6,7 @@ const User = sequelize.define('user', {
     email : {type: DataTypes.STRING, allowNull: false, unique: true},
     phone : {type: DataTypes.STRING, allowNull: false},
     password : {type: DataTypes.STRING, allowNull: false},
-    role: {type: DataTypes.STRING, defaultValue: 'ADMIN'}
+    role: {type: DataTypes.STRING, defaultValue: 'USER'}
 });
 const UserInfo = sequelize.define('user_info', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -67,6 +67,10 @@ const Reviews = sequelize.define('reviews' , {
     images: {type: DataTypes.JSON},
     review: {type: DataTypes.STRING, allowNull: false},
 })
+const Statements = sequelize.define('statements' , {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    status: {type: DataTypes.STRING, allowNull: false},
+})
 
 User.hasOne(UserInfo);
 UserInfo.belongsTo(User);
@@ -111,4 +115,8 @@ Categories.belongsTo(User);
 User.hasMany(Item);
 Item.belongsTo(User);
 
-export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews};
+User.hasOne(Statements);
+Statements.belongsTo(User);
+
+
+export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews, Statements};

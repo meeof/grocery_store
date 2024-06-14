@@ -13,21 +13,30 @@ const generateToken = (data) => {
         process.env.JWT_PRIVATE_KEY,
         {algorithm: 'HS256', expiresIn: '12h'});
 }
-const findEmailPassword = async (phoneEmail) => {
+const findEmailPhone = async (phoneEmail) => {
     return await models.User.findOne({
         attributes: ['id', 'email', 'phone', 'password', 'role'],
         where: {
             [Op.or]: [{ email: phoneEmail }, { phone: phoneEmail }],
         }
     });
+};
+const checkStatementStatus = async (userId) => {
+    const statement = await models.Statements.findOne({
+        attributes: ['status'],
+        where: {
+            userId,
+        }
+    });
+    return statement ? statement.dataValues.status : null;
 }
 class UserController {
     async registration(req, res) {
         try {
             const {email, password, role} = req.body;
             const {name, surname, language, phone} = req.body;
-            const findEmail = await findEmailPassword(email);
-            const findPhone = await findEmailPassword(phone);
+            const findEmail = await findEmailPhone(email);
+            const findPhone = await findEmailPhone(phone);
             if (deleteSpace(name) === '') {
                 ErrorTemp.badRequest(res, 'Имя некорректно');
             }
@@ -70,7 +79,7 @@ class UserController {
     async login(req, res) {
         try {
             const {enterLogin, enterPassword} = req.body;
-            const user = await findEmailPassword(enterLogin);
+            const user = await findEmailPhone(enterLogin);
             if (user) {
                 const token = generateToken(user.dataValues);
                 bcrypt.compareSync(enterPassword, user.dataValues.password) ?
@@ -94,8 +103,11 @@ class UserController {
     }
     async getInfo(req, res) {
         try {
-            const {id} = req.user;
-            const info = await getUserInfo(id);
+            let id = null;
+            if (req.user.role === 'ADMIN' && req.query.id) {
+                id = req.query.id;
+            }
+            const info = await getUserInfo(id ? id : req.user.id);
             res.json(info.dataValues)
         } catch (error) {
             ErrorTemp.err();
@@ -103,7 +115,7 @@ class UserController {
     }
     async updateInfo(req, res) {
         try {
-            const {userId, name, surname, status, about} = req.body;
+            const {name, surname, status, about} = req.body;
             const {id} = req.user;
             let itemFields = {};
             const info = await getUserInfo(id);
@@ -157,6 +169,89 @@ class UserController {
             })
             res.json('delete success');
         } catch (error) {
+            ErrorTemp.err();
+        }
+    }
+    async statement(req, res) {
+        try {
+           const statement = await checkStatementStatus(req.user.id);
+           res.json(statement);
+        } catch (error) {
+            ErrorTemp.err();
+        }
+    }
+    async allStatements(req, res){
+        try {
+            const {limit} = req.query;
+            const statements = await models.Statements.findAndCountAll({
+                attributes: ['id', 'status', "userId", "updatedAt"],
+                where: {
+                    status: 'pending',
+                },
+                limit: limit ? limit : 3,
+                order: [
+                    ['updatedAt', 'DESC'],
+                ],
+            })
+            res.json(statements);
+        } catch (error) {
+            ErrorTemp.err();
+        }
+    }
+    async addStatement(req, res) {
+        const t = await sequelize.transaction();
+        try {
+            const {status, userId} = req.body;
+            if (req.user.role === 'ADMIN') {
+               await models.Statements.update(
+                    {status},
+                    {
+                        where: {
+                            userId
+                        },
+                        transaction: t
+                    }
+                )
+               if (status === 'resolve') {
+                   await models.User.update (
+                       {role: 'SELLER'},
+                       {
+                           where: {
+                               id: userId,
+                           },
+                           transaction: t
+                       }
+                   )
+                   await t.commit();
+               }
+               else {
+                   await t.commit()
+               }
+                return res.json(status);
+            }
+            const statement = await checkStatementStatus(req.user.id);
+            if (statement === 'reject') {
+                await models.Statements.update(
+                    {status: 'pending'},
+                    {
+                        where: {
+                            userId: req.user.id,
+                        }
+                    }
+                )
+                return res.json('pending');
+            }
+            else if (!statement) {
+                await models.Statements.create(
+                    {status: 'pending', userId: req.user.id},
+                    {fields: ['status', 'userId']});
+                return res.json('pending');
+            }
+            else {
+                return res.json('banned');
+            }
+        } catch (error) {
+            await t.rollback();
             ErrorTemp.err();
         }
     }

@@ -112,7 +112,6 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
                 }} style={width >= breakpoints.rawFromSmall ? {width: freeButtonWidth} : {width: '100%'}}>
                     Добавить товар
                 </Button>}
-
             <Modal
                 show={showModal}
                 onHide={() => {

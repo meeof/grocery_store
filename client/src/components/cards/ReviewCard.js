@@ -8,6 +8,7 @@ import DelButton from "../buttons/DelButton";
 import {Context} from "../../index";
 import {colors, flexColumn, marginMedium} from "../../StyledGlobal";
 import {authAPI} from "../../api";
+import {dateString} from "../../usefulFunctions";
 const Styled = styled.div`
     ${flexColumn};
   margin-bottom: ${marginMedium};
@@ -59,15 +60,7 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
     const handleSelectImage = (selectedIndex) => {
         setImageIndex(selectedIndex);
     };
-    const created = new Date(reviewObj.createdAt).toLocaleString("eu", {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        timezone: 'UTC',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-    });
+    const created = dateString(reviewObj.createdAt);
     let images = [];
     let slides = [];
     if (reviewObj.images) {
@@ -119,7 +112,7 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                 </div>
             </Styled>
             <ViewUser name={reviewObj.name} surname={reviewObj.surname} about={reviewObj.about} status={reviewObj.status}
-                      image={reviewObj.img} showUser={showUser} setShowUser={setShowUser}/>
+                      image={reviewObj.img} showUser={showUser} setShowUser={setShowUser} profileCreated={reviewObj.profileCreated}/>
             <Modal
                 show={showRedact}
                 onHide={() => setShowRedact(false)}
