@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import infoImg from '../../assets/light/icon_comment_info.svg';
+import infoImg from '../../assets/icon_comment_info.svg';
 import styled from "styled-components";
 import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`

@@ -4,7 +4,7 @@ import {Card} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import * as uf from '../../usefulFunctions';
 import ButtonBuy from "../buttons/ButtonBuy";
-import noImage from '../../assets/light/icon_no_image.svg';
+import noImage from '../../assets/icon-picture.svg';
 import DelButton from "../buttons/DelButton";
 import {breakpoints, staticColors, itemCategoryCard} from "../../StyledGlobal";
 import {observer} from "mobx-react-lite";

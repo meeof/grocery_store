@@ -2,7 +2,7 @@ import React from 'react';
 import {Carousel, Image} from "react-bootstrap";
 import styled from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
-import noImage from '../../assets/light/icon_no_image.svg';
+import noImage from '../../assets/icon-picture.svg';
 import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   margin: ${standardValues.marginMedium} 0;

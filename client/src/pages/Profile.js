@@ -10,7 +10,7 @@ import {
     flexColumn, marginsCenter,
     marginsPage, standardValues
 } from "../StyledGlobal";
-import noImage from "../assets/light/icon_no_image.svg";
+import noImage from "../assets/icon-picture.svg";
 import Load from "../components/Load";
 import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
 import ItemAddUpdate from "../components/modals/ItemAddUpdate";

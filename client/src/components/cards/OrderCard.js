@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import styled, {useTheme} from "styled-components";
 import {Accordion, Button, Modal, OverlayTrigger, Tooltip} from "react-bootstrap";
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
 import SetItemRatingCard from "./SetItemRatingCard";

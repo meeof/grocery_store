@@ -1,8 +1,10 @@
 import React from 'react';
 import {Button} from "react-bootstrap";
 import styled, {useTheme} from "styled-components";
-import pencilImg from "../../assets/light/icon_redact_blue.svg";
-import whitePencilImg from "../../assets/light/icon_redact.svg";
+import lightPencilImg from "../../assets/light/icon_redact.svg";
+import darkPencilImg from "../../assets/dark/icon_redact.svg";
+import whitePencilImg from "../../assets/icon_redact.svg";
+import {Theme} from "../../StyledGlobal";
 
 const Styled = styled.div`
   position: absolute;
@@ -15,7 +17,7 @@ const Styled = styled.div`
     justify-content: center;
     align-items: center;
     border-width: 3px;
-    background-image: url(${pencilImg});
+    background-image: url(${(props) => props.$dark ? darkPencilImg : lightPencilImg});
     background-size: 19px;
     background-repeat: no-repeat;
     background-position: center;
@@ -30,7 +32,7 @@ const Styled = styled.div`
 const UpdateButton = ({handleModal, isActive, top, right}) => {
     const theme = useTheme();
     return (
-        <Styled $top={top} $right={right}>
+        <Styled $top={top} $right={right} $dark={Theme.dark}>
             <Button variant={theme.colors.bootstrapMainVariantOutline} disabled={isActive}
                     onClick={(e) => {
                         e.stopPropagation();

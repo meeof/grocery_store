@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
-import {staticColors} from "../../StyledGlobal";
 let Styled = styled.div`
 position: absolute;
-  background-color: ${staticColors.mainOpacity};
+  background-color: ${({theme}) => theme.colors.mainOpacity};
   top: -12px;
   right: -12px;
   font-size: 14px;

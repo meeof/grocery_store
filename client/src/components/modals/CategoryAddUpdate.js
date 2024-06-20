@@ -30,7 +30,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
             }
             else {
                 overlay.setMessage(`Категория "${data}" успешно добавлена`);
-                overlay.setColor(theme.colors.main);
+                overlay.setColor(theme.colors.mainOpacity);
                 overlay.handlerOverlay();
                 setCategoryName('');
                 setShowModal(false);

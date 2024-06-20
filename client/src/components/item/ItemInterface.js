@@ -1,10 +1,11 @@
 import React, {useContext} from 'react';
 import styled from "styled-components";
 import Rating from "../Rating";
-import fillComparisonImg from "../../assets/light/icon_comparison_green.svg";
+import lightComparisonImg from "../../assets/light/icon_comparison.svg";
+import darkComparisonImg from "../../assets/dark/icon_comparison.svg";
 import * as uf from "../../usefulFunctions";
 import ButtonBuy from "../buttons/ButtonBuy";
-import truckImg from '../../assets/light/icon_truck.svg';
+import truckImg from '../../assets/icon_truck.svg';
 import DeliveryVariant from "./DeliveryVariant";
 import useWindowSize from "../../hooks/useWindowSize";
 import {Context} from "../../index";
@@ -16,7 +17,7 @@ import {
     breakpoints,
     staticColors,
     flexColumn,
-    standardValues
+    standardValues, Theme
 } from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import ItemAddUpdate from "../modals/ItemAddUpdate";
@@ -66,7 +67,7 @@ const Styled = styled.div`
         color: ${({theme}) => theme.colors.main};
       }
       padding-left: 18px;
-      background-image: url(${fillComparisonImg});
+      background-image: url(${(props) => props.$dark ? darkComparisonImg : lightComparisonImg});
       background-size: 16px;
       background-repeat: no-repeat;
       background-position: left;
@@ -128,7 +129,7 @@ const ItemInterface = observer(({product}) => {
     }
     let city = 'Москва';
     return (
-        <Styled>
+        <Styled $dark={Theme.dark}>
             <div className={'item-head'}>
                 <h1>
                     {product.name}

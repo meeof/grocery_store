@@ -1,16 +1,20 @@
 import React, {useContext} from 'react';
 import {Button, Form, Image} from "react-bootstrap";
-import logo from '../assets/light/logo.svg'
+import lightLogo from '../assets/light/logo.svg'
+import darkLogo from '../assets/dark/logo.svg'
 import styled, {useTheme} from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import comparisonImg from "../assets/light/icon_comparison.svg";
-import cartImg from "../assets/light/icon_basket_black.svg";
-import userImg from "../assets/light/icon_user.svg";
-import searchImg from "../assets/light/icon_search.svg";
+import lightComparisonImg from "../assets/light/icon_comparison.svg";
+import darkComparisonImg from "../assets/dark/icon_comparison.svg";
+import lightCartImg from "../assets/light/icon_basket.svg";
+import darkCartImg from "../assets/dark/icon_basket.svg";
+import lightUserImg from "../assets/light/icon_user.svg";
+import darkUserImg from "../assets/dark/icon_user.svg";
+import searchImg from "../assets/icon_search.svg";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {breakpoints, largeButton, marginsPage, standardValues} from "../StyledGlobal";
+import {breakpoints, largeButton, marginsPage, standardValues, Theme} from "../StyledGlobal";
 
 const Styled = styled.div`
   margin-top: ${standardValues.marginSmall};
@@ -103,7 +107,7 @@ const CommonBar = observer (() => {
     let width = useWindowSize();
     const navigate = useNavigate();
     const logoElement = <Link to={'/'} role={"button"}>
-        <Image src={logo} className={'logo'}/>
+        <Image src={Theme.dark ? darkLogo : lightLogo} className={'logo'}/>
     </Link>
     const catalogButtonElement = <Link to={'/catalog'} className={"catalog-button"}>
         <Button variant={theme.colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
@@ -141,13 +145,13 @@ const CommonBar = observer (() => {
             </Form>
             <div className={"controls"}>
                 <Link to={user.isAuth ? '/profile' : '/profile/login'}>
-                    <Image src={userImg} />
+                    <Image src={Theme.dark ? darkUserImg : lightUserImg} />
                 </Link>
                 <Link to={'/'}>
-                    <Image src={comparisonImg}/>
+                    <Image src={Theme.dark ? darkComparisonImg : lightComparisonImg}/>
                 </Link>
                 <Link to={'/basket'}>
-                    <Image src={cartImg}/>
+                    <Image src={Theme.dark ? darkCartImg : lightCartImg}/>
                 </Link>
             </div>
         </Styled>

@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import styled, {useTheme} from "styled-components";
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import {Accordion, Button, Carousel, Image, Modal} from "react-bootstrap";
 import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";

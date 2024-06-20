@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
-import noImage from "../../assets/light/icon_no_image.svg";
+import cameraImg from "../../assets/icon_camera.svg";
+import cameraHoverImg from "../../assets/icon_camera_hover.svg";
 import BadgeCount from "../badges_and_overlays/BadgeCount";
 import {standardValues} from "../../StyledGlobal";
 let Styled = styled.div`
@@ -11,10 +12,15 @@ let Styled = styled.div`
     display: none;
   }
   label {
-    > img {
-      height: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
-      width: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
-      cursor: pointer;
+    cursor: pointer;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
+    height: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
+    background-image: url(${cameraImg});
+    &:hover {
+      background-image: url(${cameraHoverImg});
     }
   }
 `
@@ -23,7 +29,6 @@ const AddImagesButton = ({setImages, count, big}) => {
     return (
         <Styled $big={big}>
             <label htmlFor={"reviewFileInput"}>
-                <img alt={'#'} src={noImage}/>
                 {count ? <BadgeCount count={count}/> : ''}
             </label>
             <input id={'reviewFileInput'} multiple type="file" accept="image/*" onChange={(event) => {
@@ -32,5 +37,6 @@ const AddImagesButton = ({setImages, count, big}) => {
         </Styled>
     );
 };
+
 
 export default AddImagesButton;

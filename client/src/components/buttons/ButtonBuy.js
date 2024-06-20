@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button} from "react-bootstrap";
-import cartImg from '../../assets/light/icon_basket.svg';
+import cartImg from '../../assets/icon_basket_white.svg';
 import styled, {useTheme} from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
 import useGetScrollBar from "../../hooks/useGetScrollBar";

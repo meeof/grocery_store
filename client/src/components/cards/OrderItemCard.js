@@ -1,5 +1,5 @@
 import React from 'react';
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import styled from "styled-components";
 import {staticColors, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`

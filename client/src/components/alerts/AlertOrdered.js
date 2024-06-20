@@ -15,7 +15,7 @@ const AlertOrdered = ({field, showAlert, setShowAlert}) => {
             backdrop="static"
             keyboard={false}
         >
-            <Alert show={showAlert} variant="success" style={{margin: 0}}>
+            <Alert show={showAlert} variant={theme.colors.bootstrapMainVariant} style={{margin: 0}}>
                 <Alert.Heading>Заказ сформирован!</Alert.Heading>
                 <p>
                     Детали и статус заказа вы всегда можете посмотреть у себя в профиле.

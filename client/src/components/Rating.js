@@ -1,10 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import starImg from '../assets/light/icon_star.svg';
-import starImgFill from '../assets/light/icon_star_black.svg';
+import lightStarImg from '../assets/light/icon_star.svg';
+import darkStarImg from '../assets/dark/icon_star.svg';
+import lightStarImgFill from '../assets/light/icon_star_fill.svg';
+import darkStarImgFill from '../assets/dark/icon_star_fill.svg';
 import styled from "styled-components";
 import {Context} from "../index";
 import {API, authAPI} from "../api";
 import {useNavigate} from "react-router-dom";
+import {Theme} from "../StyledGlobal";
 const Styled = styled.div`
   display: flex;
   align-items: center;
@@ -14,6 +17,7 @@ const Styled = styled.div`
   span {
     vertical-align: center;
     font-weight: bold;
+    color: ${({theme}) => theme.colors.main};
   }
   img {
     width: ${(props) => (props.$big ? "32px" : "16px")};
@@ -59,7 +63,9 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
     }
     let imgStars = [];
     for (let i=0; i < 5; i++) {
-        imgStars.push(<img key={i} alt={'star'} src={i < rating ? starImgFill : starImg} onClick={() => {
+        imgStars.push(<img key={i} alt={'star'} src={i < rating ?
+            (Theme.dark ? darkStarImgFill : lightStarImgFill) :
+            (Theme.dark ? darkStarImg : lightStarImg)} onClick={() => {
             if (disabled) {
                 return
             }

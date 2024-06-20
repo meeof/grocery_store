@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Image, Modal} from "react-bootstrap";
 import {Context} from "../../index";
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import {observer} from "mobx-react-lite";
 import DelButton from "../buttons/DelButton";
 import {authAPI} from "../../api";

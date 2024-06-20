@@ -30,10 +30,10 @@ const Styled = styled.div`
     height: 30px;
   }
   .theme-light {
-    background-image: url(${(props) => props.$themeDark ? sunImgDark : sunImg});
+    background-image: url(${(props) => props.$dark ? sunImgDark : sunImg});
   }
   .theme-dark {
-    background-image: url(${(props) => props.$themeDark ? moonImgDark : moonImg});
+    background-image: url(${(props) => props.$dark ? moonImgDark : moonImg});
   }
   .contacts {
     ${flexColumn};
@@ -93,7 +93,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
         <div className={"me-3"} role={"button"}>+7(800) 800-80-80</div>
     </div>
     return (
-        <Styled $themeDark={Theme.dark}>
+        <Styled $dark={Theme.dark}>
             <div className={'header'}>
                 <Navbar expand="sm" bg="light" data-bs-theme="light">
                     <Navbar.Toggle aria-controls="basic-navbar-nav" className={`ms-2 me-auto`}/>

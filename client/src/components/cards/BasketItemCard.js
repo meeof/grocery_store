@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import * as uf from "../../usefulFunctions";
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import {useNavigate} from "react-router-dom";
 import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";

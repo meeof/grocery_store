@@ -1,5 +1,5 @@
 import React from 'react';
-import noImage from "../../assets/light/icon_no_image.svg";
+import noImage from "../../assets/icon-picture.svg";
 import {Image, Modal} from "react-bootstrap";
 import {dateString} from "../../usefulFunctions";
 const ViewUser = ({showUser, setShowUser, name, surname, status, about, image, profileCreated}) => {

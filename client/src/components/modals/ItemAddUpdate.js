@@ -65,7 +65,7 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
             }
             else {
                 overlay.setMessage(`Товар "${data}" успешно добавлен`);
-                overlay.setColor(theme.colors.main);
+                overlay.setColor(theme.colors.mainOpacity);
                 handleCancel();
                 overlay.handlerOverlay();
             }
