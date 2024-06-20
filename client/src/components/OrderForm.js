@@ -3,15 +3,15 @@ import {Button, Form,} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import styled from "styled-components";
-import {colors, importantStar, marginSmall, styledCheckbox} from "../StyledGlobal";
+import styled, {useTheme} from "styled-components";
+import {staticColors, importantStar, standardValues} from "../StyledGlobal";
 import {authAPI} from "../api";
 const StyledForm = styled.form`
   .input-label:after {
     ${importantStar};
   }
   .check-description {
-    color: ${colors.descriptionColor};
+    color: ${staticColors.descriptionColor};
     line-height: 1;
   }
   .other-labels {
@@ -24,11 +24,15 @@ const StyledForm = styled.form`
     border-radius: 3px;
     display: flex;
     align-items: center;
-    margin-bottom: ${marginSmall};
+    margin-bottom: ${standardValues.marginSmall};
     input[type="checkbox"], input[type="radio"] {
-      margin-right: ${marginSmall};
+      margin-right: ${standardValues.marginSmall};
     }
-    ${styledCheckbox};
+    input[type="radio"]:checked, input[type="checkbox"]:checked {
+      background-color: ${({theme}) => theme.colors.main};;
+      box-shadow: none;
+      border: 3px solid ${({theme}) => theme.colors.main};;
+    }
   }
   .check-label {
     position: absolute;
@@ -40,7 +44,7 @@ const StyledForm = styled.form`
   .delivery-variant-block {
     margin-bottom: 10px;
     .check-block:hover {
-      border-color: ${colors.lightColor};
+      border-color: ${staticColors.lightColor};
     }
     .delivery-locality {
       color: red;
@@ -50,7 +54,7 @@ const StyledForm = styled.form`
       margin-left: auto;
     }
     .link-map {
-      color: ${colors.main};
+      color: ${({theme}) => theme.colors.main};
       text-decoration: underline;
       position: ${(props) => props.$LinkMapActive ? 'relative' : 'static'}
     }
@@ -64,6 +68,7 @@ const StyledForm = styled.form`
 `
 
 const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const {user, render} = useContext(Context);
     const [deliveryValue, setDeliveryValue] = useState('pickup');
@@ -204,7 +209,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                         </div>
                     </div>
                 </Form.Group>
-                <Button type={"submit"} variant={colors.bootstrapMainVariant}>Подтвердить</Button>
+                <Button type={"submit"} variant={theme.colors.bootstrapMainVariant}>Подтвердить</Button>
             </StyledForm>
         </>
     );

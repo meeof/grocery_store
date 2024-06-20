@@ -1,18 +1,18 @@
 import React from 'react';
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import styled from "styled-components";
-import {colors, marginMedium, marginSmall} from "../../StyledGlobal";
+import {staticColors, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   height: 3rem;
-  margin: ${marginSmall} 0;
+  margin: ${standardValues.marginSmall} 0;
   display: flex;
   align-items: center;
   width: 100%;
   font-size: large;
-  border-bottom: solid 1px ${colors.lightColor};
+  border-bottom: solid 1px ${staticColors.lightColor};
   > img {
     height: 100%;
-    margin-right: ${marginMedium};
+    margin-right: ${standardValues.marginMedium};
   }
   .order-card-text {
     width: 100%;

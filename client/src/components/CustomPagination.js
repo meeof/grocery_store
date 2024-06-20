@@ -1,38 +1,39 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Pagination} from "react-bootstrap";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import {breakpoints, colors, flexColumn, freeButtonWidth, marginsCenter, marginSmall} from "../StyledGlobal";
+import {breakpoints, flexColumn, marginsCenter, standardValues} from "../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 const Styled = styled.div`
   width: 100%;
   ${flexColumn};
-  margin-top: ${marginSmall};
+  margin-top: ${standardValues.marginSmall};
   .show-more {
     display: flex;
     justify-content: center;
-    margin-bottom: ${marginSmall};
+    margin-bottom: ${standardValues.marginSmall};
     button {
-      width: ${freeButtonWidth};
+      width: ${standardValues.freeButtonWidth};
     }
   }
   .pagination {
     ${marginsCenter};
     * {
-      color: ${colors.main};
+      color: ${({theme}) => theme.colors.main};
     }
     .page-item + .active {
       > span {
-        background-color: ${colors.main};
+        background-color: ${({theme}) => theme.colors.main};
         color: white;
-        border-color: ${colors.main};
+        border-color: ${({theme}) => theme.colors.main};
       }
     }
   }
 `
 
 const CustomPagination = observer(() => {
+    const theme = useTheme();
     const width = useWindowSize();
     const paginationLimits = {
         small: 5,
@@ -78,7 +79,7 @@ const CustomPagination = observer(() => {
     return (<>
             {pagesAmount > 1 ? <Styled>
                 {item.page === 1 && <div className={'show-more'}>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                         item.setItems(null);
                         item.setLimit(item.limit * 2);
                         item.fetchItems();

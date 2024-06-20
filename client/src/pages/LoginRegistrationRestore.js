@@ -4,20 +4,17 @@ import {Button, Dropdown, DropdownButton, Form} from "react-bootstrap";
 import CustomOverlay from "../components/badges_and_overlays/CustomOverlay";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {
     breakpoints,
-    colors,
-    flexColumn,
-    freeButtonWidth, importantStar,
-    marginMedium,
-    marginSmall,
-    marginsPage
+    staticColors,
+    flexColumn, importantStar,
+    marginsPage, standardValues
 } from "../StyledGlobal";
 import {decodeAuthAPI} from "../api";
 
 const Styled = styled.div`
-  margin-bottom: ${marginSmall};
+  margin-bottom: ${standardValues.marginSmall};
   ${marginsPage};
   .input-label:after {
     ${importantStar};
@@ -25,13 +22,13 @@ const Styled = styled.div`
   .button-container {
     display: flex;
     button {
-      width: ${freeButtonWidth};
+      width: ${standardValues.freeButtonWidth};
     }
     .link-underline {
-      color: ${colors.main};
-      text-decoration-color: ${colors.main} !important;
+      color: ${({theme}) => theme.colors.main};
+      text-decoration-color: ${({theme}) => theme.colors.main} !important;
       text-decoration: underline;
-      margin-left: ${marginMedium};
+      margin-left: ${standardValues.marginMedium};
       display: flex;
       align-items: center;
       white-space: nowrap;
@@ -61,13 +58,14 @@ const Styled = styled.div`
       align-items: center;
       button {
         width: 100%;
-        margin-bottom: ${marginSmall};
+        margin-bottom: ${standardValues.marginSmall};
       }
     }
   }
 `
 
 const LoginRegistrationRestore = observer(() => {
+    const theme = useTheme();
     const languages = ['Русский', 'English'];
     const {user, overlay} = useContext(Context);
     const navigate = useNavigate();
@@ -142,7 +140,7 @@ const LoginRegistrationRestore = observer(() => {
                         <DropdownButton
                             onSelect={(key => setLanguage(key))}
                             id={`languages-group`}
-                            variant={colors.bootstrapMainVariantOutline}
+                            variant={theme.colors.bootstrapMainVariantOutline}
                             title={language}
                         >
                             <>
@@ -163,8 +161,9 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setRepeatPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button onClick={e => overlay.setTarget(e.target)} type={"submit"} variant={colors.bootstrapMainVariant}>Зарегистрироваться</Button>
-                        <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
+                        <Button onClick={e => overlay.setTarget(e.target)} type={"submit"}
+                                variant={theme.colors.bootstrapMainVariant}>Зарегистрироваться</Button>
+                        <CustomOverlay show={overlay.show} color={staticColors.opacityRed} message={overlay.message}
                                        target={overlay.target}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>У меня уже есть аккаунт</div>
@@ -183,7 +182,7 @@ const LoginRegistrationRestore = observer(() => {
                         }}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button variant={colors.bootstrapMainVariant} type="submit">Восстановить пароль</Button>
+                        <Button variant={theme.colors.bootstrapMainVariant} type="submit">Восстановить пароль</Button>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>Я вспомнил(-а) пароль!</div>
                     </div>
@@ -204,8 +203,9 @@ const LoginRegistrationRestore = observer(() => {
                                       onChange={(e) => setEnterPassword(e.target.value)}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button onClick={e => overlay.setTarget(e.target)} variant={colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
-                        <CustomOverlay show={overlay.show} color={colors.opacityRed} message={overlay.message}
+                        <Button onClick={e => overlay.setTarget(e.target)}
+                                variant={theme.colors.bootstrapMainVariant} type={"submit"}>Войти</Button>
+                        <CustomOverlay show={overlay.show} color={staticColors.opacityRed} message={overlay.message}
                                        target={overlay.target}/>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/restore')}>Восстановить пароль</div>

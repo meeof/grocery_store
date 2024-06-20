@@ -3,29 +3,26 @@ import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import OrderCard from "../components/cards/OrderCard";
 import {useNavigate} from "react-router-dom";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {Button} from "react-bootstrap";
 import AlertClearHistory from "../components/alerts/AlertClearHistory";
 import {
-    breakpoints, colors, customGrid2,
+    breakpoints, customGrid2,
     flexColumn,
-    freeButtonWidth,
-    marginMedium,
-    marginSmall,
-    marginsPage
+    marginsPage, standardValues
 } from "../StyledGlobal";
 import {authAPI} from "../api";
 import Load from "../components/Load";
 
 const Styled = styled.div`
-  margin-top: ${marginSmall};
+  margin-top: ${standardValues.marginSmall};
   ${marginsPage};
   ${flexColumn};
   justify-content: center;
   position: relative;
   .buttons-block {
-    padding-bottom: ${marginSmall};
-    padding-top: ${marginSmall};
+    padding-bottom: ${standardValues.marginSmall};
+    padding-top: ${standardValues.marginSmall};
     display: flex;
     justify-content: center;
     .clear-orders {
@@ -35,7 +32,7 @@ const Styled = styled.div`
       margin-left: ${(props) => props.$showMore ? '0' : 'auto'};;
     }
     .show-more {
-      width: ${freeButtonWidth};
+      width: ${standardValues.freeButtonWidth};
       display: ${(props) => props.$showMore ? '' : 'none'};
     }
   }
@@ -50,7 +47,7 @@ const Styled = styled.div`
         width: 100%;
       }
       .show-more {
-        margin-bottom: ${marginMedium};
+        margin-bottom: ${standardValues.marginMedium};
         width: 100%;
       }
     }
@@ -58,6 +55,7 @@ const Styled = styled.div`
 `;
 
 const Orders = observer(() => {
+    const theme = useTheme();
     const months = ['Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря'];
     const navigate = useNavigate();
     const {basket} = useContext(Context);
@@ -95,7 +93,7 @@ const Orders = observer(() => {
                     </div>}
                 </>
                 <div className={'buttons-block'}>
-                    <Button variant={colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
                         basket.setOrdersLimit(basket.ordersLimit * 2);
                         basket.setOrders(0);
                         fetchOrders(basket.ordersLimit);

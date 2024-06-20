@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import styled from "styled-components";
-import {marginsCenter, smallButtonWidth} from "../../StyledGlobal";
+import {marginsCenter, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   .yes-no-block {
     width: 50%;
@@ -9,7 +9,7 @@ const Styled = styled.div`
     justify-content: space-evenly;
     ${marginsCenter};
     >button {
-      width: ${smallButtonWidth};
+      width: ${standardValues.smallButtonWidth};
     }
   }
 `

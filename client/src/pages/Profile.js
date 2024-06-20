@@ -3,18 +3,14 @@ import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {Button, Image} from "react-bootstrap";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import ViewProfile from "../components/modals/ViewProfile";
 import {
     breakpoints,
-    colors,
-    flexColumn,
-    freeButtonWidth,
-    marginMedium, marginsCenter,
-    marginSmall,
-    marginsPage
+    flexColumn, marginsCenter,
+    marginsPage, standardValues
 } from "../StyledGlobal";
-import noImage from "../assets/icon_no_image.svg";
+import noImage from "../assets/light/icon_no_image.svg";
 import Load from "../components/Load";
 import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
 import ItemAddUpdate from "../components/modals/ItemAddUpdate";
@@ -52,9 +48,9 @@ const Styled = styled.div`
       ${flexColumn};
       justify-content: flex-start;
       button {
-        max-width: ${freeButtonWidth};
-        margin-top: ${marginMedium};
-        margin-bottom: ${marginMedium};
+        max-width: ${standardValues.freeButtonWidth};
+        margin-top: ${standardValues.marginMedium};
+        margin-bottom: ${standardValues.marginMedium};
       }
     }
     @media (${breakpoints.fromExtraLarge}) {
@@ -75,14 +71,15 @@ const Styled = styled.div`
       .profile-buttons {
         button {
           max-width: 100%;
-          margin-top: ${marginSmall};
-          margin-bottom: ${marginSmall};
+          margin-top: ${standardValues.marginSmall};
+          margin-bottom: ${standardValues.marginSmall};
         }
       }
     }
   }
 `
 const Profile = observer( () => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const {user, basket} = useContext(Context);
     const roles = {
@@ -116,10 +113,10 @@ const Profile = observer( () => {
                         {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <ItemAddUpdate fullForm={true}/>}
                         {(user.isAuth.role === 'USER') && <SellerStatement/>}
                         {(user.isAuth.role === 'ADMIN') &&
-                            <Button variant={colors.bootstrapMainVariant} onClick={() => navigate('/statements')}>
+                            <Button variant={theme.colors.bootstrapMainVariant} onClick={() => navigate('/statements')}>
                             Заявки
                         </Button>}
-                        <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                        <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                             basket.setOrders(null);
                             navigate('orders');
                         }}>Мои заказы</Button>

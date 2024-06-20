@@ -4,16 +4,16 @@ import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import AddReview from "./AddReview";
 import ReviewCard from "../cards/ReviewCard";
-import {marginMedium, marginsPage} from "../../StyledGlobal";
+import {marginsPage, standardValues} from "../../StyledGlobal";
 import {API, authAPI} from "../../api";
 import Load from "../Load";
 import {addImagesToFormData} from "../../usefulFunctions";
 const Styled = styled.div`
   position: relative;
   ${marginsPage};
-  margin-bottom: ${marginMedium};
+  margin-bottom: ${standardValues.marginMedium};
   button {
-    margin-top: ${marginMedium};
+    margin-top: ${standardValues.marginMedium};
   }
 `
 

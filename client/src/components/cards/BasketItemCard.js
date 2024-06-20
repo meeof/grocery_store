@@ -1,25 +1,25 @@
 import React, {useContext, useState} from 'react';
 import styled from "styled-components";
 import * as uf from "../../usefulFunctions";
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import {useNavigate} from "react-router-dom";
 import ButtonBuy from "../buttons/ButtonBuy";
 import {CloseButton} from "react-bootstrap";
-import {flexColumn, marginSmall} from "../../StyledGlobal";
+import {flexColumn, standardValues} from "../../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 
 const Styled = styled.div`
   height: 10rem;
-  margin: ${marginSmall} 0;
+  margin: ${standardValues.marginSmall} 0;
   display: flex;
   > img {
     cursor: pointer;
     height: 100%;
-    margin-right: ${marginSmall};
+    margin-right: ${standardValues.marginSmall};
   }
   .basket-card-end, .basket-card-body {
-    padding: ${marginSmall} 0;
+    padding: ${standardValues.marginSmall} 0;
     ${flexColumn};
     justify-content: space-between;
   }

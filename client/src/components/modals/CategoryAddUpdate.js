@@ -1,14 +1,16 @@
 import React, {useContext, useState} from 'react';
 import UpdateButton from "../buttons/UpdateButton";
 import {Button, Form, Modal} from "react-bootstrap";
-import {breakpoints, colors, freeButtonWidth} from "../../StyledGlobal";
+import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
 import {API, authAPI} from "../../api";
 import {observer} from "mobx-react-lite";
+import {useTheme} from "styled-components";
 
 const CategoryAddUpdate = observer(({id, name}) => {
+    const theme = useTheme();
     const width = useWindowSize();
     const {overlay, category} = useContext(Context);
     const [categoryName, setCategoryName] = useState(name ? name : '');
@@ -28,7 +30,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
             }
             else {
                 overlay.setMessage(`Категория "${data}" успешно добавлена`);
-                overlay.setColor(colors.opacityPrimary);
+                overlay.setColor(theme.colors.main);
                 overlay.handlerOverlay();
                 setCategoryName('');
                 setShowModal(false);
@@ -36,7 +38,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
         }).catch(err => {
             !id && setShowModal(false);
             overlay.setMessage(err.response?.data || 'Непредвиденная ошибка');
-            overlay.setColor(colors.opacityRed);
+            overlay.setColor(staticColors.opacityRed);
             overlay.handlerOverlay();
         })
     }
@@ -44,11 +46,11 @@ const CategoryAddUpdate = observer(({id, name}) => {
         <div onClick={(e) => e.stopPropagation()}
              style={{width: '100%', display: "flex", justifyContent: "flex-start"}}>
             {id ? <UpdateButton handleModal={setShowModal} isActive={showModal}/> :
-                <Button variant={colors.bootstrapMainVariant} onClick={(e) => {
+                <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                     setShowModal(true);
                     overlay.setTarget(e.target);
                     overlay.setShow(false);
-            }} style={width >= breakpoints.rawFromSmall ? {width: freeButtonWidth} : {width: '100%'}}>
+            }} style={width >= breakpoints.rawFromSmall ? {width: standardValues.freeButtonWidth} : {width: '100%'}}>
                 Добавить категорию
             </Button>}
             <Modal
@@ -78,7 +80,7 @@ const CategoryAddUpdate = observer(({id, name}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={(e) => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                         handlerCategory();
                         id && overlay.setTarget(e.target)
                     }}>{id ? 'Изменить' : 'Добавить'}</Button>

@@ -9,7 +9,7 @@ import ButtonBuy from "../components/buttons/ButtonBuy";
 import Reviews from "../components/reviews/Reviews";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {breakpoints, colors, flexColumn, marginsPage} from "../StyledGlobal";
+import {breakpoints, staticColors, flexColumn, marginsPage} from "../StyledGlobal";
 import {API} from "../api";
 import Load from "../components/Load";
 
@@ -17,7 +17,7 @@ const Styled = styled.div`
   position: relative;
   .characteristics {
     width: 100%;
-    background-color: ${colors.extraLightColor};
+    background-color: ${staticColors.extraLightColor};
     padding: 24px;
     .info {
       display: grid;
@@ -60,7 +60,8 @@ const Styled = styled.div`
 const StyledImg = styled.img`
   width: 100%;
   box-sizing: border-box;
-  border: ${(props) => (props.$active && `solid ${colors.main} 1px !important`)}
+  border: ${(props) => (props.$active && `solid transparent 1px !important`)};
+  border-color: ${({theme}) => theme.colors.main} !important;
 `
 
 const Item = observer (() => {

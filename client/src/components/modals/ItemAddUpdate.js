@@ -2,15 +2,17 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
 import {API, authAPI} from "../../api";
-import {breakpoints, colors, freeButtonWidth} from "../../StyledGlobal";
+import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
 import {addImagesToFormData} from "../../usefulFunctions";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import ItemInfoField from "../item/ItemInfoField";
 import UpdateButton from "../buttons/UpdateButton";
 import {observer} from "mobx-react-lite";
+import {useTheme} from "styled-components";
 
 const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
+    const theme = useTheme();
     const width = useWindowSize();
     const {item, category, overlay} = useContext(Context);
     const [showModal, setShowModal] = useState(false);
@@ -63,13 +65,13 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
             }
             else {
                 overlay.setMessage(`Товар "${data}" успешно добавлен`);
-                overlay.setColor(colors.opacityPrimary);
+                overlay.setColor(theme.colors.main);
                 handleCancel();
                 overlay.handlerOverlay();
             }
         }).catch(err => {
             overlay.setMessage(err.response?.data || 'Непредвиденная ошибка');
-            overlay.setColor(colors.opacityRed);
+            overlay.setColor(staticColors.opacityRed);
             overlay.handlerOverlay();
             !product && setShowModal(false);
         })
@@ -105,11 +107,11 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
         <div onClick={(e) => e.stopPropagation()}
              style={{width: '100%', display: "flex", justifyContent: "flex-start"}}>
             {product ? <UpdateButton handleModal={setShowModal} right={right} isActive={showModal}/> :
-                <Button variant={colors.bootstrapMainVariant} onClick={(e) => {
+                <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                     setShowModal(true);
                     overlay.setTarget(e.target);
                     overlay.setShow(false);
-                }} style={width >= breakpoints.rawFromSmall ? {width: freeButtonWidth} : {width: '100%'}}>
+                }} style={width >= breakpoints.rawFromSmall ? {width: standardValues.freeButtonWidth} : {width: '100%'}}>
                     Добавить товар
                 </Button>}
             <Modal
@@ -171,7 +173,7 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
                                     changeInfo={changeInfo}
                                     deleteInfo={deleteInfo}/>
                             })}
-                            <Button variant={colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
+                            <Button variant={theme.colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
                                     style={{width: '50%', alignSelf: "center"}}>Добавить характеристику</Button>
                         </div>}
                     </Form>
@@ -180,7 +182,7 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={(e) => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                         product && overlay.setTarget(e.target);
                         handlerProduct();
                     }}>

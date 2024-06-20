@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Card} from "react-bootstrap";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
-import noImage from '../../assets/icon_no_image.svg';
+import noImage from '../../assets/light/icon_no_image.svg';
 import DelButton from "../buttons/DelButton";
 import * as uf from "../../usefulFunctions";
 import {breakpoints, itemCategoryCard} from "../../StyledGlobal";

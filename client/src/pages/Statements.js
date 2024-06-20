@@ -3,30 +3,27 @@ import {authAPI} from "../api";
 import {Context} from "../index";
 import Load from "../components/Load";
 import {observer} from "mobx-react-lite";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {
     breakpoints,
-    colors,
     customGrid2,
     flexColumn,
-    freeButtonWidth,
-    marginMedium, marginsCenter,
-    marginSmall,
-    marginsPage
+    marginsCenter,
+    marginsPage, standardValues
 } from "../StyledGlobal";
 import {Button} from "react-bootstrap";
 import StatementCard from "../components/cards/StatementCard";
 const Styled = styled.div`
-  margin-top: ${marginSmall};
+  margin-top: ${standardValues.marginSmall};
   ${marginsPage};
   ${flexColumn};
   justify-content: center;
   .statements-block {
     ${customGrid2};
-    margin-bottom: ${marginMedium};
+    margin-bottom: ${standardValues.marginMedium};
   }
   .show-more {
-    width: ${freeButtonWidth};
+    width: ${standardValues.freeButtonWidth};
     ${marginsCenter};
     @media (${breakpoints.small}) {
       width: 100%;
@@ -35,6 +32,7 @@ const Styled = styled.div`
 `;
 
 const Statements = observer (() => {
+    const theme = useTheme();
     const {user} = useContext(Context);
     const fetchStatements = useCallback((limit) => {
         authAPI( 'get', '/api/user/allStatements', {limit})
@@ -60,7 +58,7 @@ const Statements = observer (() => {
                     return <StatementCard statement={statement} key={statement.id} handlerRefreshStatement={handlerRefreshStatement}/>
                 })}
             </div>
-            {(user.allStatementsCount > user.allStatementsLimit) && <Button variant={colors.bootstrapMainVariant} className={'show-more'}
+            {(user.allStatementsCount > user.allStatementsLimit) && <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}
             onClick={() => {
                 user.setAllStatementsLimit(user.allStatementsLimit * 2);
                 user.setAllStatements(null);

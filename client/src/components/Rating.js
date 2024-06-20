@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import starImg from '../assets/icon_star.svg';
-import starImgFill from '../assets/icon_star_black.svg';
+import starImg from '../assets/light/icon_star.svg';
+import starImgFill from '../assets/light/icon_star_black.svg';
 import styled from "styled-components";
 import {Context} from "../index";
 import {API, authAPI} from "../api";

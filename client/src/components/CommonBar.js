@@ -1,26 +1,26 @@
 import React, {useContext} from 'react';
 import {Button, Form, Image} from "react-bootstrap";
-import logo from '../assets/logo.svg'
-import styled from "styled-components";
+import logo from '../assets/light/logo.svg'
+import styled, {useTheme} from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import comparisonImg from "../assets/icon_comparison.svg";
-import cartImg from "../assets/icon_basket_black.svg";
-import userImg from "../assets/icon_user.svg";
-import searchImg from "../assets/icon_search.svg";
+import comparisonImg from "../assets/light/icon_comparison.svg";
+import cartImg from "../assets/light/icon_basket_black.svg";
+import userImg from "../assets/light/icon_user.svg";
+import searchImg from "../assets/light/icon_search.svg";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {breakpoints, colors, iconsSize, largeButton, marginSmall, marginsPage} from "../StyledGlobal";
+import {breakpoints, largeButton, marginsPage, standardValues} from "../StyledGlobal";
 
 const Styled = styled.div`
-  margin-top: ${marginSmall};
-  margin-bottom: ${marginSmall};
+  margin-top: ${standardValues.marginSmall};
+  margin-bottom: ${standardValues.marginSmall};
   ${marginsPage};
   display: flex;
   justify-content: space-between;
   .form-control {
-    margin-left: ${marginSmall};
-    margin-right: ${marginSmall};
+    margin-left: ${standardValues.marginSmall};
+    margin-right: ${standardValues.marginSmall};
   }
   form {
     min-width: 240px;
@@ -35,12 +35,12 @@ const Styled = styled.div`
   }
   .logo {
     ${largeButton};
-    margin-right: ${marginSmall};
+    margin-right: ${standardValues.marginSmall};
   }
   .search {
     ${largeButton};
     background-image: url(${searchImg});
-    background-size: ${iconsSize};
+    background-size: ${standardValues.iconsSize};
     background-repeat: no-repeat;
     background-position: center;
     min-width: 54px;
@@ -49,8 +49,8 @@ const Styled = styled.div`
     display: flex;
     align-items: center;
     img {
-      width: ${iconsSize};
-      margin-left: ${marginSmall};
+      width: ${standardValues.iconsSize};
+      margin-left: ${standardValues.marginSmall};
     }
   }
   @media (${breakpoints.small}) {
@@ -64,7 +64,7 @@ const Styled = styled.div`
       width: 100%;
       display: flex;
       justify-content: space-evenly;
-      margin-top: ${marginSmall};
+      margin-top: ${standardValues.marginSmall};
     }
     .logo {
       margin-right: 0;
@@ -98,6 +98,7 @@ const Styled = styled.div`
 
 const CommonBar = observer (() => {
     const {item, user, render} = useContext(Context);
+    const theme = useTheme();
     const location = useLocation();
     let width = useWindowSize();
     const navigate = useNavigate();
@@ -105,7 +106,7 @@ const CommonBar = observer (() => {
         <Image src={logo} className={'logo'}/>
     </Link>
     const catalogButtonElement = <Link to={'/catalog'} className={"catalog-button"}>
-        <Button variant={colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
+        <Button variant={theme.colors.bootstrapMainVariant} className={"catalog-button"}>Каталог</Button>
     </Link>
     const handlerFind = () => {
         if (location.pathname === '/catalog/all') {
@@ -136,7 +137,7 @@ const CommonBar = observer (() => {
                     value={item.find}
                     onChange={(e) => item.setFind(e.target.value)}
                 />
-                <Button variant={colors.bootstrapMainVariant} onClick={handlerFind} className={'search'}/>
+                <Button variant={theme.colors.bootstrapMainVariant} onClick={handlerFind} className={'search'}/>
             </Form>
             <div className={"controls"}>
                 <Link to={user.isAuth ? '/profile' : '/profile/login'}>

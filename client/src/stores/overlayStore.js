@@ -1,12 +1,12 @@
 import {makeAutoObservable, configure} from "mobx";
-import {colors} from "../StyledGlobal";
+import {staticColors} from "../StyledGlobal";
 configure({
     enforceActions: "never",
 })
 
 class OverlayStore {
     constructor() {
-        this._color = colors.opacityRed;
+        this._color = staticColors.opacityRed;
         this._show = false;
         this._target = null;
         this._message = '-';

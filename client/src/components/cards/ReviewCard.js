@@ -1,17 +1,17 @@
 import React, {useContext, useState} from 'react';
-import styled from "styled-components";
-import noImage from "../../assets/icon_no_image.svg";
+import styled, {useTheme} from "styled-components";
+import noImage from "../../assets/light/icon_no_image.svg";
 import {Accordion, Button, Carousel, Image, Modal} from "react-bootstrap";
 import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";
 import DelButton from "../buttons/DelButton";
 import {Context} from "../../index";
-import {colors, flexColumn, marginMedium} from "../../StyledGlobal";
+import {staticColors, flexColumn, standardValues} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import {dateString} from "../../usefulFunctions";
 const Styled = styled.div`
     ${flexColumn};
-  margin-bottom: ${marginMedium};
+  margin-bottom: ${standardValues.marginMedium};
   .review-card-head {
     width: 100%;
     display: flex;
@@ -24,7 +24,7 @@ const Styled = styled.div`
     }
     .review-card-profile-image {
       width: 50px;
-      margin-right: ${marginMedium};
+      margin-right: ${standardValues.marginMedium};
       cursor: pointer;
     }
   }
@@ -33,7 +33,7 @@ const Styled = styled.div`
       margin: 0;
     }
     .review-text {
-      padding: ${marginMedium};
+      padding: ${standardValues.marginMedium};
     }
     .review-image {
       width: 100%;
@@ -50,6 +50,7 @@ const Styled = styled.div`
 `
 
 const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
+    const theme = useTheme();
     const {render} = useContext(Context);
     const [review, setReview] = useState(reviewObj.review);
     const [redactImages, setRedactImages] = useState([]);
@@ -135,7 +136,7 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                     <Button variant="secondary" onClick={handleCancel}>
                         Отменить
                     </Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                         handlerAddUpdate(review, redactImages, reviewObj.id, () => {
                             setRedactImages([]);
                             setShowRedact(false);
@@ -153,7 +154,7 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
             >
                 <Modal.Header closeButton/>
                 <Modal.Body>
-                    <Carousel variant={colors.bootstrapOtherVariant} activeIndex={imageIndex} onSelect={handleSelectImage} interval={null}>
+                    <Carousel variant={staticColors.bootstrapOtherVariant} activeIndex={imageIndex} onSelect={handleSelectImage} interval={null}>
                         {slides}
                     </Carousel>
                 </Modal.Body>

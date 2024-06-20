@@ -1,10 +1,12 @@
 import React, {useContext} from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
-import {colors, smallButtonWidth} from "../../StyledGlobal";
 import {Context} from "../../index";
+import {useTheme} from "styled-components";
+import {standardValues} from "../../StyledGlobal";
 
 const AlertOrdered = ({field, showAlert, setShowAlert}) => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const {basket} = useContext(Context);
     return (
@@ -26,7 +28,7 @@ const AlertOrdered = ({field, showAlert, setShowAlert}) => {
                             basket.setBasket(null);
                             navigate('/catalog');
                         }
-                    }} variant={colors.bootstrapMainVariant} style={{width: smallButtonWidth}}>
+                    }} variant={theme.colors.bootstrapMainVariant} style={{width: standardValues.smallButtonWidth}}>
                         Ок
                     </Button>
                 </div>

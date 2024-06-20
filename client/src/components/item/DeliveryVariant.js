@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import infoImg from '../../assets/icon_comment_info.svg';
+import infoImg from '../../assets/light/icon_comment_info.svg';
 import styled from "styled-components";
-import {marginSmall} from "../../StyledGlobal";
+import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin: 0 ${marginSmall};
-  padding: ${marginSmall} 0;
+  margin: 0 ${standardValues.marginSmall};
+  padding: ${standardValues.marginSmall} 0;
   border-bottom: solid gray 1px;
   .delivery-hide {
     font-size: smaller;

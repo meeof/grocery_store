@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from "styled-components";
 import {Button, Form} from "react-bootstrap";
-import deleteCross from '../../assets/icon_cross.svg';
-import {marginSmall} from "../../StyledGlobal";
+import deleteCross from '../../assets/light/icon_cross.svg';
+import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin-bottom: ${marginSmall};
+  margin-bottom: ${standardValues.marginSmall};
   display: flex;
   justify-content: space-between;
   :first-child {

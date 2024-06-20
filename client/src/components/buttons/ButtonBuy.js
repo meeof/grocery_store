@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button} from "react-bootstrap";
-import cartImg from '../../assets/icon_basket.svg';
-import styled from "styled-components";
+import cartImg from '../../assets/light/icon_basket.svg';
+import styled, {useTheme} from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
 import useGetScrollBar from "../../hooks/useGetScrollBar";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react-lite";
-import {colors} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
@@ -59,6 +58,7 @@ const Styled = styled.div`
 `
 const ButtonBuy = observer( ({itemId, cost, place, fixed,
                                  allProductCost, setAllProductCost}) => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const width = useWindowSize();
     const scrollBar = useGetScrollBar();
@@ -90,7 +90,7 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
                 onClick={e => e.stopPropagation()}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                         if (place === 'basket' && productAmount <= 1) {
                             return
                         }
@@ -101,14 +101,14 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
                         setProductAmount(productAmount - 1);
                         handleBuy(productAmount - 1);
                     }}><b>-</b></Button>
-                    <Button variant={colors.bootstrapMainVariant} className={'to-basket'}
+                    <Button variant={theme.colors.bootstrapMainVariant} className={'to-basket'}
                             onClick={() => navigate('/basket')}>
                         {place === 'basket' ? <b>{productAmount}</b> : <>
                             <p>В корзине <b>{productAmount}</b></p>
                             <p>Перейти</p>
                         </>}
                     </Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                         if (place !== 'basket') {
                             basket.setBasket(null);
                         }
@@ -117,7 +117,7 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
                         handleBuy(productAmount + 1);
                     }}><b>+</b></Button>
                 </div> :
-                <Button variant={colors.bootstrapMainVariant} onClick={() => {
+                <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                     if (user.isAuth) {
                         setProductAmount(1);
                         handleBuy(1);

@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Image, Modal} from "react-bootstrap";
 import {Context} from "../../index";
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import {observer} from "mobx-react-lite";
 import DelButton from "../buttons/DelButton";
-import {colors} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import {useNavigate} from "react-router-dom";
 import UpdateButton from "../buttons/UpdateButton";
+import {useTheme} from "styled-components";
 
 const ViewProfile = observer (() => {
+    const theme = useTheme();
     const [change, setChange] = useState(false);
     const navigate = useNavigate();
     const {user} = useContext(Context);
@@ -89,7 +90,7 @@ const ViewProfile = observer (() => {
                                       onChange={(e) => setAbout(e.target.value)}></textarea>
                         </Form.Group>
                         <div style={{display: "flex", justifyContent: "space-between"}}>
-                            <Button style={{width: '40%'}} variant={colors.bootstrapMainVariant}
+                            <Button style={{width: '40%'}} variant={theme.colors.bootstrapMainVariant}
                                     onClick={handlerChangeUserInfo}>Применить</Button>
                             <Button variant={"secondary"} style={{width: '40%'}}
                                     onClick={() => {

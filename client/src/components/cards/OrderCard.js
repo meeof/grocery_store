@@ -1,36 +1,36 @@
 import React, {useContext, useState} from 'react';
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {Accordion, Button, Modal, OverlayTrigger, Tooltip} from "react-bootstrap";
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
 import SetItemRatingCard from "./SetItemRatingCard";
-import {breakpoints, colors, flexColumn, marginMedium, marginSmall} from "../../StyledGlobal";
+import {breakpoints, staticColors, flexColumn, standardValues, Theme} from "../../StyledGlobal";
 import * as uf from "../../usefulFunctions";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 const Styled = styled.div`
   ${flexColumn};
   border-radius: 5px;
-  border: solid ${colors.lightColor} 1px;
+  border: solid ${staticColors.lightColor} 1px;
   padding: 10px;
   width: 100%;
   justify-content: space-between;
-  background-color: ${colors.extraLightColor};
+  background-color: ${staticColors.extraLightColor};
   @media (${breakpoints.large}) {
-    margin-bottom: ${marginMedium};
+    margin-bottom: ${standardValues.marginMedium};
   }
   .order-card-head {
     display: flex;
     align-items: flex-start;
     i {
-      color: ${colors.main};
+      color: ${({theme}) => theme.colors.main};
     }
   }
   .order-important {
     border-radius: 5px;
-    border: solid ${colors.main} 2px;
-    color: ${colors.main};
+    border: solid ${({theme}) => theme.colors.main} 2px;
+    color: ${({theme}) => theme.colors.main};
     width: min-content;
     white-space: nowrap;
     padding: 5px;
@@ -63,7 +63,7 @@ const Styled = styled.div`
         position: absolute;
         top: 5px;
         right: 5px;
-        background-color: ${colors.mainOpacity};
+        background-color: ${({theme}) => theme.colors.mainOpacity};
         border: solid transparent 1px;
         border-radius: 5px;
         line-height: 1;
@@ -77,13 +77,14 @@ const Styled = styled.div`
     }
   }
   .comm-block, .img-block {
-    margin: ${marginSmall} 0;
+    margin: ${standardValues.marginSmall} 0;
   }
 `
 
 const OrderCard = observer(({order, months}) => {
     const navigate = useNavigate();
     const {review, item} = useContext(Context);
+    const theme = useTheme();
     const [showModalAll, setShowModalAll] = useState(false);
     const [showModalOne, setShowModalOne] = useState(false);
     const dataCreate = new Date(order.createdAt);
@@ -116,7 +117,7 @@ const OrderCard = observer(({order, months}) => {
     });
     return (
         <>
-            <Styled>
+            <Styled $themeDark={Theme.dark}>
                 <div className={'order-card-head'}>
                     <div>
                         <b>Заказ от {dataCreate.getDate()} {months[dataCreate.getMonth()]}</b>
@@ -140,8 +141,8 @@ const OrderCard = observer(({order, months}) => {
                     </Accordion>
                 </div>}
                 <div className={'orders-grade-block'}>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => setShowModalAll(true)}>Оценить заказ</Button>
-                    <Button variant={colors.bootstrapMainVariant} onClick={() => setShowModalOne(true)}>Оценить товар</Button>
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => setShowModalAll(true)}>Оценить заказ</Button>
+                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => setShowModalOne(true)}>Оценить товар</Button>
                 </div>
                 <div className={'img-block'}>
                     <Accordion>
@@ -163,7 +164,7 @@ const OrderCard = observer(({order, months}) => {
                 backdrop="static"
                 keyboard={false}
             >
-                <Modal.Header closeButton style={{backgroundColor: colors.mainOpacity}}>
+                <Modal.Header closeButton style={{backgroundColor: theme.colors.mainOpacity}}>
                     <Modal.Title style={{whiteSpace: "nowrap"}}>
                         Общая оценка для всех товаров заказа
                     </Modal.Title>
@@ -178,7 +179,7 @@ const OrderCard = observer(({order, months}) => {
                 backdrop="static"
                 keyboard={false}
             >
-                <Modal.Header closeButton style={{backgroundColor: colors.mainOpacity}}>
+                <Modal.Header closeButton style={{backgroundColor: theme.colors.mainOpacity}}>
                     <Modal.Title>
                         Оценка товаров
                     </Modal.Title>

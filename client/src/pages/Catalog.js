@@ -1,22 +1,28 @@
 import React, {useContext, useEffect} from 'react';
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {useNavigate, useParams} from "react-router-dom";
 import CategoryCard from "../components/cards/CategoryCard";
 import {Button} from "react-bootstrap";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {API, authAPI, authorization} from "../api";
-import {breakpoints, colors, customGrid, flexColumn, freeButtonWidth, marginSmall, marginsPage} from "../StyledGlobal";
+import {
+    breakpoints,
+    customGrid,
+    flexColumn,
+    marginsPage,
+    standardValues
+} from "../StyledGlobal";
 import Load from "../components/Load";
 
 const Styled = styled.div`
   ${flexColumn};
   ${marginsPage};
   .view-all-button {
-    width: ${freeButtonWidth};
+    width: ${standardValues.freeButtonWidth};
     align-self: center;
-    margin-bottom: ${marginSmall};
-    margin-top: ${marginSmall};
+    margin-bottom: ${standardValues.marginSmall};
+    margin-top: ${standardValues.marginSmall};
     @media (${breakpoints.small}) {
       width: 100%;
     }
@@ -27,6 +33,7 @@ const Styled = styled.div`
 `
 
 const Catalog = observer( () => {
+    const theme = useTheme();
     const {item, category, user} = useContext(Context);
     const navigate = useNavigate();
     const {categoryId} = useParams();
@@ -62,7 +69,7 @@ const Catalog = observer( () => {
     return (
         <>
             {category.categories ? <Styled>
-                {!categoryId && <Button variant={colors.bootstrapMainVariant} className={'view-all-button'}
+                {!categoryId && <Button variant={theme.colors.bootstrapMainVariant} className={'view-all-button'}
                                         onClick={handlerShowAll}
                 >Показать все</Button>}
                 <div className={'card_container'}>

@@ -1,13 +1,13 @@
 import React from 'react';
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import styled from "styled-components";
 import Rating from "../Rating";
 import {useNavigate} from "react-router-dom";
-import {marginMedium} from "../../StyledGlobal";
+import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
 display: flex;
   height: 3rem;
-  margin: ${marginMedium} 0;
+  margin: ${standardValues.marginMedium} 0;
   justify-content: space-between;
   align-items: center;
   > {

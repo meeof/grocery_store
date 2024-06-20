@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import styled from "styled-components";
 import Rating from "../Rating";
-import fillComparisonImg from "../../assets/icon_comparison_green.svg";
+import fillComparisonImg from "../../assets/light/icon_comparison_green.svg";
 import * as uf from "../../usefulFunctions";
 import ButtonBuy from "../buttons/ButtonBuy";
-import truckImg from '../../assets/icon_truck.svg';
+import truckImg from '../../assets/light/icon_truck.svg';
 import DeliveryVariant from "./DeliveryVariant";
 import useWindowSize from "../../hooks/useWindowSize";
 import {Context} from "../../index";
@@ -12,21 +12,26 @@ import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
 import DelButton from "../buttons/DelButton";
 import OneClickBuy from "../buttons/OneClickBuy";
-import {breakpoints, colors, flexColumn, freeButtonWidth, marginMedium, marginSmall} from "../../StyledGlobal";
+import {
+    breakpoints,
+    staticColors,
+    flexColumn,
+    standardValues
+} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import ItemAddUpdate from "../modals/ItemAddUpdate";
 
 const Styled = styled.div`
   .delivery {
-    border: solid ${colors.lightColor} 2px;
-    padding-bottom: ${marginSmall};
+    border: solid ${staticColors.lightColor} 2px;
+    padding-bottom: ${standardValues.marginSmall};
     border-radius: 10px;
     overflow: hidden;
     .delivery-head {
       display: flex;
       align-items: center;
-      padding: ${marginSmall};
-      background-color: ${colors.extraLightColor};
+      padding: ${standardValues.marginSmall};
+      background-color: ${staticColors.extraLightColor};
       > { 
         &:first-child {
           background-image: url(${truckImg});
@@ -43,22 +48,22 @@ const Styled = styled.div`
         font-weight: bold;
       }
       .change-delivery {
-        color: rgb(13,110,253);
+        color: ${({theme}) => theme.colors.main};
       }
     }
   }
   .item-head {
-    border-bottom: 1px solid ${colors.descriptionColor};
-    margin-bottom: ${marginSmall};
+    border-bottom: 1px solid ${staticColors.descriptionColor};
+    margin-bottom: ${standardValues.marginSmall};
     .rating-comparison {
       display: flex;
       align-items: center;
-      margin-bottom: ${marginSmall};
+      margin-bottom: ${standardValues.marginSmall};
     }
     .comparison-button {
-      margin-left: ${marginMedium};
+      margin-left: ${standardValues.marginMedium};
       span {
-        color: ${colors.main};
+        color: ${({theme}) => theme.colors.main};
       }
       padding-left: 18px;
       background-image: url(${fillComparisonImg});
@@ -72,16 +77,16 @@ const Styled = styled.div`
     justify-content: space-between;
     border: solid transparent 1px;
     border-radius: 10px;
-    background-color: ${colors.extraLightColor};
-    padding: ${marginSmall};
-    margin-bottom: ${marginMedium};
+    background-color: ${staticColors.extraLightColor};
+    padding: ${standardValues.marginSmall};
+    margin-bottom: ${standardValues.marginMedium};
     .buy {
       ${flexColumn};
       align-items: center;
       justify-content: center;
-      margin-left: ${marginSmall};
+      margin-left: ${standardValues.marginSmall};
       @media (${breakpoints.fromMedium}) {
-        width: ${freeButtonWidth};
+        width: ${standardValues.freeButtonWidth};
       }
     }
     .prices {
@@ -95,7 +100,7 @@ const Styled = styled.div`
       }
       .discount {
         width: min-content;
-        background-color: ${colors.opacityRed};
+        background-color: ${staticColors.opacityRed};
         color: white;
         border: solid transparent 1px;
         border-radius: 5px;
@@ -104,7 +109,7 @@ const Styled = styled.div`
       h3 {
         color: gray;
         text-decoration: line-through;
-        margin-left: ${marginSmall};
+        margin-left: ${standardValues.marginSmall};
       }
     }
   }

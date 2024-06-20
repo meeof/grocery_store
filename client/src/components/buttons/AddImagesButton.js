@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
-import noImage from "../../assets/icon_no_image.svg";
+import noImage from "../../assets/light/icon_no_image.svg";
 import BadgeCount from "../badges_and_overlays/BadgeCount";
-import {iconsSize} from "../../StyledGlobal";
+import {standardValues} from "../../StyledGlobal";
 let Styled = styled.div`
   position: absolute;
   bottom: ${(props) => (props.$big ? '35px' : '10px')};
@@ -12,8 +12,8 @@ let Styled = styled.div`
   }
   label {
     > img {
-      height: ${(props) => (props.$big ? '50px' : iconsSize)};
-      width: ${(props) => (props.$big ? '50px' : iconsSize)};
+      height: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
+      width: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
       cursor: pointer;
     }
   }

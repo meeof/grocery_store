@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button} from "react-bootstrap";
-import styled from "styled-components";
-import pencilImg from "../../assets/icon_redact_blue.svg";
-import whitePencilImg from "../../assets/icon_redact.svg";
+import styled, {useTheme} from "styled-components";
+import pencilImg from "../../assets/light/icon_redact_blue.svg";
+import whitePencilImg from "../../assets/light/icon_redact.svg";
 
 const Styled = styled.div`
   position: absolute;
@@ -28,9 +28,10 @@ const Styled = styled.div`
 `
 
 const UpdateButton = ({handleModal, isActive, top, right}) => {
+    const theme = useTheme();
     return (
         <Styled $top={top} $right={right}>
-            <Button variant={"outline-primary"} disabled={isActive}
+            <Button variant={theme.colors.bootstrapMainVariantOutline} disabled={isActive}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleModal(true);

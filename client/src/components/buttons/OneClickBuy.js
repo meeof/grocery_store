@@ -3,21 +3,21 @@ import styled from "styled-components";
 import {Modal} from "react-bootstrap";
 import OrderForm from "../OrderForm";
 import AlertOrdered from "../alerts/AlertOrdered";
-import {animations, colors, marginSmall} from "../../StyledGlobal";
+import {standardValues, Theme} from "../../StyledGlobal";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 const Styled = styled.div`
-  ${animations.getGradient('0.7')};
+  ${({theme}) => theme.animations.darkGradient};
+  ${({theme}) => theme.animations.lightGradient};
   width: 100%;
-  color: ${colors.main};
+  color: ${({theme}) => theme.colors.main};
   font-weight: bold;
-  margin-bottom: ${marginSmall};
-  border: solid 1px ${colors.main};
+  margin-bottom: ${standardValues.marginSmall};
+  border: solid 1px ${({theme}) => theme.colors.main};
   border-radius: 5px;
   padding: 6px;
   text-align: center;
   &:hover {
-    animation-name: shopButtonAnim;
     animation-duration: 250ms;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
@@ -35,7 +35,13 @@ const OneClickBuy = ({itemId}) => {
     }
     return (
         <>
-            <Styled role={"button"} onClick={handlerBuy}>Купить в 1 клик</Styled>
+            <Styled onMouseOver={(e) => {
+                e.target.style.animationName = Theme.dark ? 'darkGradient' : 'lightGradient';
+            }} onMouseLeave={(e) => {
+                e.target.style.animationName = '';
+            }} role={"button"} onClick={handlerBuy}>
+                Купить в 1 клик
+            </Styled>
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}
