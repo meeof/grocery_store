@@ -17,15 +17,22 @@ const Styled = styled.div`
       height: 27px;
       width: 27px;
       font-weight: bold;
+      color: #dc3545;
+    }
+    span:hover {
+      color: white;
     }
   }
   .alert {
     cursor: default;
     font-size: 1rem;
     right: ${props => (props.$right ? -props.$right : '-5px')};
-    top: ${props => (props.$top ? -props.$top : '-5px')};;
+    top: ${props => (props.$top ? -props.$top : '-5px')};
     .alert-heading {
       font-size: 1rem;
+    }
+    button {
+      color: black !important;
     }
   }
 `
@@ -39,7 +46,7 @@ const DelButton = ({delFun, id, name, top, right}) => {
         }
         return (
             <Styled $top={top} $right={right}>
-                <Alert style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
+                <Alert className={'alert-del'} style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
                        onClick={(e) => e.stopPropagation()}>
                     <Alert.Heading>Удалить {name && name}?</Alert.Heading>
                     <Button variant={"outline-danger"} onClick={() => delFun(id)}>Удалить</Button>

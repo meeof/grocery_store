@@ -9,7 +9,7 @@ import ButtonBuy from "../components/buttons/ButtonBuy";
 import Reviews from "../components/reviews/Reviews";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {breakpoints, staticColors, flexColumn, marginsPage} from "../StyledGlobal";
+import {breakpoints, flexColumn, marginsPage} from "../StyledGlobal";
 import {API} from "../api";
 import Load from "../components/Load";
 
@@ -17,25 +17,23 @@ const Styled = styled.div`
   position: relative;
   .characteristics {
     width: 100%;
-    background-color: ${staticColors.extraLightColor};
+    background-color: ${({theme}) => theme.colors.extraLightColor};
     padding: 24px;
     .info {
       display: grid;
       grid-template-columns: 1fr 3fr;
     }
-    .info-title {
+    .info-block {
       width: 100%;
       display: flex;
+      border-bottom: 1px dotted ${({theme}) => theme.colors.textColor};
       .title {
         width: min-content;
-        margin-right: 5px;
         white-space: nowrap;
       }
-      .dots {
+      .space {
         width: 100%;
-        border-bottom: 1px dotted black;
-        height: min-content;
-        color: transparent;
+        height: 100%;
       }
     }
   }
@@ -60,8 +58,8 @@ const Styled = styled.div`
 const StyledImg = styled.img`
   width: 100%;
   box-sizing: border-box;
-  border: ${(props) => (props.$active && `solid transparent 1px !important`)};
-  border-color: ${({theme}) => theme.colors.main} !important;
+  border: ${(props) => (props.$active && `solid transparent 3px !important`)};
+  border-color: ${({theme}) =>theme.colors.main} !important;
 `
 
 const Item = observer (() => {
@@ -104,11 +102,11 @@ const Item = observer (() => {
                             <h3>Характеристики</h3>
                             {item.oneItem.info.map(info => {
                                 return <div key={info.id} className={'info'}>
-                                    <div className={'info-title'}>
+                                    <div className={'info-block'}>
                                         <div className={'title'}>{info.title}</div>
-                                        <span className={'dots'}>-</span>
+                                        <span className={'space'}></span>
+                                        <div>{info.description}</div>
                                     </div>
-                                    <div>{info.description}</div>
                                 </div>
                             })}
                         </div>}

@@ -21,15 +21,18 @@ const getOneItem = async (itemId, amount, basketItemId) => {
             id: itemId,
         }
     });
-    return {
-        basketItemId: basketItemId,
-        categoryId: oneItem.categoryId,
-        itemId: oneItem.dataValues.id,
-        amount,
-        name: oneItem.dataValues.name,
-        cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
-        img: oneItem.dataValues.images ? JSON.parse(oneItem.dataValues.images)[0] : null,
+    if (oneItem) {
+        return {
+            basketItemId: basketItemId,
+            categoryId: oneItem.categoryId,
+            itemId: oneItem.dataValues.id,
+            amount,
+            name: oneItem.dataValues.name,
+            cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
+            img: oneItem.dataValues.images ? JSON.parse(oneItem.dataValues.images)[0] : null,
+        }
     }
+    else return null;
 }
 const deleteBasketItem = async (userId, itemId) => {
     await models.BasketItem.destroy({
@@ -94,18 +97,21 @@ class BasketController {
             const allBasketItems = await getAllBasketItems(req.user.id);
             const response = await Promise.all(allBasketItems.map(async (item) => {
                 const oneItem = await getOneItem(item.dataValues.itemId);
-                return {
-                    basketId: item.dataValues.id,
-                    amount: item.dataValues.amount,
-                    itemId: item.dataValues.itemId,
-                    name: oneItem.name,
-                    cost: oneItem.cost,
-                    image: oneItem.img ? oneItem.img : null,
-                    categoryId: oneItem.categoryId,
-                    userId: req.user.id,
+                if (oneItem) {
+                    return {
+                        basketId: item.dataValues.id,
+                        amount: item.dataValues.amount,
+                        itemId: item.dataValues.itemId,
+                        name: oneItem.name,
+                        cost: oneItem.cost,
+                        image: oneItem.img ? oneItem.img : null,
+                        categoryId: oneItem.categoryId,
+                        userId: req.user.id,
+                    }
                 }
+                else return null
             }));
-            res.json(response);
+            res.json(response.filter(item => item));
         }
         catch (err) {
             ErrorTemp.err(res);

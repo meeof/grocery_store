@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import * as uf from "../../usefulFunctions";
 import noImage from "../../assets/icon-picture.svg";
 import {useNavigate} from "react-router-dom";
@@ -42,6 +42,7 @@ const Styled = styled.div`
 `;
 
 const BasketItemCard = observer(({product, deleteBasketItemHandle}) => {
+    const theme = useTheme();
     const [allProductCost, setAllProductCost] = useState(product.cost * product.amount);
     const {review, item} = useContext(Context);
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ const BasketItemCard = observer(({product, deleteBasketItemHandle}) => {
                            allProductCost={allProductCost} setAllProductCost={setAllProductCost}/>
             </div>
             <div className={'basket-card-end'}>
-                <CloseButton className={'button-close'} onClick={() => deleteBasketItemHandle(product.itemId)}/>
+                <CloseButton variant={theme.colors.bootstrapOtherVariant} className={'button-close'} onClick={() => deleteBasketItemHandle(product.itemId)}/>
                 <div className={'cost-summary'}>
                     {allProductCost} ₽
                 </div>

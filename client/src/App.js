@@ -8,10 +8,27 @@ import {Context} from "./index";
 import {staticColors, Theme} from "./StyledGlobal";
 
 const Styled = styled.div`
-
+  min-height: ${props => props.$height + 'px'};
+  background-color: ${({theme}) => theme.colors.backgroundColor};
+  color: ${({theme}) => theme.colors.textColor};
+  .card {
+    background-color: ${({theme}) => theme.colors.backgroundColor};
+    color: ${({theme}) => theme.colors.textColor};
+  }
+  button, button, button:hover, button[class*="btn-outline"]:hover {
+    color: ${({theme}) => theme.colors.btnTextColor};
+  }
+  button[class*="btn-outline"] {
+    color: ${({theme}) => theme.colors.textColor}
+  }
 `
 const App = observer( () => {
     const {user} = useContext(Context);
+    const height = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+    )
     const [theme, setTheme] = useState('LIGHT');
     const localTheme = localStorage.getItem('theme');
     if (localTheme && theme !== localTheme) {
@@ -32,7 +49,7 @@ const App = observer( () => {
     }, [user]);
     return (
         <ThemeProvider colors={staticColors} theme={new Theme()}>
-            <Styled>
+            <Styled $height={height}>
                 <NavBar theme={theme} handlerTheme={handlerTheme}/>
                 <CommonBar/>
                 <AppRouter/>
@@ -40,5 +57,4 @@ const App = observer( () => {
         </ThemeProvider>
     );
 });
-
 export default App;

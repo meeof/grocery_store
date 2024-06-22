@@ -19,14 +19,33 @@ const Styled = styled.div`
   }
   .pagination {
     ${marginsCenter};
+    li {
+      background-color: transparent;
+    }
     * {
       color: ${({theme}) => theme.colors.main};
+      background-color: ${({theme}) => theme.colors.extraLightColor};
+      border-color: ${({theme}) => theme.colors.lightColor};
     }
     .page-item + .active {
       > span {
         background-color: ${({theme}) => theme.colors.main};
-        color: white;
+        color: ${({theme}) => theme.colors.extraLightColor};
         border-color: ${({theme}) => theme.colors.main};
+      }
+    }
+    .page-item {
+      &:first-child {
+        > span {
+          > span {
+            color: gray;
+          }
+        }
+      }
+    }
+    .page-item + .disabled {
+      span {
+        color: gray;
       }
     }
   }

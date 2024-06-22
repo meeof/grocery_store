@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button} from "react-bootstrap";
-import cartImg from '../../assets/icon_basket_white.svg';
+import lightCartImg from '../../assets/light/icon_basket_fill.svg';
+import darkCartImg from '../../assets/dark/icon_basket_fill.svg';
 import styled, {useTheme} from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
 import useGetScrollBar from "../../hooks/useGetScrollBar";
@@ -8,6 +9,7 @@ import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react-lite";
 import {authAPI} from "../../api";
+import {Theme} from "../../StyledGlobal";
 const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
@@ -46,8 +48,8 @@ const Styled = styled.div`
       justify-content: space-evenly;
       border-radius: 0;
       cursor: ${props => (props.$basket && 'default')};;
-      border-left-color: ${props => (!props.$basket && 'white')};
-      border-right-color: ${props => (!props.$basket && 'white')};
+      border-left-color: ${props => (!props.$basket && props.theme.colors.extraLightColor)};
+      border-right-color: ${props => (!props.$basket && props.theme.colors.extraLightColor)};
       p {
         margin: 0;
         font-size: 0.9rem;
@@ -130,7 +132,7 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
                     }
                 }}>
                     В корзину
-                    <img alt={''} src={cartImg}/>
+                    <img alt={''} src={Theme.dark ? darkCartImg : lightCartImg}/>
                 </Button>
             }
         </Styled>

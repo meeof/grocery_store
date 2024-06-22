@@ -9,7 +9,7 @@ const Styled = styled.div`
   align-items: center;
   width: 100%;
   font-size: large;
-  border-bottom: solid 1px ${staticColors.lightColor};
+  border-bottom: solid 1px ${({theme}) => theme.colors.lightColor};
   > img {
     height: 100%;
     margin-right: ${standardValues.marginMedium};

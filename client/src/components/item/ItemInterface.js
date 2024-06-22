@@ -5,7 +5,8 @@ import lightComparisonImg from "../../assets/light/icon_comparison.svg";
 import darkComparisonImg from "../../assets/dark/icon_comparison.svg";
 import * as uf from "../../usefulFunctions";
 import ButtonBuy from "../buttons/ButtonBuy";
-import truckImg from '../../assets/icon_truck.svg';
+import lightTruckImg from '../../assets/light/icon_truck.svg';
+import darkTruckImg from '../../assets/dark/icon_truck.svg';
 import DeliveryVariant from "./DeliveryVariant";
 import useWindowSize from "../../hooks/useWindowSize";
 import {Context} from "../../index";
@@ -24,7 +25,7 @@ import ItemAddUpdate from "../modals/ItemAddUpdate";
 
 const Styled = styled.div`
   .delivery {
-    border: solid ${staticColors.lightColor} 2px;
+    border: solid ${({theme}) => theme.colors.lightColor} 2px;
     padding-bottom: ${standardValues.marginSmall};
     border-radius: 10px;
     overflow: hidden;
@@ -32,10 +33,10 @@ const Styled = styled.div`
       display: flex;
       align-items: center;
       padding: ${standardValues.marginSmall};
-      background-color: ${staticColors.extraLightColor};
+      background-color: ${({theme}) => theme.colors.extraLightColor};
       > { 
         &:first-child {
-          background-image: url(${truckImg});
+          background-image: url(${(props) => props.$dark ? darkTruckImg : lightTruckImg});
           background-size: 20px;
           background-repeat: no-repeat;
           background-position: left;
@@ -54,7 +55,7 @@ const Styled = styled.div`
     }
   }
   .item-head {
-    border-bottom: 1px solid ${staticColors.descriptionColor};
+    border-bottom: 1px solid ${({theme}) => theme.colors.descriptionColor};
     margin-bottom: ${standardValues.marginSmall};
     .rating-comparison {
       display: flex;
@@ -78,7 +79,7 @@ const Styled = styled.div`
     justify-content: space-between;
     border: solid transparent 1px;
     border-radius: 10px;
-    background-color: ${staticColors.extraLightColor};
+    background-color: ${({theme}) => theme.colors.extraLightColor};
     padding: ${standardValues.marginSmall};
     margin-bottom: ${standardValues.marginMedium};
     .buy {

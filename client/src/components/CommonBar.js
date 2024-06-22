@@ -10,7 +10,8 @@ import lightCartImg from "../assets/light/icon_basket.svg";
 import darkCartImg from "../assets/dark/icon_basket.svg";
 import lightUserImg from "../assets/light/icon_user.svg";
 import darkUserImg from "../assets/dark/icon_user.svg";
-import searchImg from "../assets/icon_search.svg";
+import lightSearchImg from "../assets/light/icon_search.svg";
+import darkSearchImg from "../assets/dark/icon_search.svg";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
@@ -43,7 +44,7 @@ const Styled = styled.div`
   }
   .search {
     ${largeButton};
-    background-image: url(${searchImg});
+    background-image: url(${({$dark}) => $dark ? darkSearchImg : lightSearchImg});
     background-size: ${standardValues.iconsSize};
     background-repeat: no-repeat;
     background-position: center;
@@ -121,7 +122,7 @@ const CommonBar = observer (() => {
         }
     }
     return (
-        <Styled>
+        <Styled $dark={Theme.dark}>
             {width >= breakpoints.rawFromSmall ?
                 <>
                     {logoElement}

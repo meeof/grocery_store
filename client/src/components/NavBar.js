@@ -1,24 +1,21 @@
 import React, {useContext} from 'react';
 import {ButtonGroup, Nav, Navbar, ToggleButton} from "react-bootstrap";
 import useWindowSize from "../hooks/useWindowSize";
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {
     breakpoints,
-    staticColors,
     flexColumn,
     marginsCenter,
     marginsPage, standardValues, Theme
 } from "../StyledGlobal";
 import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
-import sunImg from "../assets/light/icon_sun.svg";
-import moonImg from "../assets/light/icon_moon.svg";
-import sunImgDark from "../assets/dark/icon_sun.svg";
-import moonImgDark from "../assets/dark/icon_moon.svg";
+import sunImg from "../assets/icon_sun.svg";
+import moonImg from "../assets/icon_moon.svg";
 import {observer} from "mobx-react-lite";
 
 const Styled = styled.div`
-  background-color: ${staticColors.extraLightColor};
+  background-color: ${({theme}) => theme.colors.extraLightColor};
   .header {
     display: flex;
   }
@@ -30,10 +27,10 @@ const Styled = styled.div`
     height: 30px;
   }
   .theme-light {
-    background-image: url(${(props) => props.$dark ? sunImgDark : sunImg});
+    background-image: url(${sunImg});
   }
   .theme-dark {
-    background-image: url(${(props) => props.$dark ? moonImgDark : moonImg});
+    background-image: url(${moonImg});
   }
   .contacts {
     ${flexColumn};
@@ -85,6 +82,7 @@ const Styled = styled.div`
   }
 `
 const NavBar = observer(({theme, handlerTheme}) => {
+    const styledTheme = useTheme();
     const width = useWindowSize();
     const navigate = useNavigate();
     const {user, render} = useContext(Context);
@@ -93,9 +91,9 @@ const NavBar = observer(({theme, handlerTheme}) => {
         <div className={"me-3"} role={"button"}>+7(800) 800-80-80</div>
     </div>
     return (
-        <Styled $dark={Theme.dark}>
+        <Styled>
             <div className={'header'}>
-                <Navbar expand="sm" bg="light" data-bs-theme="light">
+                <Navbar expand="sm" bg={Theme.dark ? "dark" : "light"} data-bs-theme={Theme.dark ? "dark" : "light"}>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" className={`ms-2 me-auto`}/>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className={`me-auto`}>
@@ -115,14 +113,14 @@ const NavBar = observer(({theme, handlerTheme}) => {
                     </Navbar.Collapse>
                 </Navbar>
                 <ButtonGroup size={"sm"} className={`mb-auto mt-auto`}>
-                    <ToggleButton id={`radio-RU`} type="radio" variant={staticColors.bootstrapOtherVariantOutline} name="radio"
+                    <ToggleButton id={`radio-RU`} type="radio" variant={styledTheme.colors.bootstrapOtherVariantOutline} name="radio"
                                   value={'LIGHT'} checked={theme === 'LIGHT'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);
                                   }}
                                   className={'theme-light'}
                     ></ToggleButton>
-                    <ToggleButton id={`radio-EN`} type="radio" variant={staticColors.bootstrapOtherVariantOutline} name="radio"
+                    <ToggleButton id={`radio-EN`} type="radio" variant={styledTheme.colors.bootstrapOtherVariantOutline} name="radio"
                                   value={'DARK'} checked={theme === 'DARK'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);

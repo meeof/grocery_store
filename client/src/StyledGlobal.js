@@ -29,20 +29,25 @@ export class Theme {
         `
     }
     colors = {
-        main: Theme.dark ? 'rgba(13,110,253,1)' : 'rgba(25,135,84,1)',
-        mainOpacity:Theme.dark ? 'rgba(13,110,253,.5)' : 'rgba(25,135,84,.5)',
-        bootstrapMainVariant: Theme.dark ? 'primary' : 'success',
-        bootstrapMainVariantOutline: Theme.dark ? 'outline-primary' : 'outline-success',
+        main: Theme.dark ? 'rgba(25,135,84,1)' : 'rgba(13,110,253,1)',
+        mainOpacity:Theme.dark ? 'rgba(25,135,84,.5)' : 'rgba(13,110,253,.5)',
+        bootstrapMainVariant: Theme.dark ? 'success' : 'primary',
+        bootstrapMainVariantOutline: Theme.dark ? 'outline-success' : 'outline-primary',
+        extraLightColor: Theme.dark ? '#212529' : '#f8f9fa',
+        lightColor: Theme.dark ? '#121212' : 'lightgray',
+        descriptionColor: Theme.dark ? '#000000' : 'gray',
+        bootstrapOtherVariantOutline: Theme.dark ? 'outline-light' : 'outline-dark',
+        bootstrapOtherVariant: Theme.dark ? 'white' : '',
+        backgroundColor :Theme.dark ? '#2B2B2B' : '',
+        textColor: Theme.dark ? 'white' : 'black',
+        btnTextColor: Theme.dark ? 'black' : '',
     }
     animations = {
-        darkGradient: this.getGradient(`rgba(13,110,253,.7)`, 'darkGradient'),
-        lightGradient: this.getGradient(`rgba(25,135,84,.7)`, 'lightGradient'),
+        darkGradient: this.getGradient(`rgba(25,135,84,.7)`, 'darkGradient'),
+        lightGradient: this.getGradient(`rgba(13,110,253,.7)`, 'lightGradient'),
     }
 }
 export const staticColors = {
-    lightColor: 'lightgray',
-    extraLightColor: '#f8f9fa',
-    descriptionColor: 'gray',
     opacityRed: 'rgba(255, 100, 100,0.85)',
     bootstrapOtherVariant: 'dark',
     bootstrapOtherVariantOutline: 'outline-dark',
@@ -160,6 +165,8 @@ export const itemCategoryCard = css`
     height: 100%;
     ${flexColumn};
     justify-content: space-between;
+    border-width: 2px;
+    border-color: ${({theme}) => theme.colors.lightColor};
   }
   .card-body {
     padding: 5px;

@@ -55,7 +55,7 @@ class BasketStore {
             this.countSumCost();
         }).catch(err => {
             console.log(err);
-            navigate && navigate('/profile/login');
+            /*navigate && navigate('/profile/login');*/
         });
     }
 }

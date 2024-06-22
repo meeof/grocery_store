@@ -5,7 +5,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import noImage from '../../assets/icon-picture.svg';
 import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
-  margin: ${standardValues.marginMedium} 0;
+  margin: ${standardValues.marginMedium};
   grid-column:  ${(props) => (props.$previews ? "2/3" : "1/3")};
   @media (${breakpoints.large}) {
     grid-column: 1/3;

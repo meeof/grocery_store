@@ -11,7 +11,7 @@ const StyledForm = styled.form`
     ${importantStar};
   }
   .check-description {
-    color: ${staticColors.descriptionColor};
+    color: ${({theme}) => theme.colors.descriptionColor};
     line-height: 1;
   }
   .other-labels {
@@ -44,7 +44,7 @@ const StyledForm = styled.form`
   .delivery-variant-block {
     margin-bottom: 10px;
     .check-block:hover {
-      border-color: ${staticColors.lightColor};
+      border-color: ${({theme}) => theme.colors.lightColor};
     }
     .delivery-locality {
       color: red;

@@ -12,11 +12,11 @@ import {Context} from "../../index";
 const Styled = styled.div`
   ${flexColumn};
   border-radius: 5px;
-  border: solid ${staticColors.lightColor} 1px;
+  border: solid ${({theme}) => theme.colors.lightColor} 1px;
   padding: 10px;
   width: 100%;
   justify-content: space-between;
-  background-color: ${staticColors.extraLightColor};
+  background-color: ${({theme}) => theme.colors.extraLightColor};
   @media (${breakpoints.large}) {
     margin-bottom: ${standardValues.marginMedium};
   }

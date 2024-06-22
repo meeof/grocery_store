@@ -8,9 +8,9 @@ const Styled = styled.div`
   width: 100%;
   ${flexColumn};
   padding: ${standardValues.marginSmall};
-  border: solid ${staticColors.lightColor} 1px;
+  border: solid ${({theme}) => theme.colors.lightColor} 1px;
   border-radius: 5px;
-  background-color: ${staticColors.extraLightColor};
+  background-color: ${({theme}) => theme.colors.extraLightColor};
   .buttons-block {
     margin-top: ${standardValues.marginMedium};
     display: grid;

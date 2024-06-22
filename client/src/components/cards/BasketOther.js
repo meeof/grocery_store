@@ -17,7 +17,7 @@ const Styled = styled.div`
       ${flexColumn};
       padding: 15px;
       width: 100%;
-      background-color: ${staticColors.extraLightColor};
+      background-color: ${({theme}) => theme.colors.extraLightColor};
       border: 1px transparent solid;
       border-radius: 5px;
       height: 160px;
