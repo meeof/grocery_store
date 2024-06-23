@@ -33,7 +33,7 @@ const Styled = styled.div`
     position: relative;
   }
   input::placeholder, textarea::placeholder {
-    color: ${({theme}) => theme.colors.inputPlaceholderColor} !important;
+    color: ${staticColors.inputPlaceholderColor} !important;
   }
   input[type="text"]:-webkit-autofill,
   input[type="text"]:-webkit-autofill:hover,
@@ -57,7 +57,7 @@ const Styled = styled.div`
     color: ${({theme}) => theme.colors.textColor} !important;
   }
   .dropdown-item:hover {
-    background-color: ${({theme}) => theme.colors.inputPlaceholderColor} !important;
+    background-color: ${({theme}) => theme.colors.dropdownHover} !important;
   }
   .accordion-button, .accordion-collapse, .accordion-item {
     background-color: ${({theme}) => theme.colors.inputColor} !important;

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {breakpoints, marginsCenter, standardValues} from "../../StyledGlobal";
+import {breakpoints, marginsCenter, standardValues, Theme} from "../../StyledGlobal";
 import {Alert, Button, Modal} from "react-bootstrap";
 import useWindowSize from "../../hooks/useWindowSize";
 import styled, {useTheme} from "styled-components";
@@ -57,10 +57,12 @@ const SellerStatement = observer (() => {
                 keyboard={false}
             >
                 <Styled>
-                    <Alert style={{zIndex: 999, margin: 0}} variant={theme.colors.bootstrapMainVariant} onClose={() => setShowModal(false)} dismissible
+                    <Alert style={{zIndex: 999, margin: 0}} variant={theme.colors.bootstrapMainVariant}
+                           data-bs-theme={Theme.dark ? "dark" : "light"}
+                           onClose={() => setShowModal(false)} dismissible
                            onClick={(e) => e.stopPropagation()}>
                         <Alert.Heading>Подать заявку на рассмотрение ?</Alert.Heading>
-                        <p>В случае одобрения вашей заявки администрацией вы сможете создавать и редактировать собственные категории товаров, а также публиковать и удалять товары на продажу. В противном случае вы сможете подать заявку еще раз.</p>
+                        <p>В случае одобрения вашей заявки администрацией вы сможете создавать и редактировать собственные категории товаров, а также удалять и публиковать товары на продажу. В противном случае вы сможете подать заявку еще раз.</p>
                         <div className={'yes-no-block'}>
                             <Button variant={theme.colors.bootstrapMainVariantOutline} onClick={handlerStatement}>Да</Button>
                             <Button variant={"outline-danger"} onClick={() => {setShowModal(false)}}>Нет</Button>

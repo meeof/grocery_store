@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, Button, Modal} from "react-bootstrap";
 import styled from "styled-components";
-import {marginsCenter, standardValues} from "../../StyledGlobal";
+import {marginsCenter, standardValues, Theme} from "../../StyledGlobal";
 const Styled = styled.div`
   .yes-no-block {
     width: 50%;
@@ -22,7 +22,7 @@ const AlertClearHistory = ({showAlert, setShowAlert, clearOrdersHandler}) => {
             keyboard={false}
         >
             <Styled>
-                <Alert style={{zIndex: 999, margin: 0}} variant="danger" onClose={() => setShowAlert(false)} dismissible
+                <Alert data-bs-theme={Theme.dark ? "dark" : "light"} style={{zIndex: 999, margin: 0}} variant="danger" onClose={() => setShowAlert(false)} dismissible
                        onClick={(e) => e.stopPropagation()}>
                     <Alert.Heading>Очистить историю заказов ?</Alert.Heading>
                     <p>Восстановить её будет невозможно.</p>

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
 import {API, authAPI} from "../../api";
-import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
+import {breakpoints, staticColors, standardValues, Theme} from "../../StyledGlobal";
 import {addImagesToFormData} from "../../usefulFunctions";
 import {Button, Dropdown, DropdownButton, Form, Modal} from "react-bootstrap";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
@@ -11,7 +11,7 @@ import UpdateButton from "../buttons/UpdateButton";
 import {observer} from "mobx-react-lite";
 import {useTheme} from "styled-components";
 
-const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
+const ItemAddUpdate = observer(({product, itemInfo, fullForm, right, top}) => {
     const theme = useTheme();
     const width = useWindowSize();
     const {item, category, overlay} = useContext(Context);
@@ -106,7 +106,7 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
     return (
         <div onClick={(e) => e.stopPropagation()}
              style={{width: '100%', display: "flex", justifyContent: "flex-start"}}>
-            {product ? <UpdateButton handleModal={setShowModal} right={right} isActive={showModal}/> :
+            {product ? <UpdateButton top={top} handleModal={setShowModal} right={right} isActive={showModal}/> :
                 <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                     setShowModal(true);
                     overlay.setTarget(e.target);
@@ -122,6 +122,8 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
                 }}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>{product ? (fullForm ? 'Редактирование товара' : 'Частичное редактирование товара') :
@@ -174,18 +176,19 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right}) => {
                                     deleteInfo={deleteInfo}/>
                             })}
                             <Button variant={theme.colors.bootstrapMainVariant} onClick={newInfo} className={'mt-3'}
-                                    style={{width: '50%', alignSelf: "center"}}>Добавить характеристику</Button>
+                                    style={{width: '50%', alignSelf: "center", color: theme.colors.btnTextColor}}
+                                    >Добавить характеристику</Button>
                         </div>}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCancel}>
+                    <Button variant="secondary" onClick={handleCancel} style={{color: theme.colors.btnTextColor}}>
                         Отменить
                     </Button>
                     <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                         product && overlay.setTarget(e.target);
                         handlerProduct();
-                    }}>
+                    }} style={{color: theme.colors.btnTextColor}}>
                         {product ? 'Изменить' : 'Добавить'}
                     </Button>
                 </Modal.Footer>

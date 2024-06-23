@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {observer} from "mobx-react-lite";
-import {breakpoints, staticColors, flexColumn, largeButton, standardValues} from "../../StyledGlobal";
+import {breakpoints, flexColumn, largeButton, standardValues} from "../../StyledGlobal";
 import {Button, Form} from "react-bootstrap";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
@@ -52,7 +52,7 @@ const BasketOther = observer (() => {
         <Styled>
             <div className={'other-block other-promo'}>
                 <b>Введите промокод</b>
-                <Form.Control placeholder={'Промокод'}/>
+                <Form.Control type={'text'} placeholder={'Промокод'}/>
                 <div role={"button"} className={'link-promo'}>Активировать</div>
             </div>
             <div className={'other-block'}>

@@ -1,13 +1,14 @@
 import React, {useContext, useState} from 'react';
 import UpdateButton from "../buttons/UpdateButton";
 import {Button, Form, Modal} from "react-bootstrap";
-import {breakpoints, staticColors, standardValues} from "../../StyledGlobal";
+import {breakpoints, staticColors, standardValues, Theme} from "../../StyledGlobal";
 import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 import {Context} from "../../index";
 import useWindowSize from "../../hooks/useWindowSize";
 import {API, authAPI} from "../../api";
 import {observer} from "mobx-react-lite";
 import {useTheme} from "styled-components";
+
 
 const CategoryAddUpdate = observer(({id, name}) => {
     const theme = useTheme();
@@ -61,6 +62,8 @@ const CategoryAddUpdate = observer(({id, name}) => {
                 }}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -77,13 +80,13 @@ const CategoryAddUpdate = observer(({id, name}) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCancel}>
+                    <Button variant="secondary" onClick={handleCancel} style={{color: theme.colors.btnTextColor}}>
                         Отменить
                     </Button>
                     <Button variant={theme.colors.bootstrapMainVariant} onClick={(e) => {
                         handlerCategory();
                         id && overlay.setTarget(e.target)
-                    }}>{id ? 'Изменить' : 'Добавить'}</Button>
+                    }} style={{color: theme.colors.btnTextColor}}>{id ? 'Изменить' : 'Добавить'}</Button>
                 </Modal.Footer>
             </Modal>
             <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target} message={overlay.message}/>

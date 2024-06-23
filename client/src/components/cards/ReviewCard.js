@@ -6,7 +6,7 @@ import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";
 import DelButton from "../buttons/DelButton";
 import {Context} from "../../index";
-import {staticColors, flexColumn, standardValues} from "../../StyledGlobal";
+import {staticColors, flexColumn, standardValues, Theme} from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import {dateString} from "../../usefulFunctions";
 const Styled = styled.div`
@@ -119,6 +119,8 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                 onHide={() => setShowRedact(false)}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Редактирование отзыва</Modal.Title>
@@ -132,10 +134,10 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                     }}/>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCancel}>
+                    <Button variant="secondary" onClick={handleCancel} style={{color: theme.colors.btnTextColor}}>
                         Отменить
                     </Button>
-                    <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
+                    <Button variant={theme.colors.bootstrapMainVariant} style={{color: theme.colors.btnTextColor}} onClick={() => {
                         handlerAddUpdate(review, redactImages, reviewObj.id, () => {
                             setRedactImages([]);
                             setShowRedact(false);

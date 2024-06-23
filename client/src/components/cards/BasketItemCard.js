@@ -17,6 +17,7 @@ const Styled = styled.div`
     cursor: pointer;
     height: 100%;
     margin-right: ${standardValues.marginSmall};
+    border-radius: 5px;
   }
   .basket-card-end, .basket-card-body {
     padding: ${standardValues.marginSmall} 0;

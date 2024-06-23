@@ -5,7 +5,7 @@ import noImage from "../../assets/icon-picture.svg";
 import {useNavigate} from "react-router-dom";
 import Rating from "../Rating";
 import SetItemRatingCard from "./SetItemRatingCard";
-import {breakpoints, staticColors, flexColumn, standardValues, Theme} from "../../StyledGlobal";
+import {breakpoints, flexColumn, standardValues, Theme} from "../../StyledGlobal";
 import * as uf from "../../usefulFunctions";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
@@ -58,6 +58,7 @@ const Styled = styled.div`
       img {
         height: 5rem;
         cursor: pointer;
+        border-radius: 5px;
       }
       .img-item-label {
         position: absolute;

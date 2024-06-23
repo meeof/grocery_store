@@ -41,8 +41,8 @@ export class Theme {
         backgroundColor :Theme.dark ? '#2B2B2B' : '',
         textColor: Theme.dark ? 'white' : 'black',
         btnTextColor: Theme.dark ? 'black' : '',
-        inputColor: Theme.dark ? '#424242' : '',
-        inputPlaceholderColor: Theme.dark ? 'rgba(168,168,168,0.66)' : '',
+        inputColor: Theme.dark ? '#212529' : '',
+        dropdownHover: Theme.dark ? '#2B3035' : ''
     }
     animations = {
         darkGradient: this.getGradient(`rgba(25,135,84,.7)`, 'darkGradient'),
@@ -53,6 +53,7 @@ export const staticColors = {
     opacityRed: 'rgba(255, 100, 100,0.85)',
     bootstrapOtherVariant: 'dark',
     bootstrapOtherVariantOutline: 'outline-dark',
+    inputPlaceholderColor: 'rgb(148,148,148)',
 }
 class Breakpoints {
     rawSmall = 575.5;

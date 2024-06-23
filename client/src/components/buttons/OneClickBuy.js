@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import styled from "styled-components";
+import styled, {useTheme} from "styled-components";
 import {Modal} from "react-bootstrap";
 import OrderForm from "../OrderForm";
 import AlertOrdered from "../alerts/AlertOrdered";
@@ -26,6 +26,7 @@ const Styled = styled.div`
 `
 
 const OneClickBuy = ({itemId}) => {
+    const theme = useTheme();
     const {user} = useContext(Context);
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
@@ -47,6 +48,8 @@ const OneClickBuy = ({itemId}) => {
                 onHide={() => setShowModal(false)}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Быстрое оформление заказа</Modal.Title>

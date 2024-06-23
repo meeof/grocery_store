@@ -85,11 +85,17 @@ const NavBar = observer(({theme, handlerTheme}) => {
     const styledTheme = useTheme();
     const width = useWindowSize();
     const navigate = useNavigate();
-    const {user, item} = useContext(Context);
+    const {user} = useContext(Context);
     const contacts = <div className={"contacts"}>
         <div className={"me-3"}>Доставка с 8:00 до 23:00</div>
         <div className={"me-3"} role={"button"}>+7(800) 800-80-80</div>
     </div>
+    const resetInputsForAutofillStyle = () => {
+        const inputs = document.getElementsByTagName("input");
+        for (const input of inputs) {
+            input.value = '';
+        }
+    }
     return (
         <Styled>
             <div className={'header'}>
@@ -117,7 +123,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
                                   value={'LIGHT'} checked={theme === 'LIGHT'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);
-                                      item.setFind('');
+                                      resetInputsForAutofillStyle();
                                   }}
                                   className={'theme-light'}
                     ></ToggleButton>
@@ -125,7 +131,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
                                   value={'DARK'} checked={theme === 'DARK'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);
-                                      item.setFind('');
+                                      resetInputsForAutofillStyle();
                                   }}
                                   className={'theme-dark'}
                     ></ToggleButton>

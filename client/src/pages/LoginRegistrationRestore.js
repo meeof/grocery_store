@@ -9,12 +9,12 @@ import {
     breakpoints,
     staticColors,
     flexColumn, importantStar,
-    marginsPage, standardValues
+    marginsPage, standardValues,
 } from "../StyledGlobal";
 import {decodeAuthAPI} from "../api";
 
 const Styled = styled.div`
-  margin-bottom: ${standardValues.marginSmall};
+  padding-bottom: ${standardValues.marginSmall};
   ${marginsPage};
   .input-label:after {
     ${importantStar};
@@ -63,7 +63,6 @@ const Styled = styled.div`
     }
   }
 `
-
 const LoginRegistrationRestore = observer(() => {
     const theme = useTheme();
     const languages = ['Русский', 'English'];

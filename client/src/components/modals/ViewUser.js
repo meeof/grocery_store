@@ -2,7 +2,10 @@ import React from 'react';
 import noImage from "../../assets/icon-picture.svg";
 import {Image, Modal} from "react-bootstrap";
 import {dateString} from "../../usefulFunctions";
+import {Theme} from "../../StyledGlobal";
+import {useTheme} from "styled-components";
 const ViewUser = ({showUser, setShowUser, name, surname, status, about, image, profileCreated}) => {
+    const theme = useTheme();
     const created = dateString(profileCreated, true);
     return (
         <Modal
@@ -12,6 +15,8 @@ const ViewUser = ({showUser, setShowUser, name, surname, status, about, image, p
             onHide={() => {
                 setShowUser(false);
             }}
+            data-bs-theme={Theme.dark ? "dark" : "light"}
+            style={{color: theme.colors.textColor}}
         >
             <Modal.Header closeButton/>
             <Modal.Body style={{display: "flex", flexDirection: "column", alignItems: "center"}}>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import infoImg from '../../assets/icon_comment_info.svg';
 import styled from "styled-components";
-import {standardValues} from "../../StyledGlobal";
+import {standardValues, staticColors} from "../../StyledGlobal";
 const Styled = styled.div`
   margin: 0 ${standardValues.marginSmall};
   padding: ${standardValues.marginSmall} 0;
@@ -23,6 +23,9 @@ const Styled = styled.div`
       align-self: flex-end;
       margin-left: auto;
     }
+  }
+  .delivery-hide {
+    color: ${staticColors.inputPlaceholderColor} !important;
   }
 `
 const DeliveryVariant = ({name, price, info}) => {

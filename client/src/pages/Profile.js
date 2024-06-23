@@ -83,8 +83,9 @@ const Profile = observer( () => {
     const navigate = useNavigate();
     const {user, basket} = useContext(Context);
     const roles = {
-        ADMIN : 'Администратор',
-        USER : 'Пользователь'
+        ADMIN: 'Администратор',
+        SELLER: 'Продавец',
+        USER: 'Пользователь'
     }
     useEffect(() => {
         user.fetchUserInfo(navigate);

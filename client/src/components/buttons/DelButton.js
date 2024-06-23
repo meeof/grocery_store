@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import {Alert, Button} from "react-bootstrap";
+import {Theme} from "../../StyledGlobal";
 
 const Styled = styled.div`
   position: absolute;
@@ -32,7 +33,7 @@ const Styled = styled.div`
       font-size: 1rem;
     }
     button {
-      color: black !important;
+      color: ${({theme}) => theme.colors.textColor}
     }
   }
 `
@@ -46,7 +47,7 @@ const DelButton = ({delFun, id, name, top, right}) => {
         }
         return (
             <Styled $top={top} $right={right}>
-                <Alert className={'alert-del'} style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
+                <Alert data-bs-theme={Theme.dark ? "dark" : "light"} className={'alert-del'} style={{zIndex: 999}} variant="danger" onClose={() => setShow(false)} dismissible
                        onClick={(e) => e.stopPropagation()}>
                     <Alert.Heading>Удалить {name && name}?</Alert.Heading>
                     <Button variant={"outline-danger"} onClick={() => delFun(id)}>Удалить</Button>

@@ -4,14 +4,14 @@ import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import styled, {useTheme} from "styled-components";
-import {importantStar, standardValues} from "../StyledGlobal";
+import {importantStar, standardValues, staticColors, Theme} from "../StyledGlobal";
 import {authAPI} from "../api";
 const StyledForm = styled.form`
   .input-label:after {
     ${importantStar};
   }
   .check-description {
-    color: ${({theme}) => theme.colors.descriptionColor};
+    color: ${ staticColors.inputPlaceholderColor};
     line-height: 1;
   }
   .other-labels {
@@ -29,9 +29,9 @@ const StyledForm = styled.form`
       margin-right: ${standardValues.marginSmall};
     }
     input[type="radio"]:checked, input[type="checkbox"]:checked {
-      background-color: ${({theme}) => theme.colors.main};;
+      background-color: ${({theme}) => theme.colors.main};
       box-shadow: none;
-      border: 3px solid ${({theme}) => theme.colors.main};;
+      border: 3px solid ${({theme}) => theme.colors.main};
     }
   }
   .check-label {
@@ -125,7 +125,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
             <StyledForm $LinkMapActive={deliveryValue === 'point'} onSubmit={(e) => handlerOrder(e)}>
                 <b>Контактные данные</b>
                 <Form.Group className="mb-3 check-block" controlId="formOrderAutoContact">
-                    <Form.Check checked={autoContact} onChange={autoContactHandler}/>
+                    <Form.Check data-bs-theme={Theme.dark ? "dark" : "light"} checked={autoContact} onChange={autoContactHandler}/>
                     <Form.Label className="check-label"></Form.Label>
                     <div>
                         <div className={'other-labels'}>Как в профиле</div>
@@ -153,7 +153,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                 </Form.Group>
                 <div className={'delivery-variant-block'}>
                     <div className="check-block">
-                        <input type="radio" name="deliveryVariantRadio" className="form-check-input"
+                        <input data-bs-theme={Theme.dark ? "dark" : "light"} type="radio" name="deliveryVariantRadio" className="form-check-input"
                                id="flexRadioDefault3" value={'point'} checked={deliveryValue === 'point'}
                                onChange={(e) => setDeliveryValue(e.target.value)}/>
                         <label className="check-label" htmlFor="flexRadioDefault3"></label>
@@ -172,7 +172,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                         </div>
                     </div>
                     <div className="check-block">
-                        <input type="radio" name="deliveryVariantRadio" className="form-check-input"
+                        <input data-bs-theme={Theme.dark ? "dark" : "light"} type="radio" name="deliveryVariantRadio" className="form-check-input"
                                id="flexRadioDefault2" value={'courier'} checked={deliveryValue === 'courier'}
                                onChange={(e) => setDeliveryValue(e.target.value)}/>
                         <label className="check-label" htmlFor="flexRadioDefault2"></label>
@@ -190,17 +190,17 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                 {deliveryValue === 'courier' &&
                     <Form.Group className="mb-3" controlId="formOrderAddress">
                         <label htmlFor="orderAddress">Адрес</label>
-                        <Form.Control as={"textarea"} id={'orderAddress'} value={orderAddress}
+                        <Form.Control as={"textarea"} value={orderAddress}
                                   onChange={(e) => setOrderAddress(e.target.value)}/>
                     </Form.Group>
                 }
                 <Form.Group className="mb-3" controlId="formOrderComment">
                     <label htmlFor="orderComment">Комментарии к заказу</label>
-                    <Form.Control as={"textarea"} id={'orderComment'} value={orderComment}
+                    <Form.Control as={"textarea"} value={orderComment}
                               onChange={(e) => setOrderComment(e.target.value)}/>
                 </Form.Group>
                 <Form.Group className="mb-3 check-block" controlId="formOrderSubscription">
-                    <Form.Check checked={subscription} onChange={() => setSubscription(!subscription)}/>
+                    <Form.Check data-bs-theme={Theme.dark ? "dark" : "light"} checked={subscription} onChange={() => setSubscription(!subscription)}/>
                     <Form.Label className="check-label"></Form.Label>
                     <div>
                         <div className={'other-labels'}>Подписаться на SMS рассылку</div>
@@ -209,7 +209,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                         </div>
                     </div>
                 </Form.Group>
-                <Button type={"submit"} variant={theme.colors.bootstrapMainVariant}>Подтвердить</Button>
+                <Button type={"submit"} style={{color: theme.colors.btnTextColor}} variant={theme.colors.bootstrapMainVariant}>Подтвердить</Button>
             </StyledForm>
         </>
     );

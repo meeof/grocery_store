@@ -1,7 +1,7 @@
 import React from 'react';
 import noImage from "../../assets/icon-picture.svg";
 import styled from "styled-components";
-import {staticColors, standardValues} from "../../StyledGlobal";
+import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   height: 3rem;
   margin: ${standardValues.marginSmall} 0;
@@ -13,6 +13,7 @@ const Styled = styled.div`
   > img {
     height: 100%;
     margin-right: ${standardValues.marginMedium};
+    border-radius: 5px;
   }
   .order-card-text {
     width: 100%;

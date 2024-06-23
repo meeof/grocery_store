@@ -8,6 +8,7 @@ import {authAPI} from "../../api";
 import {useNavigate} from "react-router-dom";
 import UpdateButton from "../buttons/UpdateButton";
 import {useTheme} from "styled-components";
+import {Theme} from "../../StyledGlobal";
 
 const ViewProfile = observer (() => {
     const theme = useTheme();
@@ -55,6 +56,8 @@ const ViewProfile = observer (() => {
                 onHide={() => {
                     setChange(false);
                 }}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Редактировать профиль</Modal.Title>
@@ -86,13 +89,13 @@ const ViewProfile = observer (() => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formProfileAbout" style={{display: "flex", flexDirection: "column"}}>
                             <label htmlFor="aboutUser" style={{marginBottom: '10px'}}>Описание профиля</label>
-                            <Form.Control as={"textarea"} id={'aboutUser'} value={about} style={{height: '100px', resize: 'none'}}
+                            <Form.Control as={"textarea"} value={about} style={{height: '100px', resize: 'none'}}
                                       onChange={(e) => setAbout(e.target.value)}/>
                         </Form.Group>
                         <div style={{display: "flex", justifyContent: "space-between"}}>
-                            <Button style={{width: '40%'}} variant={theme.colors.bootstrapMainVariant}
+                            <Button style={{width: '40%', color: theme.colors.btnTextColor}} variant={theme.colors.bootstrapMainVariant}
                                     onClick={handlerChangeUserInfo}>Применить</Button>
-                            <Button variant={"secondary"} style={{width: '40%'}}
+                            <Button variant={"secondary"} style={{width: '40%', color: theme.colors.btnTextColor}}
                                     onClick={() => {
                                         setChange(false)
                                         user.setUserInfo(null);

@@ -135,9 +135,9 @@ const ItemInterface = observer(({product}) => {
                 <h1>
                     {product.name}
                     {(user.isAuth?.id === product.userId || user.isAuth?.role === 'ADMIN') && <>
-                        <ItemAddUpdate right={'64px'} product={product} fullForm={true}
+                        <ItemAddUpdate top={'25px'} right={'64px'} product={product} fullForm={true}
                                        itemInfo={JSON.stringify(product.info)}/>
-                        <DelButton right={'24px'} delFun={delItem} id={product.id} name={product.name}/>
+                        <DelButton top={'25px'} right={'24px'} delFun={delItem} id={product.id} name={product.name}/>
                     </>}
                 </h1>
                 <div className={'rating-comparison'}>
