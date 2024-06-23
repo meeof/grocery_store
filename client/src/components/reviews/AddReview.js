@@ -1,6 +1,6 @@
 import styled, {useTheme} from "styled-components";
 import React, {useState} from "react";
-import {Button, CloseButton} from "react-bootstrap";
+import {Button, CloseButton, Form} from "react-bootstrap";
 import useWindowSize from "../../hooks/useWindowSize";
 import AddImagesButton from "../buttons/AddImagesButton";
 import {observer} from "mobx-react-lite";
@@ -60,9 +60,9 @@ const AddReview = observer(({handlerAddUpdate}) => {
             </div>
             : <Button variant={theme.colors.bootstrapMainVariant} onClick={()=> setWrite(true)}>Написать отзыв</Button>
         }
-        {write && <><textarea onFocus={(e) => {e.target.scrollIntoView()}}
+        {write && <><Form.Control as={"textarea"} onFocus={(e) => {e.target.scrollIntoView()}}
                               autoFocus={true} className="addReviewArea" placeholder={`Напишите отзыв ...`}
-                              value={review} onChange={(e)=> setReview(e.target.value)}></textarea>
+                              value={review} onChange={(e)=> setReview(e.target.value)}></Form.Control>
             <AddImagesButton setImages={setImages} count={images?.length} big={width < breakpoints.rawSmall}/>
             {width >= breakpoints.rawFromSmall && <CloseButton onClick={() => setWrite(false)}/>}</>}
     </Styled>

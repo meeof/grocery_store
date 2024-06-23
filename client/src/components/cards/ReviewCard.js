@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import styled, {useTheme} from "styled-components";
 import noImage from "../../assets/icon-picture.svg";
-import {Accordion, Button, Carousel, Image, Modal} from "react-bootstrap";
+import {Accordion, Button, Carousel, Form, Image, Modal} from "react-bootstrap";
 import ViewUser from "../modals/ViewUser";
 import UpdateButton from "../buttons/UpdateButton";
 import DelButton from "../buttons/DelButton";
@@ -124,11 +124,10 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
                     <Modal.Title>Редактирование отзыва</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{display: "flex", flexDirection: "column"}}>
-                    <textarea autoFocus={true} className="redactReviewArea" placeholder={`Напишите отзыв ...`}
+                    <Form.Control as={"textarea"} autoFocus={true} className="redactReviewArea" placeholder={`Напишите отзыв ...`}
                               value={review} onChange={(e)=> setReview(e.target.value)}
-                              style={{marginBottom: '20px', minHeight: '100px'}}
-                    ></textarea>
-                    <input id={'reviewFileInput'} multiple type="file" accept="image/*" onChange={(event) => {
+                              style={{marginBottom: '20px', minHeight: '100px'}}/>
+                    <Form.Control id={'reviewFileInput'} multiple type="file" accept="image/*" onChange={(event) => {
                         setRedactImages(event.target.files);
                     }}/>
                 </Modal.Body>

@@ -85,7 +85,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
     const styledTheme = useTheme();
     const width = useWindowSize();
     const navigate = useNavigate();
-    const {user, render} = useContext(Context);
+    const {user, item} = useContext(Context);
     const contacts = <div className={"contacts"}>
         <div className={"me-3"}>Доставка с 8:00 до 23:00</div>
         <div className={"me-3"} role={"button"}>+7(800) 800-80-80</div>
@@ -117,6 +117,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
                                   value={'LIGHT'} checked={theme === 'LIGHT'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);
+                                      item.setFind('');
                                   }}
                                   className={'theme-light'}
                     ></ToggleButton>
@@ -124,7 +125,7 @@ const NavBar = observer(({theme, handlerTheme}) => {
                                   value={'DARK'} checked={theme === 'DARK'}
                                   onChange={(e) => {
                                       handlerTheme(e.currentTarget.value);
-                                      render.forceUpdate();
+                                      item.setFind('');
                                   }}
                                   className={'theme-dark'}
                     ></ToggleButton>

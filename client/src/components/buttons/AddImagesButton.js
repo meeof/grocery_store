@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from "styled-components";
-import cameraImg from "../../assets/icon_camera.svg";
+import lightCameraImg from "../../assets/light/icon_camera.svg";
+import darkCameraImg from "../../assets/dark/icon_camera.svg";
 import cameraHoverImg from "../../assets/icon_camera_hover.svg";
 import BadgeCount from "../badges_and_overlays/BadgeCount";
-import {standardValues} from "../../StyledGlobal";
+import {standardValues, Theme} from "../../StyledGlobal";
 let Styled = styled.div`
   position: absolute;
   bottom: ${(props) => (props.$big ? '35px' : '10px')};
@@ -18,7 +19,7 @@ let Styled = styled.div`
     background-position: center;
     width: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
     height: ${(props) => (props.$big ? '50px' : standardValues.iconsSize)};
-    background-image: url(${cameraImg});
+    background-image: url(${(props) => props.$dark ? darkCameraImg : lightCameraImg});
     &:hover {
       background-image: url(${cameraHoverImg});
     }
@@ -27,7 +28,7 @@ let Styled = styled.div`
 
 const AddImagesButton = ({setImages, count, big}) => {
     return (
-        <Styled $big={big}>
+        <Styled $big={big} $dark={Theme.dark}>
             <label htmlFor={"reviewFileInput"}>
                 {count ? <BadgeCount count={count}/> : ''}
             </label>

@@ -37,10 +37,12 @@ export class Theme {
         lightColor: Theme.dark ? '#121212' : 'lightgray',
         descriptionColor: Theme.dark ? '#000000' : 'gray',
         bootstrapOtherVariantOutline: Theme.dark ? 'outline-light' : 'outline-dark',
-        bootstrapOtherVariant: Theme.dark ? 'white' : '',
+        bootstrapOtherVariant: Theme.dark ? 'white' : null,
         backgroundColor :Theme.dark ? '#2B2B2B' : '',
         textColor: Theme.dark ? 'white' : 'black',
         btnTextColor: Theme.dark ? 'black' : '',
+        inputColor: Theme.dark ? '#424242' : '',
+        inputPlaceholderColor: Theme.dark ? 'rgba(168,168,168,0.66)' : '',
     }
     animations = {
         darkGradient: this.getGradient(`rgba(25,135,84,.7)`, 'darkGradient'),

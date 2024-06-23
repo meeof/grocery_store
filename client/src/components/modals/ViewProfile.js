@@ -86,8 +86,8 @@ const ViewProfile = observer (() => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formProfileAbout" style={{display: "flex", flexDirection: "column"}}>
                             <label htmlFor="aboutUser" style={{marginBottom: '10px'}}>Описание профиля</label>
-                            <textarea id={'aboutUser'} value={about} style={{height: '100px', resize: 'none'}}
-                                      onChange={(e) => setAbout(e.target.value)}></textarea>
+                            <Form.Control as={"textarea"} id={'aboutUser'} value={about} style={{height: '100px', resize: 'none'}}
+                                      onChange={(e) => setAbout(e.target.value)}/>
                         </Form.Group>
                         <div style={{display: "flex", justifyContent: "space-between"}}>
                             <Button style={{width: '40%'}} variant={theme.colors.bootstrapMainVariant}

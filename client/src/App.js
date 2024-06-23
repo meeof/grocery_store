@@ -21,6 +21,52 @@ const Styled = styled.div`
   button[class*="btn-outline"] {
     color: ${({theme}) => theme.colors.textColor}
   }
+  input[type="text"], input[type="text"]:focus,
+  input[type="search"], input[type="search"]:focus, 
+  input[type="password"], input[type="password"]:focus,
+  input[type="tel"], input[type="tel"]:focus,
+  input[type="email"], input[type="email"]:focus,
+  textarea {
+    background-color: ${({theme}) => theme.colors.inputColor} !important;
+    color: ${({theme}) => theme.colors.textColor} !important;
+    border-color: ${({theme}) => theme.colors.lightColor} !important;
+    position: relative;
+  }
+  input::placeholder, textarea::placeholder {
+    color: ${({theme}) => theme.colors.inputPlaceholderColor} !important;
+  }
+  input[type="text"]:-webkit-autofill,
+  input[type="text"]:-webkit-autofill:hover,
+  input[type="text"]:-webkit-autofill:focus,
+  input[type="search"]:-webkit-autofill,
+  input[type="search"]:-webkit-autofill:hover,
+  input[type="search"]:-webkit-autofill:focus,
+  input[type="password"]:-webkit-autofill,
+  input[type="password"]:-webkit-autofill:hover,
+  input[type="password"]:-webkit-autofill:focus,
+  input[type="tel"]:-webkit-autofill,
+  input[type="tel"]:-webkit-autofill:hover,
+  input[type="tel"]:-webkit-autofill:focus,
+  input[type="email"]:-webkit-autofill,
+  input[type="email"]:-webkit-autofill:hover,
+  input[type="email"]:-webkit-autofill:focus{
+    transition: background-color 0s 600000s, color 0s 600000s !important;
+  }
+  .dropdown-menu, .dropdown-item {
+    background-color: ${({theme}) => theme.colors.inputColor} !important;
+    color: ${({theme}) => theme.colors.textColor} !important;
+  }
+  .dropdown-item:hover {
+    background-color: ${({theme}) => theme.colors.inputPlaceholderColor} !important;
+  }
+  .accordion-button, .accordion-collapse, .accordion-item {
+    background-color: ${({theme}) => theme.colors.inputColor} !important;
+    color: ${({theme}) => theme.colors.textColor} !important;
+    border-color: ${({theme}) => theme.colors.lightColor} !important;
+  }
+  .accordion-button {
+    box-shadow: 0 1px ${({theme}) => theme.colors.lightColor} !important;
+  }
 `
 const App = observer( () => {
     const {user} = useContext(Context);

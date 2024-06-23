@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import styled, {useTheme} from "styled-components";
-import {staticColors, importantStar, standardValues} from "../StyledGlobal";
+import {importantStar, standardValues} from "../StyledGlobal";
 import {authAPI} from "../api";
 const StyledForm = styled.form`
   .input-label:after {
@@ -190,14 +190,14 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                 {deliveryValue === 'courier' &&
                     <Form.Group className="mb-3" controlId="formOrderAddress">
                         <label htmlFor="orderAddress">Адрес</label>
-                        <textarea id={'orderAddress'} value={orderAddress}
-                                  onChange={(e) => setOrderAddress(e.target.value)}></textarea>
+                        <Form.Control as={"textarea"} id={'orderAddress'} value={orderAddress}
+                                  onChange={(e) => setOrderAddress(e.target.value)}/>
                     </Form.Group>
                 }
                 <Form.Group className="mb-3" controlId="formOrderComment">
                     <label htmlFor="orderComment">Комментарии к заказу</label>
-                    <textarea id={'orderComment'} value={orderComment}
-                              onChange={(e) => setOrderComment(e.target.value)}></textarea>
+                    <Form.Control as={"textarea"} id={'orderComment'} value={orderComment}
+                              onChange={(e) => setOrderComment(e.target.value)}/>
                 </Form.Group>
                 <Form.Group className="mb-3 check-block" controlId="formOrderSubscription">
                     <Form.Check checked={subscription} onChange={() => setSubscription(!subscription)}/>
