@@ -6,6 +6,8 @@ import styled, {ThemeProvider} from "styled-components";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
 import {staticColors, Theme} from "./StyledGlobal";
+import darkArrowImg from './assets/dark/icon-bootstrap-arrow.svg'
+import lightArrowImg from './assets/light/icon-bootstrap-arrow.svg'
 
 const Styled = styled.div`
   min-height: ${props => props.$height + 'px'};
@@ -67,6 +69,9 @@ const Styled = styled.div`
   .accordion-button {
     box-shadow: 0 1px ${({theme}) => theme.colors.lightColor} !important;
   }
+  .accordion-button:after {
+    background-image: url(${({$dark}) => $dark ? darkArrowImg : lightArrowImg})
+  }
 `
 const App = observer( () => {
     const {user} = useContext(Context);
@@ -95,7 +100,7 @@ const App = observer( () => {
     }, [user]);
     return (
         <ThemeProvider colors={staticColors} theme={new Theme()}>
-            <Styled $height={height}>
+            <Styled $height={height} $dark={Theme.dark}>
                 <NavBar theme={theme} handlerTheme={handlerTheme}/>
                 <CommonBar/>
                 <AppRouter/>

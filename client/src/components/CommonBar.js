@@ -4,8 +4,8 @@ import lightLogo from '../assets/light/logo.svg'
 import darkLogo from '../assets/dark/logo.svg'
 import styled, {useTheme} from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import lightComparisonImg from "../assets/light/icon_comparison.svg";
-import darkComparisonImg from "../assets/dark/icon_comparison.svg";
+import lightLikeImg from "../assets/light/icon_like_fill.svg";
+import darkLikeImg from "../assets/dark/icon_like_fill.svg";
 import lightCartImg from "../assets/light/icon_basket.svg";
 import darkCartImg from "../assets/dark/icon_basket.svg";
 import lightUserImg from "../assets/light/icon_user.svg";
@@ -148,8 +148,8 @@ const CommonBar = observer (() => {
                 <Link to={user.isAuth ? '/profile' : '/profile/login'}>
                     <Image src={Theme.dark ? darkUserImg : lightUserImg} />
                 </Link>
-                <Link to={'/'}>
-                    <Image src={Theme.dark ? darkComparisonImg : lightComparisonImg}/>
+                <Link to={'/favorites'}>
+                    <Image src={Theme.dark ? darkLikeImg : lightLikeImg}/>
                 </Link>
                 <Link to={'/basket'}>
                     <Image src={Theme.dark ? darkCartImg : lightCartImg}/>

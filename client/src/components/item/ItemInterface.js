@@ -1,8 +1,10 @@
-import React, {useContext} from 'react';
-import styled from "styled-components";
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import styled, {useTheme} from "styled-components";
 import Rating from "../Rating";
-import lightComparisonImg from "../../assets/light/icon_comparison.svg";
-import darkComparisonImg from "../../assets/dark/icon_comparison.svg";
+import lightLikeImgFill from "../../assets/light/icon_like_fill.svg";
+import darkLikeImgFill from "../../assets/dark/icon_like_fill.svg";
+import lightLikeImg from "../../assets/light/icon_like.svg";
+import darkLikeImg from "../../assets/dark/icon_like.svg";
 import * as uf from "../../usefulFunctions";
 import ButtonBuy from "../buttons/ButtonBuy";
 import lightTruckImg from '../../assets/light/icon_truck.svg';
@@ -22,6 +24,7 @@ import {
 } from "../../StyledGlobal";
 import {authAPI} from "../../api";
 import ItemAddUpdate from "../modals/ItemAddUpdate";
+import CustomOverlay from "../badges_and_overlays/CustomOverlay";
 
 const Styled = styled.div`
   .delivery {
@@ -57,18 +60,19 @@ const Styled = styled.div`
   .item-head {
     border-bottom: 1px solid ${({theme}) => theme.colors.descriptionColor};
     margin-bottom: ${standardValues.marginSmall};
-    .rating-comparison {
+    .rating-like {
       display: flex;
       align-items: center;
       margin-bottom: ${standardValues.marginSmall};
     }
-    .comparison-button {
+    .like-button {
       margin-left: ${standardValues.marginMedium};
       span {
         color: ${({theme}) => theme.colors.main};
       }
       padding-left: 18px;
-      background-image: url(${(props) => props.$dark ? darkComparisonImg : lightComparisonImg});
+      background-image: url(${(props) => props.$inFavorites ? 
+              (props.$dark ? darkLikeImgFill : lightLikeImgFill) : (props.$dark ? darkLikeImg : lightLikeImg)});
       background-size: 16px;
       background-repeat: no-repeat;
       background-position: left;
@@ -118,9 +122,11 @@ const Styled = styled.div`
 `
 
 const ItemInterface = observer(({product}) => {
-    const {user} = useContext(Context);
+    const {user, overlay} = useContext(Context);
     const width = useWindowSize();
+    const theme = useTheme();
     const navigate = useNavigate();
+    const [inFavorites, setInFavorites] = useState(false);
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then(() => {
             navigate(-1);
@@ -128,9 +134,31 @@ const ItemInterface = observer(({product}) => {
             console.log(err.response.data);
         })
     }
+    const checkFavorites = useCallback(() => {
+        authAPI('get', '/api/favorites/check', {itemId: product.id}).then((data) => {
+            setInFavorites(data);
+        }).catch(err => {
+            console.log(err.response.data);
+        })
+    }, [product.id])
+    const addDelFavorites = (method) => {
+        authAPI(method, '/api/favorites', {itemId: product.id}).then(() => {
+            overlay.setMessage(method === 'post' ? `Товар добавлен в избранное` : `Товар удален из избранного`);
+            overlay.setColor(theme.colors.mainOpacity);
+            overlay.handlerOverlay();
+            setInFavorites(method === 'post');
+        }).catch(err => {
+            overlay.setMessage(err.response?.data || 'Непредвиденная ошибка');
+            overlay.setColor(staticColors.opacityRed);
+            overlay.handlerOverlay();
+        })
+    }
+    useEffect(() => {
+        checkFavorites();
+    }, [checkFavorites]);
     let city = 'Москва';
     return (
-        <Styled $dark={Theme.dark}>
+        <Styled $dark={Theme.dark} $inFavorites={inFavorites}>
             <div className={'item-head'}>
                 <h1>
                     {product.name}
@@ -140,10 +168,13 @@ const ItemInterface = observer(({product}) => {
                         <DelButton top={'25px'} right={'24px'} delFun={delItem} id={product.id} name={product.name}/>
                     </>}
                 </h1>
-                <div className={'rating-comparison'}>
+                <div className={'rating-like'}>
                     <Rating disabled={true} itemsId={[product.id]}/>
-                    <div role={"button"} className={'comparison-button'}>
-                        <span>Добавить в сравнение</span>
+                    <div role={"button"} className={'like-button'} onClick={(e) =>  {
+                        overlay.setTarget(e.target)
+                        inFavorites ? addDelFavorites('delete') : addDelFavorites('post');
+                    }}>
+                        <span>{inFavorites ? 'В избранном' : 'Добавить в избранное'}</span>
                     </div>
                 </div>
             </div>
@@ -166,6 +197,7 @@ const ItemInterface = observer(({product}) => {
                 <DeliveryVariant name={'Самовывоз'} price={'бесплатно'} info={'На пункте выдачи'}/>
                 <DeliveryVariant name={'Курьером'} price={'300 ₽'} info={'Доставка курьером'}/>
             </div>
+            <CustomOverlay show={overlay.show} color={overlay.color} target={overlay.target} message={overlay.message}/>
         </Styled>
     );
 });

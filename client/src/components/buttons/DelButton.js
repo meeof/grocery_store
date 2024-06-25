@@ -2,6 +2,10 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import {Alert, Button} from "react-bootstrap";
 import {Theme} from "../../StyledGlobal";
+import redCrossImg from "../../assets/icon_cross_red.svg";
+import whiteCrossImg from "../../assets/icon_cross_white.svg";
+import redLikeImg from "../../assets/icon_like_red.svg";
+import whiteLikeImg from "../../assets/icon_like_white.svg";
 
 const Styled = styled.div`
   position: absolute;
@@ -9,20 +13,20 @@ const Styled = styled.div`
   right: ${props => (props.$right ? props.$right : '5px')};
   z-index: 999;
   button {
-    padding: 0;
+    padding: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-width: 3px;
-    span {
-      height: 27px;
-      width: 27px;
-      font-weight: bold;
-      color: #dc3545;
-    }
-    span:hover {
-      color: white;
-    }
+    background-image: url(${props => (props.$favorites ? redLikeImg : redCrossImg)});
+    background-size: 19px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 32px;
+    height: 32px;
+  }
+  button:hover {
+    background-image: url(${props => (props.$favorites ? whiteLikeImg : whiteCrossImg)});
   }
   .alert {
     cursor: default;
@@ -38,7 +42,7 @@ const Styled = styled.div`
   }
 `
 
-const DelButton = ({delFun, id, name, top, right}) => {
+const DelButton = ({favorites, delFun, id, name, top, right}) => {
     const [show, setShow] = useState(false);
     if (show) {
         if (name && name.length > 18) {
@@ -55,12 +59,16 @@ const DelButton = ({delFun, id, name, top, right}) => {
             </Styled>
         );
     }
-    return <Styled $top={top} $right={right}>
+    return <Styled $top={top} $right={right} $favorites={favorites}>
         <Button variant={"outline-danger"} onClick={(e) => {
             e.stopPropagation();
-            setShow(!show)
+            if (favorites) {
+                delFun(id)
+            }
+            else {
+                setShow(!show)
+            }
         }}>
-            <span>x</span>
         </Button>
     </Styled>
 };

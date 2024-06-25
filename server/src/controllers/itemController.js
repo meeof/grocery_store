@@ -1,32 +1,9 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {checkCategoryExist, deleteSpace, getOneItem, saveImages, verifyCreator} from "../usefulFunctions.js";
+import {checkCategoryExist, deleteSpace, getItems, getOneItem, saveImages, verifyCreator} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
-const getItems = async (categoryId, limit, page, find) => {
-    page = page || 1;
-    limit = limit || 4;
-    const offset = limit * (page - 1);
-    const where = {};
-    categoryId && (where.categoryId = categoryId);
-    find && (where.name = {[Op.iRegexp]: find});
-    const allItems = await models.Item.findAndCountAll({
-        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId'],
-        where, limit, offset, order: [
-            ['id', 'DESC'],
-        ],
-    })
-    allItems.rows.map(item => {
-        if (item.dataValues.images === null) {
-            item.dataValues.images = [];
-        }
-        else {
-            item.dataValues.images = JSON.parse(item.dataValues.images);
-        }
-    })
-    return allItems
-}
 class ItemController {
     async createUpdate(req, res) {
         try {

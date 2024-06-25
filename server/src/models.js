@@ -32,9 +32,6 @@ const Item = sequelize.define('item', {
     discount : {type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
     images : {type: DataTypes.JSON},
 });
-const Comparison = sequelize.define('comparison', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-});
 const ItemInfo = sequelize.define('item_info', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title : {type: DataTypes.STRING, allowNull: false},
@@ -71,15 +68,14 @@ const Statements = sequelize.define('statements' , {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     status: {type: DataTypes.STRING, allowNull: false},
 })
-
+const Favorites = sequelize.define('favorites', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+});
 User.hasOne(UserInfo);
 UserInfo.belongsTo(User);
 
 User.hasMany(Rating);
 Rating.belongsTo(User);
-
-User.hasOne(Comparison);
-Comparison.belongsTo(User);
 
 User.hasMany(BasketItem);
 BasketItem.belongsTo(User);
@@ -118,5 +114,9 @@ Item.belongsTo(User);
 User.hasOne(Statements);
 Statements.belongsTo(User);
 
+Item.hasMany(Favorites);
+Favorites.belongsTo(Item);
+User.hasOne(Favorites);
+Favorites.belongsTo(User);
 
-export {Categories, ItemInfo, Comparison, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews, Statements};
+export {Categories, ItemInfo, Favorites, Item, Rating, BasketItem, UserInfo, User, Orders, WasBought, Reviews, Statements};

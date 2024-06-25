@@ -35,13 +35,13 @@ const Category = observer( () => {
             }).catch(() => {
                 user.setAuth(false);
             }).finally(() => {
-                item.setCategoryId(categoryId)
-                item.fetchItems();
+                item.setCategoryId(categoryId);
+                !item.items && item.fetchItems();
             })
         }
         else {
             item.setCategoryId(categoryId)
-            item.fetchItems();
+            !item.items && item.fetchItems();
         }
     }, [item, user, render.rerender, categoryId]);
     return (

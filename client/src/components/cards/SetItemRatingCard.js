@@ -18,6 +18,7 @@ display: flex;
   img {
     cursor: pointer;
     height: inherit;
+    border-radius: 5px;
   }
 `
 

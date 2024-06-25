@@ -164,6 +164,8 @@ const OrderCard = observer(({order, months}) => {
                 onHide={() => setShowModalAll(false)}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton style={{backgroundColor: theme.colors.mainOpacity}}>
                     <Modal.Title style={{whiteSpace: "nowrap"}}>
@@ -179,6 +181,8 @@ const OrderCard = observer(({order, months}) => {
                 onHide={() => setShowModalOne(false)}
                 backdrop="static"
                 keyboard={false}
+                data-bs-theme={Theme.dark ? "dark" : "light"}
+                style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton style={{backgroundColor: theme.colors.mainOpacity}}>
                     <Modal.Title>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import {Button, Form} from "react-bootstrap";
-import deleteCross from '../../assets/icon_cross.svg';
+import deleteCross from '../../assets/icon_cross_black.svg';
 import {standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   margin-bottom: ${standardValues.marginSmall};

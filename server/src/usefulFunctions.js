@@ -3,6 +3,7 @@ import path from "path";
 import __dirname from "./__dirname.js";
 import * as models from "./models.js";
 import {Op} from "sequelize";
+import {sequelize} from "./db.js";
 
 export const deleteSpace = (str) => {
     return str.replace(/^ +| +$/g, '');
@@ -79,4 +80,40 @@ export const verifyCreator = async (table, userId, id) => {
         }
     });
     return userId === check.dataValues.userId;
+}
+export const getItems = async (categoryId, limit, page, find, favoritesIn) => {
+    page = page || 1;
+    limit = limit || 4;
+    const offset = limit * (page - 1);
+    const where = {};
+    let order = [['id', 'DESC']];
+    categoryId && (where.categoryId = categoryId);
+    find && (where.name = {[Op.iRegexp]: find});
+    if (favoritesIn) {
+        where.id = {[Op.in]: favoritesIn};
+        let strOrderFavorites = '';
+        for (let i= 0; i < favoritesIn.length; i++) {
+            if (i === 0) {
+                strOrderFavorites += `CASE\n`
+            }
+            strOrderFavorites += `WHEN id='${favoritesIn[i]}' THEN ${i+1}\n`
+            if (i === favoritesIn.length - 1) {
+                strOrderFavorites += 'END'
+            }
+        }
+        strOrderFavorites && (order = [sequelize.literal(strOrderFavorites)]);
+    }
+    const allItems = await models.Item.findAndCountAll({
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId'],
+        where, limit, offset, order
+    })
+    allItems.rows.map(item => {
+        if (item.dataValues.images === null) {
+            item.dataValues.images = [];
+        }
+        else {
+            item.dataValues.images = JSON.parse(item.dataValues.images);
+        }
+    })
+    return allItems
 }

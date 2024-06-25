@@ -5,6 +5,7 @@ import itemRouter from "./itemRouter.js";
 import basketRouter from "./basketRouter.js";
 import ratingRouter from "./ratingRouter.js";
 import reviewRouter from "./reviewRouter.js";
+import favoritesRouter from "./favoritesRouter.js";
 const router = new express.Router();
 
 router.use('/user', userRouter);
@@ -13,4 +14,5 @@ router.use('/item', itemRouter);
 router.use('/basket', basketRouter);
 router.use('/rating', ratingRouter);
 router.use('/reviews', reviewRouter);
+router.use('/favorites', favoritesRouter);
 export default router;

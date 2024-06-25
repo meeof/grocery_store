@@ -10,6 +10,7 @@ import Order from "./pages/Order";
 import Orders from "./pages/Orders";
 import LoginRegistrationRestore from "./pages/LoginRegistrationRestore";
 import Statements from "./pages/Statements";
+import Favorites from "./pages/Favorites";
 
 const AppRouter = () => {
     return (
@@ -26,6 +27,7 @@ const AppRouter = () => {
             <Route path="/basket" element={<Basket/>} />
             <Route path="/basket/order" element={<Order/>} />
             <Route path="/statements" element={<Statements/>} />
+            <Route path="/favorites" element={<Favorites/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );
