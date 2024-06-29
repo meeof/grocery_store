@@ -9,7 +9,6 @@ import {Theme} from "../../StyledGlobal";
 const Styled = styled.div`
   position: absolute;
   top: ${props => (props.$top ? props.$top : '5px')};
-  right: ${props => (props.$right ? props.$right : '40px')};
   ${props => (props.$right ? `right: ${props.$right}` : 'left: 5px')};
   button {
     padding: 4px;

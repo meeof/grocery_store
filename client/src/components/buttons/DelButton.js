@@ -12,21 +12,23 @@ const Styled = styled.div`
   top: ${props => (props.$top ? props.$top : '5px')};
   right: ${props => (props.$right ? props.$right : '5px')};
   z-index: 999;
-  button {
-    padding: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-width: 3px;
-    background-image: url(${props => (props.$favorites ? redLikeImg : redCrossImg)});
-    background-size: 19px;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 32px;
-    height: 32px;
-  }
-  button:hover {
-    background-image: url(${props => (props.$favorites ? whiteLikeImg : whiteCrossImg)});
+  > {
+    button {
+      padding: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-width: 3px;
+      background-image: url(${props => (props.$favorites ? redLikeImg : redCrossImg)});
+      background-size: 19px;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 32px;
+      height: 32px;
+    }
+    button:hover {
+        background-image: url(${props => (props.$favorites ? whiteLikeImg : whiteCrossImg)});
+    }
   }
   .alert {
     cursor: default;

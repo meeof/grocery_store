@@ -105,7 +105,7 @@ const Item = observer (() => {
                                     <div className={'info-block'}>
                                         <div className={'title'}>{info.title}</div>
                                         <span className={'space'}></span>
-                                        <div>{info.description}</div>
+                                        <div>{info.content}</div>
                                     </div>
                                 </div>
                             })}

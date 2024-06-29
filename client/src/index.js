@@ -11,6 +11,9 @@ import OverlayStore from "./stores/overlayStore";
 import CategoryStore from "./stores/categoryStore";
 import ReviewStore from "./stores/reviewStore";
 import RerenderStore from "./stores/rerenderStore";
+import FavoritesStore from "./stores/favoritesStore";
+import InfoLinkStore from "./stores/InfoLinkStore";
+import BlogStore from "./stores/blogStore";
 
 export const Context = createContext(null);
 
@@ -24,6 +27,9 @@ root.render(
         category: new CategoryStore(),
         review: new ReviewStore(),
         render: new RerenderStore(),
+        favorites: new FavoritesStore(),
+        linkInfo: new InfoLinkStore(),
+        blog: new BlogStore(),
     }}>
         <BrowserRouter>
             <App/>

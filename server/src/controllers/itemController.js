@@ -86,13 +86,13 @@ class ItemController {
                                 itemId: id,
                             },
                         });
-                        for (const {title, description} of JSON.parse(info)) {
-                            if (deleteSpace(title) === '' || deleteSpace(description) === '') {
+                        for (const {title, content} of JSON.parse(info)) {
+                            if (deleteSpace(title) === '' || deleteSpace(content) === '') {
                                 continue
                             }
                             await models.ItemInfo.create(
-                                {title, description, itemId: id},
-                                {fields: ['title', 'description', 'itemId']}
+                                {title, content, itemId: id},
+                                {fields: ['title', 'content', 'itemId']}
                             )
                         }
                     })
@@ -143,7 +143,7 @@ class ItemController {
             const response =  await sequelize.transaction(async () => {
                 const oneItem = await getOneItem(id);
                 const itemInfos = await models.ItemInfo.findAll({
-                    attributes: ['id', 'title', 'description'],
+                    attributes: ['id', 'title', 'content'],
                     where: {
                         itemId: id,
                     }

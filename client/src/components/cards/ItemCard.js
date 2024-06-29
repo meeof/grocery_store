@@ -48,7 +48,8 @@ const ItemCard = observer(({...props}) => {
     return (
         <Styled $disc={props.product.discount}>
             <Card onClick={() => {
-                navigate(uf.routePrefix('product', props.product.id));
+                props.favorites ? navigate('/catalog/all/' + uf.routePrefix('product', props.product.id)) :
+                    navigate(uf.routePrefix('product', props.product.id));
                 review.setReviews(null);
                 item.setOneItem(null);
             }}>

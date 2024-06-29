@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import LoginRegistrationRestore from "./pages/LoginRegistrationRestore";
 import Statements from "./pages/Statements";
 import Favorites from "./pages/Favorites";
+import Blog from "./pages/Blog";
 
 const AppRouter = () => {
     return (
@@ -28,6 +29,7 @@ const AppRouter = () => {
             <Route path="/basket/order" element={<Order/>} />
             <Route path="/statements" element={<Statements/>} />
             <Route path="/favorites" element={<Favorites/>} />
+            <Route path="/blog" element={<Blog/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );

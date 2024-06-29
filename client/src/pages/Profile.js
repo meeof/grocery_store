@@ -16,6 +16,7 @@ import CategoryAddUpdate from "../components/modals/CategoryAddUpdate";
 import ItemAddUpdate from "../components/modals/ItemAddUpdate";
 import SellerStatement from "../components/modals/SellerStatement";
 import {dateString} from "../usefulFunctions";
+import Publication from "../components/modals/Publication";
 
 const Styled = styled.div`
   ${marginsPage};
@@ -113,10 +114,12 @@ const Profile = observer( () => {
                         {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <CategoryAddUpdate/>}
                         {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <ItemAddUpdate fullForm={true}/>}
                         {(user.isAuth.role === 'USER') && <SellerStatement/>}
-                        {(user.isAuth.role === 'ADMIN') &&
+                        {(user.isAuth.role === 'ADMIN') && <>
                             <Button variant={theme.colors.bootstrapMainVariant} onClick={() => navigate('/statements')}>
-                            Заявки
-                        </Button>}
+                                Заявки
+                            </Button>
+                            <Publication/>
+                        </>}
                         <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                             basket.setOrders(null);
                             navigate('orders');

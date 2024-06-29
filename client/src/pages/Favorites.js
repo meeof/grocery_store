@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import styled, {useTheme} from "styled-components";
 import {customGrid, flexColumn, marginsCenter, marginsPage, standardValues} from "../StyledGlobal";
 import {Context} from "../index";
@@ -8,6 +8,7 @@ import Load from "../components/Load";
 import * as uf from "../usefulFunctions";
 import ItemCard from "../components/cards/ItemCard";
 import {Button} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
 const Styled = styled.div`
   ${flexColumn};
   ${marginsPage};
@@ -23,53 +24,50 @@ const Styled = styled.div`
   }
 `
 
-const Favorites = () => {
+const Favorites = observer(() => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const {user} = useContext(Context);
-    const [favorites, setFavorites] = useState(null);
-    const [count, setCount] = useState(0);
-    const [limit, setLimit] = useState(6);
+    const {user, favorites} = useContext(Context);
     const getFavorites = useCallback((limit) => {
         authAPI( 'get', '/api/favorites', {limit}).then((data) => {
-            setFavorites(data.rows);
-            setCount(data.count);
+            favorites.setFavorites(data.rows);
+            favorites.setCount(data.count);
         }).catch(err => {
             console.log(err);
             navigate('/profile/login');
         })
-    }, [navigate]);
+    }, [navigate, favorites]);
     const delFavorites = (itemId) => {
         authAPI('delete', '/api/favorites', {itemId}).then(() => {
-            getFavorites(limit);
+            getFavorites(favorites.limit);
         }).catch(err => {
             console.log(err);
         })
     }
     useEffect(() => {
-        if (!favorites) {
-            getFavorites(limit)
+        if (!favorites.favorites) {
+            getFavorites(favorites.limit)
         }
-    }, [getFavorites, limit, favorites]);
+    }, [getFavorites, favorites]);
     return (
         <Styled>{
-            favorites ? <>
+            favorites.favorites ? <>
                     <div className={"card_container"}>{
-                        favorites.length > 0 ? favorites.map(product => {
+                        favorites.favorites.length > 0 ? favorites.favorites.map(product => {
                             return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delFavorites}
                                              isAuth={user.isAuth}
                                              product={product}
                                              favorites={true}/>
                         }) : 'Ничего нет'
                     }</div>
-                    {count > limit &&
+                    {favorites.count > favorites.limit &&
                         <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
-                            setLimit(limit * 2)
-                            getFavorites(limit * 2);
+                            favorites.setLimit(favorites.limit * 2)
+                            getFavorites(favorites.limit * 2);
                         }}>Показывать больше</Button>}
                 </> : <Load/>
         }</Styled>
     );
-};
+});
 
 export default Favorites;

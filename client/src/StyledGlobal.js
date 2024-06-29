@@ -1,4 +1,5 @@
 import {css} from "styled-components";
+import deleteCross from './assets/icon_cross_black.svg';
 export class Theme {
     static _dark = false;
     static get dark() {
@@ -40,7 +41,7 @@ export class Theme {
         bootstrapOtherVariant: Theme.dark ? 'white' : null,
         backgroundColor :Theme.dark ? '#2B2B2B' : '',
         textColor: Theme.dark ? 'white' : 'black',
-        btnTextColor: Theme.dark ? 'black' : '',
+        btnTextColor: Theme.dark ? 'black' : 'white',
         inputColor: Theme.dark ? '#212529' : '',
         dropdownHover: Theme.dark ? '#2B3035' : ''
     }
@@ -184,4 +185,12 @@ export const itemCategoryCard = css`
       margin-bottom: ${standardValues.marginSmall};
     }
   }
+`
+export const deleteFieldButton = css`
+  min-width: 37.6px;
+  margin-left: 5px;
+  background-image: url(${deleteCross});
+  background-size: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
 `
