@@ -5,14 +5,19 @@ import {API} from "../api";
 class ItemStore {
     constructor() {
         this._items = null;
+        this._new = null;
         this._showItem = null;
         this._count = 0;
         this._limit = 6;
+        this._barLimit = 20;
         this._itemInfo = [];
         this._find = '';
         this._categoryId = 'all';
         this._page = 1;
         makeAutoObservable(this)
+    }
+    get new() {
+        return this._new
     }
     setPage(val) {
         this._page = val;
@@ -56,14 +61,21 @@ class ItemStore {
     get count() {
         return this._count;
     }
-    fetchItems (page) {
-        const params = {limit: this._limit, page: page || 1, find: this._find};
+    fetchItems (page, field) {
+        const params = {limit: field ? this._barLimit : this._limit, page: page || 1, find: this._find, field};
         if (this._categoryId !== 'all') {
             params.categoryId = uf.routeUnPrefix(this._categoryId);
         }
         API('get', '/api/item', params).then(data => {
-            this._items = data.rows;
-            this._count = data.count;
+            switch (field) {
+                case 'new' :
+                    this._new = data.rows;
+                    break
+                default :
+                    this._items = data.rows;
+                    this._count = data.count;
+                    break
+            }
         });
     }
 }

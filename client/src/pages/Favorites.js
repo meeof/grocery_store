@@ -57,7 +57,7 @@ const Favorites = observer(() => {
                             return <ItemCard key={uf.routePrefix('item', product.id)} delItem={delFavorites}
                                              isAuth={user.isAuth}
                                              product={product}
-                                             favorites={true}/>
+                                             field={'favorites'}/>
                         }) : 'Ничего нет'
                     }</div>
                     {favorites.count > favorites.limit &&

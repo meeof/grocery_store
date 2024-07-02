@@ -79,6 +79,7 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right, top}) => {
         setSelected(category?.categories?.[key]);
     };
     useEffect(() => {
+        !product && linkInfo.setInfos([]);
         itemInfo && linkInfo.setInfos(JSON.parse(itemInfo));
         API('get', '/api/categories').then(data => {
             category.setCategories(data);

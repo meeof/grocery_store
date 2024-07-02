@@ -10,8 +10,10 @@ import {breakpoints, staticColors, itemCategoryCard} from "../../StyledGlobal";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import ItemAddUpdate from "../modals/ItemAddUpdate";
+
 const Styled = styled.div`
   ${itemCategoryCard};
+  box-sizing: border-box !important;
   .body-block {
     display: flex;
     justify-content: space-between;
@@ -35,6 +37,21 @@ const Styled = styled.div`
     color: ${(props) => (props.$disc > 0 ? "gray" : "transparent")};
     text-decoration: line-through;
   }
+  [class^='bar-decoration'] {
+    border-radius: 5px;
+    border: solid transparent 2px;
+    color: ${({theme}) => theme.colors.main};
+    width: 100%;
+    white-space: nowrap;
+    padding: 5px;
+    font-weight: bold;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+  }
+  .bar-decoration-new {
+    border-color: ${({theme}) => theme.colors.main};
+  }
   @media (${breakpoints.small}) {
     .card-body {
       flex-wrap: wrap;
@@ -46,9 +63,10 @@ const ItemCard = observer(({...props}) => {
     const {review, item} = useContext(Context);
     const navigate = useNavigate();
     return (
-        <Styled $disc={props.product.discount}>
+        <Styled $disc={props.product.discount}
+        style={{minWidth: props.cardWidth + 'px'}}>
             <Card onClick={() => {
-                props.favorites ? navigate('/catalog/all/' + uf.routePrefix('product', props.product.id)) :
+                props.field ? navigate('/catalog/all/' + uf.routePrefix('product', props.product.id)) :
                     navigate(uf.routePrefix('product', props.product.id));
                 review.setReviews(null);
                 item.setOneItem(null);
@@ -59,16 +77,17 @@ const ItemCard = observer(({...props}) => {
                     <div className={'body-block'}>
                         <Card.Text>{props.product.name}</Card.Text>
                         <Card.Title>
-                            {uf.getPriceDiscount(props.product.price, props.product.discount)} ₽
                             <div className={'old_price'}>{ props.product.discount > 0 ? props.product.price : '-'} ₽</div>
+                            {uf.getPriceDiscount(props.product.price, props.product.discount)} ₽
                         </Card.Title>
                     </div>
                 </Card.Body>
-                <ButtonBuy itemId={props.product.id}/>
+                {!props.field && <ButtonBuy itemId={props.product.id}/>}
+                {props.field === 'new' && <div className={'bar-decoration-new'}>NEW</div>}
                 {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
-                {(props.isAuth?.id === props.product?.userId || props.isAuth?.role === 'ADMIN') && <>
-                    <DelButton favorites={props.favorites} delFun={props.delItem} id={props.product.id} name={props.product.name}/>
-                    {!props.favorites && <ItemAddUpdate product={props.product}/>}
+                {((props.field === 'favorites') || !props.field) && (props.isAuth?.id === props.product?.userId || props.isAuth?.role === 'ADMIN') && <>
+                    <DelButton field={props.field} delFun={props.delItem} id={props.product.id} name={props.product.name}/>
+                    {(props.field !== 'favorites') && <ItemAddUpdate product={props.product}/>}
                     </>}
             </Card>
         </Styled>

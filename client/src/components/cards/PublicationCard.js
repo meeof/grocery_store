@@ -7,7 +7,7 @@ import Publication from "../modals/Publication";
 import DelButton from "../buttons/DelButton";
 
 const Styled = styled.div`
-  border-bottom: solid ${staticColors.inputPlaceholderColor} 1px;
+  ${(props) => (!props.$one && `border-bottom: solid ${staticColors.inputPlaceholderColor} 1px`)};
   margin: ${standardValues.marginMedium};
   position: relative;
   h2 {
@@ -69,11 +69,11 @@ const Styled = styled.div`
   }
 `
 
-const PublicationCard = ({publication, isAuth, delFun}) => {
+const PublicationCard = ({publication, isAuth, delFun, one}) => {
     const created = dateString(publication.createdAt);
     return (
-        <Styled $structure={publication.structure}>
-            {isAuth?.role === 'ADMIN' && <>
+        <Styled $structure={publication.structure} $one={one}>
+            {(isAuth?.role === 'ADMIN' && !one) && <>
                 <Publication publication={publication}/>
                 <DelButton delFun={delFun} id={publication.id} name={'публикацию'}/>
             </>}

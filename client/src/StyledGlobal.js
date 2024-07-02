@@ -133,12 +133,21 @@ export const customGrid2 = css`
     gap: 10px;
   }
 `
+export const standardValues = {
+    freeButtonWidth: '300px',
+    smallButtonWidth: '80px',
+    marginSmall: '10px',
+    marginMedium: '20px',
+    iconsSize: '34px',
+    standardPageMargin: 24,
+    smallPageMargin: 8,
+};
 export const marginsPage = css`
-  margin-left: 24px;
-  margin-right: 24px;
+  margin-left: ${standardValues.standardPageMargin}px;
+  margin-right: ${standardValues.standardPageMargin}px;
   @media (${breakpoints.small}) {
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: ${standardValues.smallPageMargin}px;
+    margin-right: ${standardValues.smallPageMargin}px;
   }
 `
 export const flexColumn = css`
@@ -156,13 +165,6 @@ export const importantStar = css`
   content: ' *';
   color: red;
 `
-export const standardValues = {
-    freeButtonWidth: '300px',
-    smallButtonWidth: '80px',
-    marginSmall: '10px',
-    marginMedium: '20px',
-    iconsSize: '34px',
-};
 export const itemCategoryCard = css`
   .card {
     cursor: pointer;

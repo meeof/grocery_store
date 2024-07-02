@@ -1,4 +1,4 @@
-import {deleteSpace, getItems, saveImages} from "../usefulFunctions.js";
+import {deleteSpace, saveImages} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import * as models from "../models.js";
 import ErrorTemp from "../errors/errorsTemplate.js";

@@ -21,7 +21,7 @@ class FavoritesController {
                 }
             })
             favorites = favorites.map(row => row.dataValues.itemId).reverse();
-            const items = await getItems(null, limit, null, null, favorites);
+            const items = await getItems(null, limit, null, null, null, favorites);
             res.json(items);
         } catch (error) {
             ErrorTemp.badRequest(res)

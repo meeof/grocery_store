@@ -81,7 +81,7 @@ export const verifyCreator = async (table, userId, id) => {
     });
     return userId === check.dataValues.userId;
 }
-export const getItems = async (categoryId, limit, page, find, favoritesIn) => {
+export const getItems = async (categoryId, limit, page, find, field, favoritesIn) => {
     page = page || 1;
     limit = limit || 4;
     const offset = limit * (page - 1);
@@ -103,8 +103,11 @@ export const getItems = async (categoryId, limit, page, find, favoritesIn) => {
         }
         strOrderFavorites && (order = [sequelize.literal(strOrderFavorites)]);
     }
+    /*if (field === 'new') {
+        order = [['createdAt', 'DESC']];
+    }*/
     const allItems = await models.Item.findAndCountAll({
-        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId'],
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId', 'createdAt'],
         where, limit, offset, order
     })
     allItems.rows.map(item => {

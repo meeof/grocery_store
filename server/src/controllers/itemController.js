@@ -130,8 +130,8 @@ class ItemController {
     }
     async getAll(req, res) {
         try {
-            let {categoryId, limit, page, find} = req.query;
-            const allItems = await getItems(categoryId, limit, page, find);
+            let {categoryId, limit, page, find, field} = req.query;
+            const allItems = await getItems(categoryId, limit, page, find, field);
             res.json(allItems);
         } catch (error) {
             ErrorTemp.badRequest(res)

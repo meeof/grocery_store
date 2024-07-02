@@ -4,18 +4,16 @@ import lightCartImg from '../../assets/light/icon_basket_fill.svg';
 import darkCartImg from '../../assets/dark/icon_basket_fill.svg';
 import styled, {useTheme} from "styled-components";
 import useWindowSize from "../../hooks/useWindowSize";
-import useGetScrollBar from "../../hooks/useGetScrollBar";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react-lite";
 import {authAPI} from "../../api";
-import {Theme} from "../../StyledGlobal";
+import {standardValues, Theme} from "../../StyledGlobal";
 const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
   left: ${props => (props.$fixed && '8px')};
-  width: ${props => (props.$fixed ? props.$width - 16 - (props.$scroll > 0 ? props.$scroll : 0) + 'px' : '100%')};
-  z-index: 99;
+  z-index: 1000;
   ${props => (props.$basket && `width: 100px`)};
   button {
     width: 100%;
@@ -63,7 +61,6 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
     const theme = useTheme();
     const navigate = useNavigate();
     const width = useWindowSize();
-    const scrollBar = useGetScrollBar();
     const [productAmount, setProductAmount] = useState(0);
     const {user, basket} = useContext(Context);
     const outherCostsHandler = (cost, operator) => {
@@ -88,8 +85,10 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
         })
     }, [itemId]);
     return (
-        <Styled $fixed={fixed} $width={width} $scroll={scrollBar} $basket={place === 'basket'}
-                onClick={e => e.stopPropagation()}>
+        <Styled $fixed={fixed} $basket={place === 'basket'}
+                onClick={e => e.stopPropagation()}
+        style={{width : fixed ? (width - standardValues.smallPageMargin *
+                2 - (window.innerWidth - document.body.clientWidth) + 'px') : '100%'}}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
                     <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {

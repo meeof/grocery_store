@@ -44,7 +44,7 @@ const Styled = styled.div`
   }
 `
 
-const DelButton = ({favorites, delFun, id, name, top, right}) => {
+const DelButton = ({field, delFun, id, name, top, right}) => {
     const [show, setShow] = useState(false);
     if (show) {
         if (name && name.length > 18) {
@@ -61,10 +61,10 @@ const DelButton = ({favorites, delFun, id, name, top, right}) => {
             </Styled>
         );
     }
-    return <Styled $top={top} $right={right} $favorites={favorites}>
+    return <Styled $top={top} $right={right} $favorites={field === 'favorites'}>
         <Button variant={"outline-danger"} onClick={(e) => {
             e.stopPropagation();
-            if (favorites) {
+            if (field === 'favorites') {
                 delFun(id)
             }
             else {
