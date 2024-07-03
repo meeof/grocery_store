@@ -40,7 +40,6 @@ const Styled = styled.div`
   [class^='bar-decoration'] {
     border-radius: 5px;
     border: solid transparent 2px;
-    color: ${({theme}) => theme.colors.main};
     width: 100%;
     white-space: nowrap;
     padding: 5px;
@@ -51,6 +50,15 @@ const Styled = styled.div`
   }
   .bar-decoration-new {
     border-color: ${({theme}) => theme.colors.main};
+    color: ${({theme}) => theme.colors.main};
+  }
+  .bar-decoration-discount {
+    border-color: #DC3545;
+    color: #DC3545;
+  }
+  .bar-decoration-popular {
+    border-color: #E86E30;
+    color: #E86E30;
   }
   @media (${breakpoints.small}) {
     .card-body {
@@ -64,7 +72,7 @@ const ItemCard = observer(({...props}) => {
     const navigate = useNavigate();
     return (
         <Styled $disc={props.product.discount}
-        style={{minWidth: props.cardWidth + 'px'}}>
+        style={{minWidth: props.cardWidth + 'px', width: props.cardWidth + 'px'}}>
             <Card onClick={() => {
                 props.field ? navigate('/catalog/all/' + uf.routePrefix('product', props.product.id)) :
                     navigate(uf.routePrefix('product', props.product.id));
@@ -83,8 +91,10 @@ const ItemCard = observer(({...props}) => {
                     </div>
                 </Card.Body>
                 {!props.field && <ButtonBuy itemId={props.product.id}/>}
+                {props.field === 'popular' && <div className={'bar-decoration-popular'}>Продано {props.product.count}</div>}
                 {props.field === 'new' && <div className={'bar-decoration-new'}>NEW</div>}
-                {props.product.discount > 0 && <span className={'discount'}>-{props.product.discount}%</span>}
+                {props.field === 'discount' && <div className={'bar-decoration-discount'}>-{props.product.discount}%</div>}
+                {(props.product.discount > 0 && props.field !== 'discount') && <span className={'discount'}>- {props.product.discount} %</span>}
                 {((props.field === 'favorites') || !props.field) && (props.isAuth?.id === props.product?.userId || props.isAuth?.role === 'ADMIN') && <>
                     <DelButton field={props.field} delFun={props.delItem} id={props.product.id} name={props.product.name}/>
                     {(props.field !== 'favorites') && <ItemAddUpdate product={props.product}/>}

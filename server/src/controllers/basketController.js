@@ -16,7 +16,7 @@ const getAllBasketItems = async (userId) => {
 }
 const getOneItem = async (itemId, amount, basketItemId) => {
     const oneItem = await models.Item.findOne({
-        attributes: ['id', 'name', 'price', 'discount', 'images', "categoryId"],
+        attributes: ['id', 'name', 'price', 'discount', 'images', "categoryId", "count"],
         where: {
             id: itemId,
         }
@@ -30,6 +30,7 @@ const getOneItem = async (itemId, amount, basketItemId) => {
             name: oneItem.dataValues.name,
             cost: Math.round(oneItem.dataValues.price/100 * (100 - oneItem.dataValues.discount)),
             img: oneItem.dataValues.images ? JSON.parse(oneItem.dataValues.images)[0] : null,
+            count: oneItem.dataValues.count,
         }
     }
     else return null;
@@ -47,8 +48,19 @@ const setWasBought = async (userId, itemId) => {
         {
             userId,
             itemId,
+            count: 1,
         },
-        {fields: ['userId', 'itemId']});
+        {fields: ['userId', 'itemId', 'count']});
+}
+const countIncrement = async (id, count) => {
+    await models.Item.update(
+        {count},
+        {
+            where: {
+                id,
+            }
+        }
+    )
 }
 class BasketController {
     async addItem (req, res) {
@@ -141,10 +153,21 @@ class BasketController {
     }
     async formOrder(req, res){
         try {
-            const checkFirstBuy = async (userId, itemId) => {
+            const checkFirstBuy = async (userId, itemId, amount) => {
                 const firstBuy = await checkBoughtReviewed(userId, itemId, 'bought');
                 if (!firstBuy) {
                     await setWasBought(userId, itemId);
+                }
+                else {
+                    await models.WasBought.update(
+                        {count: firstBuy.dataValues.count + amount},
+                        {
+                            where: {
+                                userId,
+                                itemId,
+                            }
+                        }
+                    )
                 }
             }
             const {name, surname, phone, point, delivery, address, comment, sms, itemId} = req.body;
@@ -157,15 +180,17 @@ class BasketController {
                     const item = await getOneItem(itemId, 1, null);
                     items.push(item);
                     fullPrice = item.cost;
-                    await checkFirstBuy(req.user.id, itemId);
+                    await checkFirstBuy(req.user.id, itemId, 1);
+                    await countIncrement(itemId, item.count + 1);
                 }
                 else {
                     const allBasketItems = await getAllBasketItems(req.user.id);
                     items = await Promise.all(allBasketItems.map(async (basketItem) => {
                         const item = await getOneItem(basketItem.dataValues.itemId, basketItem.dataValues.amount, basketItem.dataValues.id);
-                        await checkFirstBuy(req.user.id, basketItem.dataValues.itemId);
+                        await checkFirstBuy(req.user.id, basketItem.dataValues.itemId, basketItem.dataValues.amount);
                         fullPrice += (item.cost * basketItem.dataValues.amount);
                         await deleteBasketItem(req.user.id, basketItem.dataValues.itemId);
+                        await countIncrement(basketItem.dataValues.itemId, item.count + basketItem.dataValues.amount);
                         return item;
                     }));
                 }

@@ -6,6 +6,8 @@ class ItemStore {
     constructor() {
         this._items = null;
         this._new = null;
+        this._discount = null;
+        this._popular = null;
         this._showItem = null;
         this._count = 0;
         this._limit = 6;
@@ -16,8 +18,14 @@ class ItemStore {
         this._page = 1;
         makeAutoObservable(this)
     }
+    get popular() {
+        return this._popular
+    }
     get new() {
         return this._new
+    }
+    get discount() {
+        return this._discount
     }
     setPage(val) {
         this._page = val;
@@ -70,6 +78,12 @@ class ItemStore {
             switch (field) {
                 case 'new' :
                     this._new = data.rows;
+                    break
+                case 'discount' :
+                    this._discount = data.rows;
+                    break
+                case 'popular' :
+                    this._popular = data.rows;
                     break
                 default :
                     this._items = data.rows;

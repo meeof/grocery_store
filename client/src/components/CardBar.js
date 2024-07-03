@@ -1,20 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
-import {breakpoints, standardValues} from "../StyledGlobal";
+import {breakpoints, standardValues, Theme} from "../StyledGlobal";
 import * as uf from "../usefulFunctions";
 import ItemCard from "./cards/ItemCard";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
-import darkArrowImg from '../assets/dark/icon-bootstrap-arrow.svg';
-import lightArrowImg from '../assets/light/icon-bootstrap-arrow.svg';
-import darkArrowImgHover from '../assets/dark/icon-bootstrap-arrow-hover.svg'
-import lightArrowImgHover from '../assets/light/icon-bootstrap-arrow-hover.svg'
+import arrowImg from '../assets/icon-bootstrap-arrow.svg';
+import arrowImgHover from '../assets/icon-bootstrap-arrow-hover.svg'
 
 const Styled = styled.div`
   position: relative;
   overflow: clip;
   width: 100%;
+  margin-bottom: ${standardValues.marginSmall};
   .bar-box {
     display: flex;
     width: 100%;
@@ -40,11 +39,11 @@ const Styled = styled.div`
       height: 40px !important;
       background-repeat: no-repeat;
       background-position: center;
-      background-image: url(${({$dark}) => $dark ? darkArrowImgHover : lightArrowImgHover});
+      background-image: url(${arrowImg});
     }
   }
   .back-arrow {
-    left: 0;
+    left: 3px;
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     .arrow {
@@ -53,7 +52,7 @@ const Styled = styled.div`
   }
   .forward-arrow {
     top: 0;
-    right: 0;
+    right: 3px;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
     .arrow {
@@ -63,7 +62,7 @@ const Styled = styled.div`
   .back-arrow:hover, .forward-arrow:hover {
     background-color: rgba(16,18,20, 0.3);
     .arrow {
-      background-image: url(${({$dark}) => $dark ? darkArrowImg : lightArrowImg})
+      background-image: url(${arrowImgHover})
     }
   }
 `
@@ -85,22 +84,20 @@ const CardBar = observer(({field}) => {
     }
     const [offset, setOffset] = useState(0);
     useEffect(() => {
-        setTimeout(() => {
-            if (!item[field]) {
-                item.setCategoryId('all');
-                item.fetchItems(1, field);
-            }
-        }, 0);
+        if (!item[field]) {
+            item.setCategoryId('all');
+            item.fetchItems(1, field);
+        }
     }, [item, field, offset]);
     const cardWidth = (width - (window.innerWidth - document.body.clientWidth) - (width < breakpoints.rawSmall ?
         standardValues.smallPageMargin * 2 : standardValues.standardPageMargin * 2)) / show;
     return (
-        <Styled>
-            <div className={'back-arrow'} onClick={() => {
+        <Styled $dark={Theme.dark}>
+            {item[field]?.length > show && <div className={'back-arrow'} onClick={() => {
                 offset > 0 && setOffset(offset - 1);
             }}>
                 <div className={'arrow'}></div>
-            </div>
+            </div>}
             <div className={'bar-box'} style={{
                 transform:
                 `translate(${(cardWidth) * offset * -1 + 'px'})`
@@ -111,11 +108,11 @@ const CardBar = observer(({field}) => {
                                      product={product} field={field} cardWidth={cardWidth}/>
                 })}
             </div>
-            <div className={'forward-arrow'} onClick={() => {
+            {item[field]?.length > show && <div className={'forward-arrow'} onClick={() => {
                 offset + show < item[field].length && setOffset(offset + 1)
             }}>
                 <div className={'arrow'}></div>
-            </div>
+            </div>}
         </Styled>
     );
 });

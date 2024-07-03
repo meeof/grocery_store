@@ -7,7 +7,7 @@ class ReviewController {
         try {
             const {itemId, field} = req.query;
             const bought = await checkBoughtReviewed(req.user.id, itemId, field);
-            res.json(bought);
+            res.json(!!bought);
         } catch (err) {
             ErrorTemp.badRequest(res);
         }

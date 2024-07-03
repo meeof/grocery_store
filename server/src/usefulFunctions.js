@@ -63,14 +63,14 @@ export const checkBoughtReviewed = async (userId, itemId, field) => {
             table = models.Reviews;
             break
     }
-    const check = await table.findOne({
-        attributes: ['id'],
+    let attributes = ['id'];
+    field === 'bought' && attributes.push('count');
+    return await table.findOne({
         where: {
             userId,
             itemId,
         }
     })
-    return !!check;
 }
 export const verifyCreator = async (table, userId, id) => {
     const check = await table.findOne({
@@ -106,8 +106,15 @@ export const getItems = async (categoryId, limit, page, find, field, favoritesIn
     /*if (field === 'new') {
         order = [['createdAt', 'DESC']];
     }*/
+    if (field === 'discount') {
+        where.discount = {[Op.gte]: 30};
+        order = [['discount', 'DESC']];
+    }
+    if (field === 'popular') {
+        order = [['count', 'DESC']];
+    }
     const allItems = await models.Item.findAndCountAll({
-        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId', 'createdAt'],
+        attributes: ['id', 'name', 'price', 'discount', 'images', 'categoryId', 'userId', 'createdAt', 'count'],
         where, limit, offset, order
     })
     allItems.rows.map(item => {

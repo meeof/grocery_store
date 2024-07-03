@@ -31,6 +31,7 @@ const Item = sequelize.define('item', {
     price : {type: DataTypes.REAL, allowNull: false},
     discount : {type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
     images : {type: DataTypes.JSON},
+    count: {type: DataTypes.INTEGER, defaultValue: 0},
 });
 const ItemInfo = sequelize.define('item_info', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -58,6 +59,7 @@ const Orders = sequelize.define('orders', {
 });
 const WasBought = sequelize.define('was_bought', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    count: {type: DataTypes.INTEGER, allowNull: false},
 });
 const Reviews = sequelize.define('reviews' , {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
