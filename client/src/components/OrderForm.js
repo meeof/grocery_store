@@ -67,11 +67,11 @@ const StyledForm = styled.form`
   }
 `
 
-const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
+const OrderForm = observer(({field, setShowModal, setShowAlert, itemId, setDeliveryCost}) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const {user, render} = useContext(Context);
-    const [deliveryValue, setDeliveryValue] = useState('pickup');
+    const [deliveryValue, setDeliveryValue] = useState('point');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [phone, setPhone] = useState('');
@@ -155,7 +155,10 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                     <div className="check-block">
                         <input data-bs-theme={Theme.dark ? "dark" : "light"} type="radio" name="deliveryVariantRadio" className="form-check-input"
                                id="flexRadioDefault3" value={'point'} checked={deliveryValue === 'point'}
-                               onChange={(e) => setDeliveryValue(e.target.value)}/>
+                               onChange={(e) => {
+                                   setDeliveryValue(e.target.value);
+                                   field === 'page' && setDeliveryCost(0);
+                               }}/>
                         <label className="check-label" htmlFor="flexRadioDefault3"></label>
                         <div>
                             <div className={'other-labels'}>Доставка в точки самовывоза</div>
@@ -165,7 +168,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                                 </div>
                             }
                             <div role={"button"} className={'link-map'}
-                                 onClick={() => navigate('/profile/registration')}>Выбрать на карте</div>
+                                 onClick={() => navigate('/')}>Выбрать на карте</div>
                         </div>
                         <div className={'delivery-price'}>
                             + 0 ₽
@@ -174,7 +177,10 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId}) => {
                     <div className="check-block">
                         <input data-bs-theme={Theme.dark ? "dark" : "light"} type="radio" name="deliveryVariantRadio" className="form-check-input"
                                id="flexRadioDefault2" value={'courier'} checked={deliveryValue === 'courier'}
-                               onChange={(e) => setDeliveryValue(e.target.value)}/>
+                               onChange={(e) => {
+                                   setDeliveryValue(e.target.value);
+                                   field === 'page' && setDeliveryCost(300);
+                               }}/>
                         <label className="check-label" htmlFor="flexRadioDefault2"></label>
                         <div>
                             <div className={'other-labels'}>Курьером</div>

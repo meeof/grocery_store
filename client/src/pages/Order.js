@@ -39,6 +39,7 @@ const Order = observer( () => {
     const navigate = useNavigate();
     const {basket} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
+    const [deliveryCost, setDeliveryCost] = useState(0);
     useEffect(() => {
         basket.fetchBasket(navigate)
     }, [navigate, basket]);
@@ -49,7 +50,7 @@ const Order = observer( () => {
                     <Styled>
                         <div className={'order-left'}>
                             <h2>Оформление заказа</h2>
-                            <OrderForm setShowAlert={setShowAlert} field={'page'}/>
+                            <OrderForm setShowAlert={setShowAlert} field={'page'} setDeliveryCost={setDeliveryCost}/>
                         </div>
                         <div className={'order-right'}>
                             {basket.getBasket.map(product => {
@@ -57,7 +58,7 @@ const Order = observer( () => {
                             })}
                             <div className={'order-cost'}>
                                 <h1>Итого:</h1>
-                                <h1>{basket.allCost} ₽</h1>
+                                <h1>{basket.allCost + deliveryCost} ₽</h1>
                             </div>
                         </div>
                     </Styled>

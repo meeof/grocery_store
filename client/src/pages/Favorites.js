@@ -45,9 +45,7 @@ const Favorites = observer(() => {
         })
     }
     useEffect(() => {
-        if (!favorites.favorites) {
-            getFavorites(favorites.limit)
-        }
+        getFavorites(favorites.limit)
     }, [getFavorites, favorites]);
     return (
         <Styled>{

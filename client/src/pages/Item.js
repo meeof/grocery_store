@@ -9,9 +9,10 @@ import ButtonBuy from "../components/buttons/ButtonBuy";
 import Reviews from "../components/reviews/Reviews";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {breakpoints, flexColumn, marginsPage} from "../StyledGlobal";
+import {breakpoints, flexColumn, marginsPage, standardValues} from "../StyledGlobal";
 import {API} from "../api";
 import Load from "../components/Load";
+import ItemIcons from "../components/item/ItemIcons";
 
 const Styled = styled.div`
   position: relative;
@@ -27,6 +28,7 @@ const Styled = styled.div`
       width: 100%;
       display: flex;
       border-bottom: 1px dotted ${({theme}) => theme.colors.textColor};
+      margin-bottom: ${standardValues.marginSmall};
       .title {
         width: min-content;
         white-space: nowrap;
@@ -55,12 +57,6 @@ const Styled = styled.div`
     }
   }
 `
-const StyledImg = styled.img`
-  width: 100%;
-  box-sizing: border-box;
-  border: ${(props) => (props.$active && `solid transparent 3px !important`)};
-  border-color: ${({theme}) =>theme.colors.main} !important;
-`
 
 const Item = observer (() => {
     const width = useWindowSize();
@@ -83,16 +79,8 @@ const Item = observer (() => {
                 {(typeof item.oneItem === 'object') ?
                     <Styled>
                         <div className={'item-container'}>
-                            {width >= breakpoints.rawFromLarge ?
-                                <div className={'icons'}>
-                                    {item.oneItem.images?.map((img, index) => {
-                                        return <StyledImg src={process.env.REACT_APP_API_URL + img} key={index}
-                                                          $active={index === slideIndex} role={"button"}
-                                                          onClick={() => handleSlideSelect(index)}/>
-                                    })}
-                                </div>
-                                :
-                                <></>
+                            {width >= breakpoints.rawFromLarge ? <ItemIcons handleSlideSelect={handleSlideSelect}
+                                slideIndex={slideIndex} images={item.oneItem.images}/> : <></>
                             }
                             <ProductSlider images={item.oneItem.images} slideIndex={slideIndex}
                                            handleSlideSelect={handleSlideSelect} previews={item.oneItem.images?.[0]}/>

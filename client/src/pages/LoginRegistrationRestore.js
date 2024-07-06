@@ -181,7 +181,7 @@ const LoginRegistrationRestore = observer(() => {
                         }}/>
                     </Form.Group>
                     <div className={'button-container'}>
-                        <Button variant={theme.colors.bootstrapMainVariant} type="submit">Восстановить пароль</Button>
+                        <Button disabled={true} variant={theme.colors.bootstrapMainVariant} type="submit">Восстановить пароль</Button>
                         <div role={"button"} className={'link-underline'}
                              onClick={() => navigate('/profile/login')}>Я вспомнил(-а) пароль!</div>
                     </div>

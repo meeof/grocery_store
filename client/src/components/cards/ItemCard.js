@@ -93,8 +93,8 @@ const ItemCard = observer(({...props}) => {
                 {!props.field && <ButtonBuy itemId={props.product.id}/>}
                 {props.field === 'popular' && <div className={'bar-decoration-popular'}>Продано {props.product.count}</div>}
                 {props.field === 'new' && <div className={'bar-decoration-new'}>NEW</div>}
-                {props.field === 'discount' && <div className={'bar-decoration-discount'}>-{props.product.discount}%</div>}
-                {(props.product.discount > 0 && props.field !== 'discount') && <span className={'discount'}>- {props.product.discount} %</span>}
+                {props.field === 'discount' && <div className={'bar-decoration-discount'}>- {props.product.discount} %</div>}
+                {(props.product.discount > 0 && props.field !== 'discount') && <span className={'discount'}>-{props.product.discount}%</span>}
                 {((props.field === 'favorites') || !props.field) && (props.isAuth?.id === props.product?.userId || props.isAuth?.role === 'ADMIN') && <>
                     <DelButton field={props.field} delFun={props.delItem} id={props.product.id} name={props.product.name}/>
                     {(props.field !== 'favorites') && <ItemAddUpdate product={props.product}/>}

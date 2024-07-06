@@ -13,7 +13,7 @@ const Styled = styled.div`
   position: relative;
   overflow: clip;
   width: 100%;
-  margin-bottom: ${standardValues.marginSmall};
+  margin-bottom: ${standardValues.marginMedium};
   .bar-box {
     display: flex;
     width: 100%;
@@ -43,18 +43,18 @@ const Styled = styled.div`
     }
   }
   .back-arrow {
-    left: 3px;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
+    left: 0;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
     .arrow {
       transform: rotateZ(90deg);
     }
   }
   .forward-arrow {
     top: 0;
-    right: 3px;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
+    right: 0;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
     .arrow {
       transform: rotateZ(270deg);
     }
@@ -100,7 +100,7 @@ const CardBar = observer(({field}) => {
             </div>}
             <div className={'bar-box'} style={{
                 transform:
-                `translate(${(cardWidth) * offset * -1 + 'px'})`
+                `translate(${cardWidth * offset * -1 + 'px'})`
             }}>
                 {item[field] && item[field].map((product) => {
                     return <ItemCard key={uf.routePrefix('item', product.id)} delItem={() => {}}

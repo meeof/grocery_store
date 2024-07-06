@@ -12,6 +12,7 @@ const Styled = styled.div`
   position: relative;
   ${marginsPage};
   margin-bottom: ${standardValues.marginMedium};
+  margin-top: ${standardValues.marginSmall};
   button {
     margin-top: ${standardValues.marginMedium};
   }

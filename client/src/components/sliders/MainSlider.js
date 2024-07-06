@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {Carousel, Image} from "react-bootstrap";
 import slideHigh from "../../images/slider_high.jpg";
 import styled from "styled-components";
-import {breakpoints} from "../../StyledGlobal";
+import {breakpoints, standardValues} from "../../StyledGlobal";
 
 const Styled = styled.div`
+  margin-bottom: ${standardValues.marginMedium};
   .carousel-caption {
     padding: 0;
     top: 40%;

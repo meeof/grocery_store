@@ -103,17 +103,15 @@ const NavBar = observer(({theme, handlerTheme}) => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" className={`ms-2 me-auto`}/>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className={`me-auto`}>
-                            <Nav.Link href="/about">О компании</Nav.Link>
-                            <Nav.Link href="/contacts">Контакты</Nav.Link>
-                            <Nav.Link href="/shipping">Доставка</Nav.Link>
-                            <Nav.Link href="/pay">Оплата</Nav.Link>
-                            <Nav.Link href="/blog">Блог</Nav.Link>
                             <Nav.Link onClick={e => {
                                 e.preventDefault();
                                 navigate(user.isAuth ? '/profile' : '/profile/login')
                             }}>
                                 Личный кабинет
                             </Nav.Link>
+                            <Nav.Link href="/blog">Блог</Nav.Link>
+                            <Nav.Link href="/contacts">Контакты</Nav.Link>
+                            <Nav.Link href="/about">О компании</Nav.Link>
                             {(width >= breakpoints.rawFromLarge || width < breakpoints.rawSmall) && contacts}
                         </Nav>
                     </Navbar.Collapse>

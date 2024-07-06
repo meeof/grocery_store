@@ -5,14 +5,17 @@ import CommonBar from "./components/CommonBar";
 import styled, {ThemeProvider} from "styled-components";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
-import {staticColors, Theme} from "./StyledGlobal";
+import {flexColumn, staticColors, Theme} from "./StyledGlobal";
 import darkArrowImg from './assets/dark/icon-bootstrap-arrow.svg'
 import lightArrowImg from './assets/light/icon-bootstrap-arrow.svg'
+import Footer from "./components/Footer";
 
 const Styled = styled.div`
   min-height: ${props => props.$height + 'px'};
   background-color: ${({theme}) => theme.colors.backgroundColor};
   color: ${({theme}) => theme.colors.textColor};
+  ${flexColumn};
+  justify-content: flex-start;
   .card {
     background-color: ${({theme}) => theme.colors.backgroundColor};
     color: ${({theme}) => theme.colors.textColor};
@@ -75,11 +78,7 @@ const Styled = styled.div`
 `
 const App = observer( () => {
     const {user} = useContext(Context);
-    const height = Math.max(
-        document.body.scrollHeight, document.documentElement.scrollHeight,
-        document.body.offsetHeight, document.documentElement.offsetHeight,
-        document.body.clientHeight, document.documentElement.clientHeight
-    )
+    const height = document.documentElement.clientHeight;
     const [theme, setTheme] = useState('LIGHT');
     const localTheme = localStorage.getItem('theme');
     if (localTheme && theme !== localTheme) {
@@ -104,6 +103,7 @@ const App = observer( () => {
                 <NavBar theme={theme} handlerTheme={handlerTheme}/>
                 <CommonBar/>
                 <AppRouter/>
+                <Footer/>
             </Styled>
         </ThemeProvider>
     );

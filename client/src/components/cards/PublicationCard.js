@@ -9,6 +9,7 @@ import DelButton from "../buttons/DelButton";
 const Styled = styled.div`
   ${(props) => (!props.$one && `border-bottom: solid ${staticColors.inputPlaceholderColor} 1px`)};
   margin: ${standardValues.marginMedium};
+  ${(props) => (props.$one && `margin: 0`)};
   position: relative;
   h2 {
     margin-bottom: ${standardValues.marginSmall};
@@ -21,6 +22,7 @@ const Styled = styled.div`
   p {
     margin-bottom: ${standardValues.marginSmall};
     margin-top: ${standardValues.marginSmall};
+    text-align: justify;
   }
   .content-box {
     display: flex;

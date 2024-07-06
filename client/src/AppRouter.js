@@ -12,6 +12,8 @@ import LoginRegistrationRestore from "./pages/LoginRegistrationRestore";
 import Statements from "./pages/Statements";
 import Favorites from "./pages/Favorites";
 import Blog from "./pages/Blog";
+import Contacts from "./pages/Contacts";
+import About from "./pages/About";
 
 const AppRouter = () => {
     return (
@@ -30,6 +32,8 @@ const AppRouter = () => {
             <Route path="/statements" element={<Statements/>} />
             <Route path="/favorites" element={<Favorites/>} />
             <Route path="/blog" element={<Blog/>} />
+            <Route path="/contacts" element={<Contacts/>} />
+            <Route path="/about" element={<About/>} />
             <Route path="*" element={<Main/>} />
         </Routes>
     );

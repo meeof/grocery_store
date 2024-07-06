@@ -1,10 +1,11 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {breakpoints, flexColumn, largeButton, standardValues} from "../../StyledGlobal";
 import {Button, Form} from "react-bootstrap";
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import styled, {useTheme} from "styled-components";
+import AlertOk from "../alerts/AlertOk";
 const Styled = styled.div`
     ${flexColumn}
     button {
@@ -45,6 +46,7 @@ const Styled = styled.div`
 `;
 
 const BasketOther = observer (() => {
+    const [showAlert, setShowAlert] = useState(false);
     const theme = useTheme();
     const navigate = useNavigate();
     const {basket} = useContext(Context);
@@ -53,7 +55,7 @@ const BasketOther = observer (() => {
             <div className={'other-block other-promo'}>
                 <b>Введите промокод</b>
                 <Form.Control type={'text'} placeholder={'Промокод'}/>
-                <div role={"button"} className={'link-promo'}>Активировать</div>
+                <div role={"button"} className={'link-promo'} onClick={() => setShowAlert(true)}>Активировать</div>
             </div>
             <div className={'other-block'}>
                 <div className={'other-cost'}>Итого к оплате:</div>
@@ -64,6 +66,8 @@ const BasketOther = observer (() => {
                             navigate('order')
                         }}>Оформить заказ</Button>
             </div>
+            <AlertOk show={showAlert} setShow={setShowAlert} alertVariant={'danger'}
+                     buttonVariant={"outline-danger"} text={'Промокод недействителен'}/>
         </Styled>
     );
 });
