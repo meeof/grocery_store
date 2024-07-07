@@ -11,7 +11,7 @@ const Styled = styled.div`
   position: absolute;
   top: ${props => (props.$top ? props.$top : '5px')};
   right: ${props => (props.$right ? props.$right : '5px')};
-  z-index: 999;
+  z-index: 998;
   > {
     button {
       padding: 4px;

@@ -90,7 +90,7 @@ const ItemCard = observer(({...props}) => {
                         </Card.Title>
                     </div>
                 </Card.Body>
-                {!props.field && <ButtonBuy itemId={props.product.id}/>}
+                {((props.field === 'favorites') || !props.field) && <ButtonBuy itemId={props.product.id}/>}
                 {props.field === 'popular' && <div className={'bar-decoration-popular'}>Продано {props.product.count}</div>}
                 {props.field === 'new' && <div className={'bar-decoration-new'}>NEW</div>}
                 {props.field === 'discount' && <div className={'bar-decoration-discount'}>- {props.product.discount} %</div>}

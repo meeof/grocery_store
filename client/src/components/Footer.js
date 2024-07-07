@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from "styled-components";
-import {flexColumn, standardValues, Theme} from "../StyledGlobal";
+import {breakpoints, flexColumn, standardValues, Theme} from "../StyledGlobal";
 import lightFbImg from "../assets/light/icon-facebook.svg";
 import darkFbImg from "../assets/dark/icon-facebook.svg";
 import lightTgImg from "../assets/light/icon-telegram.svg";
 import darkTgImg from "../assets/dark/icon-telegram.svg";
 import lightVkImg from "../assets/light/icon-vk.svg";
 import darkVkImg from "../assets/dark/icon-vk.svg";
+import {useLocation} from "react-router-dom";
+import useWindowSize from "../hooks/useWindowSize";
 
 const Styled = styled.div`
   justify-self: flex-end;
@@ -15,6 +17,7 @@ const Styled = styled.div`
   padding-top: ${standardValues.marginSmall};
   padding-bottom: ${standardValues.marginSmall};
   align-items: center;
+  margin-bottom: ${({$marginBottom}) => $marginBottom ? '45px' : 0};
   .contacts-block {
     display: flex;
     margin-bottom: ${standardValues.marginSmall};
@@ -41,8 +44,17 @@ const Styled = styled.div`
 `
 
 const Footer = () => {
+    const location = useLocation();
+    const width = useWindowSize();
+    let marginBottom = false;
+    if (location.pathname.includes('/catalog/') && width < breakpoints.rawSmall) {
+        marginBottom = true;
+    }
+    else {
+        marginBottom = false;
+    }
     return (
-        <Styled $dark={Theme.dark}>
+        <Styled $dark={Theme.dark} $marginBottom={marginBottom}>
             <div className={'contacts-block'}>
                 <a href='//facebook.com/' className={'link-fb'}> </a>
                 <a href='//telegram.org/' className={'link-tg'}> </a>

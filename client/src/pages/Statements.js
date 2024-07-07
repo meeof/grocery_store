@@ -33,7 +33,7 @@ const Styled = styled.div`
 
 const Statements = observer (() => {
     const theme = useTheme();
-    const {user} = useContext(Context);
+    const {user, scroll} = useContext(Context);
     const fetchStatements = useCallback((limit) => {
         authAPI( 'get', '/api/user/allStatements', {limit})
             .then(data => {
@@ -41,8 +41,10 @@ const Statements = observer (() => {
                 user.setAllStatementsCount(data.count);
             }).catch(err => {
             console.log(err);
+        }).finally(() => {
+            scroll.scrollToPoint();
         })
-    }, [user]);
+    }, [user, scroll]);
     const handlerRefreshStatement = () => {
         fetchStatements(user.allStatementsLimit);
     }
@@ -60,6 +62,7 @@ const Statements = observer (() => {
             </div>
             {(user.allStatementsCount > user.allStatementsLimit) && <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}
             onClick={() => {
+                scroll.setScroll();
                 user.setAllStatementsLimit(user.allStatementsLimit * 2);
                 user.setAllStatements(null);
                 fetchStatements(user.allStatementsLimit);

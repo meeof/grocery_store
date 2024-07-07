@@ -58,7 +58,7 @@ const Orders = observer(() => {
     const theme = useTheme();
     const months = ['Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря'];
     const navigate = useNavigate();
-    const {basket} = useContext(Context);
+    const {basket, scroll} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
     const fetchOrders = useCallback((limit) => {
         authAPI( 'get', '/api/basket/orders', {limit})
@@ -68,8 +68,10 @@ const Orders = observer(() => {
             }).catch(err => {
                 console.log(err);
                 navigate('/profile/login')
+        }).finally(() => {
+            scroll.scrollToPoint();
         })
-    }, [basket, navigate]);
+    }, [basket, navigate, scroll]);
     useEffect(() => {
         fetchOrders(basket.ordersLimit)
     }, [basket, fetchOrders]);
@@ -94,6 +96,7 @@ const Orders = observer(() => {
                 </>
                 <div className={'buttons-block'}>
                     <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
+                        scroll.setScroll()
                         basket.setOrdersLimit(basket.ordersLimit * 2);
                         basket.setOrders(0);
                         fetchOrders(basket.ordersLimit);

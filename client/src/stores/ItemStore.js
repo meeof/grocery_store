@@ -69,7 +69,7 @@ class ItemStore {
     get count() {
         return this._count;
     }
-    fetchItems (page, field) {
+    fetchItems (page, finallyFun, field) {
         const params = {limit: field ? this._barLimit : this._limit, page: page || 1, find: this._find, field};
         if (this._categoryId !== 'all') {
             params.categoryId = uf.routeUnPrefix(this._categoryId);
@@ -90,6 +90,8 @@ class ItemStore {
                     this._count = data.count;
                     break
             }
+        }).finally(() => {
+            finallyFun && finallyFun();
         });
     }
 }

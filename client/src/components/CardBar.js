@@ -86,7 +86,7 @@ const CardBar = observer(({field}) => {
     useEffect(() => {
         if (!item[field]) {
             item.setCategoryId('all');
-            item.fetchItems(1, field);
+            item.fetchItems(1, null, field);
         }
     }, [item, field, offset]);
     const cardWidth = (width - (window.innerWidth - document.body.clientWidth) - (width < breakpoints.rawSmall ?

@@ -48,7 +48,6 @@ const Styled = styled.div`
     ${marginsPage}
   }
   @media (${breakpoints.small}) {
-    padding-bottom: 40px;
     .characteristics {
       padding: 8px;
     }

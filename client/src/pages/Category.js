@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {useParams} from "react-router-dom";
 import ItemCard from "../components/cards/ItemCard";
@@ -9,6 +9,7 @@ import CustomPagination from "../components/CustomPagination";
 import {authAPI, authorization} from "../api";
 import {customGrid, flexColumn, marginsPage} from "../StyledGlobal";
 import Load from "../components/Load";
+import FilterCanvas from "../components/filter/FilterCanvas";
 
 const Styled = styled.div`
   ${flexColumn};
@@ -21,6 +22,7 @@ const Styled = styled.div`
 const Category = observer( () => {
     const {item, user, render} = useContext(Context);
     const {categoryId} = useParams();
+    const [showCanvas, setShowCanvas] = useState(false);
     const delItem = (id) => {
         authAPI('delete', '/api/item', {id}).then(() => {
             item.fetchItems();
@@ -56,6 +58,7 @@ const Category = observer( () => {
                         }) : 'Ничего нет'}
                 </div> : <Load/>}
             {item.count > item.limit && <CustomPagination/>}
+            <FilterCanvas show={showCanvas} setShow={setShowCanvas}/>
         </Styled>
     );
 });

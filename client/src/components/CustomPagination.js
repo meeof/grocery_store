@@ -59,11 +59,11 @@ const CustomPagination = observer(() => {
         middle: 7,
         large: 9
     }
-    const {item} = useContext(Context);
+    const {item, scroll} = useContext(Context);
     const [pagesAmount, setPagesAmount] = useState(1);
     const clickPage = (val) => {
         item.setPage(val);
-        item.fetchItems(val);
+        item.fetchItems(val, () => scroll.scrollToPoint());
     }
     let paginationLimit = paginationLimits.large;
     if (width < breakpoints.rawSmall) {
@@ -99,9 +99,10 @@ const CustomPagination = observer(() => {
             {pagesAmount > 1 ? <Styled>
                 {item.page === 1 && <div className={'show-more'}>
                     <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
+                        scroll.setScroll();
                         item.setItems(null);
                         item.setLimit(item.limit * 2);
-                        item.fetchItems();
+                        item.fetchItems(null, () => scroll.scrollToPoint());
                     }}>Показывать больше</Button>
                 </div>}
                 <Pagination size={paginationLimit === paginationLimits.small ? 'sm' : ''}>

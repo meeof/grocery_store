@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import styled, {useTheme} from "styled-components";
 import Load from "../components/Load";
@@ -25,8 +25,7 @@ const Styled = styled.div`
 
 const Blog = observer (() => {
     const theme = useTheme();
-    const [scroll, setScroll] = useState(0);
-    const {blog, user} = useContext(Context);
+    const {blog, user, scroll} = useContext(Context);
     const deletePublication = (id) => {
         authAPI('delete','/api/blog', {id}).then(data => {
             blog.setBlog(null);
@@ -36,7 +35,7 @@ const Blog = observer (() => {
         })
     }
     useEffect(() => {
-        blog.fetch(scroll > 0 && scroll);
+        blog.fetch(() => scroll.scrollToPoint());
     }, [blog, scroll]);
     return (
         <Styled>
@@ -48,9 +47,10 @@ const Blog = observer (() => {
                         </div>
                         {blog.count > blog.limit && <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}
                                                              onClick={(e) => {
-                                                                 setScroll(document.body.getBoundingClientRect().height);
+                                                                 scroll.setScroll();
                                                                  blog.setLimit(blog.limit * 2);
                                                                  blog.setBlog(0);
+                                                                 blog.fetch(() => scroll.scrollToPoint())
                                                              }}>Показывать больше</Button>}
                     </>
                     :

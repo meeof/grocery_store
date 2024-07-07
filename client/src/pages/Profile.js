@@ -115,10 +115,10 @@ const Profile = observer( () => {
                         {(user.isAuth.role === 'ADMIN' || user.isAuth.role === 'SELLER') && <ItemAddUpdate fullForm={true}/>}
                         {(user.isAuth.role === 'USER') && <SellerStatement/>}
                         {(user.isAuth.role === 'ADMIN') && <>
+                            <Publication/>
                             <Button variant={theme.colors.bootstrapMainVariant} onClick={() => navigate('/statements')}>
                                 Заявки
                             </Button>
-                            <Publication/>
                         </>}
                         <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {
                             basket.setOrders(null);

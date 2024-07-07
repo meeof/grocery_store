@@ -13,7 +13,7 @@ const Styled = styled.div`
   position: ${props => (props.$fixed && 'fixed')};
   bottom:  ${props => (props.$fixed && '14px')};
   left: ${props => (props.$fixed && '8px')};
-  z-index: 1000;
+  z-index: 998;
   ${props => (props.$basket && `width: 100px`)};
   button {
     width: 100%;
@@ -63,6 +63,7 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
     const width = useWindowSize();
     const [productAmount, setProductAmount] = useState(0);
     const {user, basket} = useContext(Context);
+    const [fixedWidth, setFixedWidth] = useState('100%')
     const outherCostsHandler = (cost, operator) => {
         basket.setAllCost(basket.allCost + (operator * cost))
         if (allProductCost && setAllProductCost) {
@@ -83,12 +84,15 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
         }).catch(err => {
             console.log(err);
         })
-    }, [itemId]);
+        setTimeout(() => {
+            setFixedWidth((width - standardValues.smallPageMargin *
+                2 - (window.innerWidth - document.body.clientWidth) + 'px'));
+        }, 0)
+    }, [itemId, width]);
     return (
         <Styled $fixed={fixed} $basket={place === 'basket'}
                 onClick={e => e.stopPropagation()}
-        style={{width : fixed ? (width - standardValues.smallPageMargin *
-                2 - (window.innerWidth - document.body.clientWidth) + 'px') : '100%'}}>
+        style={{width : fixed ? fixedWidth : '100%'}}>
             {productAmount > 0 ?
                 <div className={'buy-start'}>
                     <Button variant={theme.colors.bootstrapMainVariant} onClick={() => {

@@ -27,7 +27,7 @@ const Styled = styled.div`
 const Favorites = observer(() => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const {user, favorites} = useContext(Context);
+    const {user, favorites, scroll} = useContext(Context);
     const getFavorites = useCallback((limit) => {
         authAPI( 'get', '/api/favorites', {limit}).then((data) => {
             favorites.setFavorites(data.rows);
@@ -35,8 +35,10 @@ const Favorites = observer(() => {
         }).catch(err => {
             console.log(err);
             navigate('/profile/login');
+        }).finally(() => {
+            scroll.scrollToPoint()
         })
-    }, [navigate, favorites]);
+    }, [navigate, favorites, scroll]);
     const delFavorites = (itemId) => {
         authAPI('delete', '/api/favorites', {itemId}).then(() => {
             getFavorites(favorites.limit);
@@ -60,6 +62,7 @@ const Favorites = observer(() => {
                     }</div>
                     {favorites.count > favorites.limit &&
                         <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
+                            scroll.setScroll();
                             favorites.setLimit(favorites.limit * 2)
                             getFavorites(favorites.limit * 2);
                         }}>Показывать больше</Button>}

@@ -26,7 +26,8 @@ class BlogStore {
     get count() {
         return this._count;
     }
-    fetch(scroll, one) {
+    fetch(finallyFun, one) {
+
         const query = {limit: this._limit}
         one && (query.one = true);
         API('get','/api/blog', query).then(data => {
@@ -35,8 +36,7 @@ class BlogStore {
         }).catch(err => {
             console.log(err);
         }).finally(() => {
-            window.scrollTo({top: scroll - window.innerHeight, behavior: "instant"})
-            window.scrollTo({top: scroll, behavior: "smooth"})
+            finallyFun && finallyFun();
         })
     }
 }
