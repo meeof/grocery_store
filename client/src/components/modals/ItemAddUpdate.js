@@ -50,6 +50,13 @@ const ItemAddUpdate = observer(({product, itemInfo, fullForm, right, top}) => {
             formData = addImagesToFormData(formData, images);
         }
         authAPI('post', '/api/item', formData).then(data => {
+            if (data === 'Unauthorized') {
+                overlay.setMessage('Вы не авторизованы');
+                overlay.setColor(staticColors.opacityRed);
+                overlay.handlerOverlay();
+                !product && setShowModal(false);
+                return
+            }
             if (product) {
                 if (fullForm) {
                     API('get','/api/item/one', {id: product.id}).then(data => {

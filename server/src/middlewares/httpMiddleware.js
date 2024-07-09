@@ -12,7 +12,8 @@ class HttpMiddleware {
             req.user = decoded;
             next();
         } catch (error) {
-            ErrorTemp.err(res, 401, 'Unauthorized');
+            res.json('Unauthorized');
+            /*ErrorTemp.err(res, 401, 'Unauthorized');*/
         }
     }
     isSeller(req, res, next) {

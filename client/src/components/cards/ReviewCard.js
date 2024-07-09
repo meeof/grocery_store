@@ -79,6 +79,9 @@ const ReviewCard = ({reviewObj, myReview, handlerAddUpdate}) => {
     }
     const handlerDeleteReview = (id) => {
         authAPI( 'delete', '/api/reviews', {id}).then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             render.forceUpdate();
         }).catch((err) => {
             console.log(err);

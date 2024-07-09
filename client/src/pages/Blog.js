@@ -28,6 +28,9 @@ const Blog = observer (() => {
     const {blog, user, scroll} = useContext(Context);
     const deletePublication = (id) => {
         authAPI('delete','/api/blog', {id}).then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             blog.setBlog(null);
             blog.fetch();
         }).catch(err => {

@@ -38,7 +38,10 @@ const Catalog = observer( () => {
     const navigate = useNavigate();
     const {categoryId} = useParams();
     const delCategory = (id) => {
-        authAPI('delete', '/api/categories', {id}).then(() => {
+        authAPI('delete', '/api/categories', {id}).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             API('get', '/api/categories').then(data => {
                 category.setCategories(data);
             });

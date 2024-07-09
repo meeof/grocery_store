@@ -63,6 +63,10 @@ const Orders = observer(() => {
     const fetchOrders = useCallback((limit) => {
         authAPI( 'get', '/api/basket/orders', {limit})
             .then(data => {
+                if (data === 'Unauthorized') {
+                    navigate('/profile/login')
+                    return
+                }
                 basket.setOrders(data.rows);
                 basket.setOrdersCount(data.count);
             }).catch(err => {
@@ -76,7 +80,10 @@ const Orders = observer(() => {
         fetchOrders(basket.ordersLimit)
     }, [basket, fetchOrders]);
     const clearOrdersHandler = () => {
-        authAPI('delete', '/api/basket/clearOrders').then(() => {
+        authAPI('delete', '/api/basket/clearOrders').then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             setShowAlert(false);
             fetchOrders(basket.ordersLimit);
         }).catch(err => {

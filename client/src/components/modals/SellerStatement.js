@@ -26,6 +26,9 @@ const SellerStatement = observer (() => {
     const [showModal, setShowModal] = useState(false);
     const handlerStatement = () => {
         authAPI('post','/api/user/statement').then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             user.setStatement(data);
             setShowModal(false);
         }).catch(err => {
@@ -34,6 +37,9 @@ const SellerStatement = observer (() => {
     }
     useEffect(() => {
         authAPI('get','/api/user/statement').then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             user.setStatement(data);
             console.log(user.statement);
         }).catch(err => {

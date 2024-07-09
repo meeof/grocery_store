@@ -49,6 +49,10 @@ class UserStore {
     }
     fetchUserInfo(navigate) {
         authAPI('get', '/api/user/info').then(data => {
+            if (data === 'Unauthorized') {
+                navigate && navigate('/profile/login');
+                return
+            }
             this._userInfo = data;
         }).catch((err) => {
             console.log(err);

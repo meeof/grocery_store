@@ -37,6 +37,9 @@ const Statements = observer (() => {
     const fetchStatements = useCallback((limit) => {
         authAPI( 'get', '/api/user/allStatements', {limit})
             .then(data => {
+                if (data === 'Unauthorized') {
+                    return
+                }
                 user.setAllStatements(data.rows);
                 user.setAllStatementsCount(data.count);
             }).catch(err => {

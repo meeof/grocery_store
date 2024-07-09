@@ -31,7 +31,10 @@ const Reviews = observer(({itemId}) => {
         }
         text && formData.append('review', text);
         images && (formData = addImagesToFormData(formData, images));
-        authAPI('post', '/api/reviews', formData).then(() => {
+        authAPI('post', '/api/reviews', formData).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             then && then();
             render.forceUpdate();
         }).catch((err) => {
@@ -40,8 +43,14 @@ const Reviews = observer(({itemId}) => {
     }
     useEffect(() => {
         authAPI('get', '/api/reviews/check', {itemId, field: 'bought'}).then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             review.setBought(data);
             authAPI('get', '/api/reviews/check', {itemId, field: 'reviewed'}).then(data => {
+                if (data === 'Unauthorized') {
+                    return
+                }
                 review.setReviewed(data)
             }).catch(err => {
                 console.log(err);

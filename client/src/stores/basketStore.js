@@ -51,6 +51,10 @@ class BasketStore {
     }
     fetchBasket(navigate) {
         authAPI('get', '/api/basket').then(data => {
+            if (data === 'Unauthorized') {
+                navigate && navigate('/profile/login');
+                return
+            }
             this._basket = data;
             this.countSumCost();
         }).catch(err => {

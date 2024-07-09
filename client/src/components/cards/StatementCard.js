@@ -3,7 +3,7 @@ import styled, {useTheme} from "styled-components";
 import {Button} from "react-bootstrap";
 import {authAPI} from "../../api";
 import ViewUser from "../modals/ViewUser";
-import {staticColors, flexColumn, standardValues} from "../../StyledGlobal";
+import {flexColumn, standardValues} from "../../StyledGlobal";
 const Styled = styled.div`
   width: 100%;
   ${flexColumn};
@@ -29,6 +29,9 @@ const StatementCard = ({statement, handlerRefreshStatement}) => {
     const [info, setInfo] = useState(null);
     const handlerStatement = (status) => {
         authAPI('post','/api/user/statement', {status, userId: statement.userId}).then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             handlerRefreshStatement(null);
         }).catch(err => {
             console.log(err);
@@ -37,6 +40,9 @@ const StatementCard = ({statement, handlerRefreshStatement}) => {
     useEffect(() => {
         if (showModal) {
             authAPI('get', '/api/user/info', {id: statement.userId}).then(data => {
+                if (data === 'Unauthorized') {
+                    return
+                }
                 setInfo(data);
             }).catch((err) => {
                 console.log(err);

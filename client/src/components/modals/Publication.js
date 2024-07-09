@@ -38,7 +38,14 @@ const Publication = observer(({publication}) => {
         (JSON.stringify(publication?.links) !== JSON.stringify(linkInfo.links)) && formData.append('links', JSON.stringify(linkInfo.links));
         formData = addImagesToFormData(formData, images);
         structure && formData.append(`structure`, structure);
-        authAPI('post', '/api/blog', formData).then(() => {
+        authAPI('post', '/api/blog', formData).then((data) => {
+            if (data === 'Unauthorized') {
+                overlay.setMessage('Вы не авторизованы');
+                overlay.setColor(staticColors.opacityRed);
+                overlay.handlerOverlay();
+                !publication && setShowModal(false);
+                return
+            }
             if (publication) {
                 blog.fetch();
                 setShowModal(false);

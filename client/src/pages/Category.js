@@ -24,7 +24,10 @@ const Category = observer( () => {
     const {categoryId} = useParams();
     const [showCanvas, setShowCanvas] = useState(false);
     const delItem = (id) => {
-        authAPI('delete', '/api/item', {id}).then(() => {
+        authAPI('delete', '/api/item', {id}).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             item.fetchItems();
         }).catch(err => {
             console.log(err.response.data);

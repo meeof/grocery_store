@@ -71,13 +71,20 @@ const ButtonBuy = observer( ({itemId, cost, place, fixed,
         }
     }
     function handleBuy(amount) {
-        authAPI( 'post', '/api/basket', {itemId, amount}).catch(err => {
+        authAPI( 'post', '/api/basket', {itemId, amount}).then((data) => {
+            if (data === 'Unauthorized') {
+                navigate('/profile/login');
+            }
+        }).catch(err => {
             console.log(err);
             navigate('/profile/login');
         })
     }
     useEffect(() => {
         authAPI('get', '/api/basket/amount', {itemId}).then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             if (data) {
                 setProductAmount(data);
             }

@@ -30,6 +30,10 @@ const Favorites = observer(() => {
     const {user, favorites, scroll} = useContext(Context);
     const getFavorites = useCallback((limit) => {
         authAPI( 'get', '/api/favorites', {limit}).then((data) => {
+            if (data === 'Unauthorized') {
+                navigate('/profile/login');
+                return
+            }
             favorites.setFavorites(data.rows);
             favorites.setCount(data.count);
         }).catch(err => {
@@ -40,7 +44,10 @@ const Favorites = observer(() => {
         })
     }, [navigate, favorites, scroll]);
     const delFavorites = (itemId) => {
-        authAPI('delete', '/api/favorites', {itemId}).then(() => {
+        authAPI('delete', '/api/favorites', {itemId}).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             getFavorites(favorites.limit);
         }).catch(err => {
             console.log(err);

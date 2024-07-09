@@ -23,6 +23,13 @@ const CategoryAddUpdate = observer(({id, name}) => {
     }
     const handlerCategory = () => {
         authAPI('post', '/api/categories', {id, categoryName}).then((data) => {
+            if (data === 'Unauthorized') {
+                !id && setShowModal(false);
+                overlay.setMessage('Вы не авторизованы');
+                overlay.setColor(staticColors.opacityRed);
+                overlay.handlerOverlay();
+                return
+            }
             if (id) {
                 setShowModal(false);
                 API('get', '/api/categories').then(data => {

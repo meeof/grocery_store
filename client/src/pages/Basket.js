@@ -26,7 +26,11 @@ const Basket = observer(() => {
     const navigate = useNavigate();
     const deleteBasketItemHandle = (itemId) => {
         if (user.isAuth) {
-            authAPI( 'delete', '/api/basket', {itemId}).then(() => {
+            authAPI( 'delete', '/api/basket', {itemId}).then((data) => {
+                if (data === 'Unauthorized') {
+                    navigate('/profile/login');
+                    return
+                }
                 basket.fetchBasket(user.isAuth.id);
             }).catch(err => {
                 console.log(err);

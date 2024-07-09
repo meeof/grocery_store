@@ -42,6 +42,9 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
         }
         else  {
             authAPI('get', '/api/rating/user', {itemId: itemsId[0]}).then(data => {
+                if (data === 'Unauthorized') {
+                    return
+                }
                 setRating(data);
             }).catch((err) => {
                 console.log(err);
@@ -49,7 +52,11 @@ const Rating = ({disabled, setShowModalAll, itemsId}) => {
         }
     }, [setShowModalAll, itemsId, user.isAuth?.id, disabled]);
     const handleSetRating = (rate) => {
-        authAPI('post', '/api/rating', {rate, itemsId}).then(() => {
+        authAPI('post', '/api/rating', {rate, itemsId}).then((data) => {
+            if (data === 'Unauthorized') {
+                navigate('/profile/login');
+                return
+            }
             if (!setShowModalAll) {
                 setRating(rate);
             }

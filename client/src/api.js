@@ -35,7 +35,7 @@ const authInterceptor = config => {
     config.headers.authorization = `Bearer ${token}`;
     return config;
 }
-$authHost.interceptors.request.use(authInterceptor)
+$authHost.interceptors.request.use(authInterceptor);
 export {
     $host,
     $authHost

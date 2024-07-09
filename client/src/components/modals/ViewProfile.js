@@ -27,7 +27,10 @@ const ViewProfile = observer (() => {
         status && formData.append('status', status);
         about && formData.append('about', about);
         image && formData.append(`${image[0].name}`, image[0]);
-        authAPI('patch', '/api/user/info', formData).then(() => {
+        authAPI('patch', '/api/user/info', formData).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             user.fetchUserInfo();
             setChange(false);
         }).catch((err) => {
@@ -36,6 +39,9 @@ const ViewProfile = observer (() => {
     }
     const deleteUserHandler = () => {
         authAPI('delete', '/api/user').then(data => {
+            if (data === 'Unauthorized') {
+                return
+            }
             user.userExit(navigate);
         }).catch(err => {
             console.log(err)

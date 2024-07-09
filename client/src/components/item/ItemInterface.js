@@ -128,7 +128,10 @@ const ItemInterface = observer(({product}) => {
     const navigate = useNavigate();
     const [inFavorites, setInFavorites] = useState(false);
     const delItem = (id) => {
-        authAPI('delete', '/api/item', {id}).then(() => {
+        authAPI('delete', '/api/item', {id}).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             navigate(-1);
         }).catch(err => {
             console.log(err.response.data);
@@ -136,13 +139,22 @@ const ItemInterface = observer(({product}) => {
     }
     const checkFavorites = useCallback(() => {
         authAPI('get', '/api/favorites/check', {itemId: product.id}).then((data) => {
+            if (data === 'Unauthorized') {
+                return
+            }
             setInFavorites(data);
         }).catch(err => {
             console.log(err.response.data);
         })
     }, [product.id])
     const addDelFavorites = (method) => {
-        authAPI(method, '/api/favorites', {itemId: product.id}).then(() => {
+        authAPI(method, '/api/favorites', {itemId: product.id}).then((data) => {
+            if (data === 'Unauthorized') {
+                overlay.setMessage('Вы не авторизованы');
+                overlay.setColor(staticColors.opacityRed);
+                overlay.handlerOverlay();
+                return
+            }
             overlay.setMessage(method === 'post' ? `Товар добавлен в избранное` : `Товар удален из избранного`);
             overlay.setColor(theme.colors.mainOpacity);
             overlay.handlerOverlay();

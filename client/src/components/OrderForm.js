@@ -92,7 +92,7 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId, setDeliv
         formData.append('comment', orderComment);
         formData.append('sms', subscription);
         (field === 'modal') && formData.append('itemId', itemId);
-        authAPI('post', '/api/basket/formOrder', formData).then(() => {
+        authAPI('post', '/api/basket/formOrder', formData).then((data) => {
             setShowAlert(true);
             if (field === 'modal') {
                 setShowModal(false);
@@ -111,6 +111,9 @@ const OrderForm = observer(({field, setShowModal, setShowAlert, itemId, setDeliv
         }
         else {
             authAPI( 'get', '/api/basket/getContacts').then(data => {
+                if (data === 'Unauthorized') {
+                    return
+                }
                 setName(data.name);
                 setSurname(data.surname);
                 setPhone(user.isAuth.phone);
