@@ -1,6 +1,14 @@
 import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
-import {checkCategoryExist, deleteSpace, getItems, getOneItem, saveImages, verifyCreator} from "../usefulFunctions.js";
+import {
+    checkCategoryExist,
+    deleteSpace,
+    getItemInfo,
+    getItems,
+    getOneItem,
+    saveImages,
+    verifyCreator
+} from "../usefulFunctions.js";
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
 
@@ -130,8 +138,8 @@ class ItemController {
     }
     async getAll(req, res) {
         try {
-            let {categoryId, limit, page, find, field} = req.query;
-            const allItems = await getItems(categoryId, limit, page, find, field);
+            let {categoryId, limit, page, find, field, filter} = req.query;
+            const allItems = await getItems(limit, null, categoryId, page, find, field, filter);
             res.json(allItems);
         } catch (error) {
             ErrorTemp.badRequest(res)
@@ -142,12 +150,7 @@ class ItemController {
             const {id} = req.query;
             const response =  await sequelize.transaction(async () => {
                 const oneItem = await getOneItem(id);
-                const itemInfos = await models.ItemInfo.findAll({
-                    attributes: ['id', 'title', 'content'],
-                    where: {
-                        itemId: id,
-                    }
-                })
+                const itemInfos = await getItemInfo(id);
                 return  {
                     ...oneItem.dataValues,
                     images: oneItem.images? JSON.parse(oneItem.images) : [],

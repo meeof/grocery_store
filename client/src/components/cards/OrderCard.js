@@ -9,6 +9,7 @@ import {breakpoints, flexColumn, standardValues, Theme} from "../../StyledGlobal
 import * as uf from "../../usefulFunctions";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
+import useWindowSize from "../../hooks/useWindowSize";
 const Styled = styled.div`
   ${flexColumn};
   border-radius: 5px;
@@ -84,6 +85,7 @@ const Styled = styled.div`
 
 const OrderCard = observer(({order, months}) => {
     const navigate = useNavigate();
+    const width = useWindowSize();
     const {review, item} = useContext(Context);
     const theme = useTheme();
     const [showModalAll, setShowModalAll] = useState(false);
@@ -168,7 +170,7 @@ const OrderCard = observer(({order, months}) => {
                 style={{color: theme.colors.textColor}}
             >
                 <Modal.Header closeButton style={{backgroundColor: theme.colors.mainOpacity}}>
-                    <Modal.Title style={{whiteSpace: "nowrap"}}>
+                    <Modal.Title style={{whiteSpace: width > breakpoints.rawFromSmall ? "nowrap" : ''}}>
                         Общая оценка для всех товаров заказа
                     </Modal.Title>
                 </Modal.Header>
