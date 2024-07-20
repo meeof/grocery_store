@@ -69,7 +69,7 @@ const Styled = styled.div`
 
 const CardBar = observer(({field}) => {
     const width = useWindowSize();
-    const {user, item} = useContext(Context);
+    const {item} = useContext(Context);
     const cardsShow = {
         small: 2,
         middle: 4,
@@ -103,8 +103,7 @@ const CardBar = observer(({field}) => {
                 `translate(${cardWidth * offset * -1 + 'px'})`
             }}>
                 {item[field] && item[field].map((product) => {
-                    return <ItemCard key={uf.routePrefix('item', product.id)} delItem={() => {}}
-                                     isAuth={user.isAuth} cardsShow={show}
+                    return <ItemCard key={uf.routePrefix('item', product.id)} delItem={() => {}} cardsShow={show}
                                      product={product} field={field} cardWidth={cardWidth}/>
                 })}
             </div>

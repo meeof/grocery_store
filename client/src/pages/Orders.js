@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import OrderCard from "../components/cards/OrderCard";
@@ -13,6 +13,7 @@ import {
 } from "../StyledGlobal";
 import {authAPI} from "../api";
 import Load from "../components/Load";
+import useWindowSize from "../hooks/useWindowSize";
 
 const Styled = styled.div`
   margin-top: ${standardValues.marginSmall};
@@ -40,12 +41,17 @@ const Styled = styled.div`
     ${customGrid2};
   }
   @media (${breakpoints.small}) {
+    .orders-block {
+      position: relative;
+    }
+    .clear-orders {
+      position: fixed;
+      width: 100%;
+      bottom: ${standardValues.marginSmall};
+      opacity: .7;
+    }
     .buttons-block {
       ${flexColumn};
-      .clear-orders {
-        position: static;
-        width: 100%;
-      }
       .show-more {
         margin-bottom: ${standardValues.marginMedium};
         width: 100%;
@@ -55,11 +61,15 @@ const Styled = styled.div`
 `;
 
 const Orders = observer(() => {
+    const width = useWindowSize();
     const theme = useTheme();
     const months = ['Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря'];
     const navigate = useNavigate();
     const {basket, scroll} = useContext(Context);
     const [showAlert, setShowAlert] = useState(false);
+    const [fixedWidth, setFixedWidth] = useState('100%');
+    const intersectionObserver = useRef(null);
+    const intersectionObservable = useRef(null);
     const fetchOrders = useCallback((limit) => {
         authAPI( 'get', '/api/basket/orders', {limit})
             .then(data => {
@@ -73,12 +83,9 @@ const Orders = observer(() => {
                 console.log(err);
                 navigate('/profile/login')
         }).finally(() => {
-            scroll.scrollToPoint();
+            width > breakpoints.rawFromSmall && scroll.scrollToPoint();
         })
-    }, [basket, navigate, scroll]);
-    useEffect(() => {
-        fetchOrders(basket.ordersLimit)
-    }, [basket, fetchOrders]);
+    }, [basket, navigate, scroll, width]);
     const clearOrdersHandler = () => {
         authAPI('delete', '/api/basket/clearOrders').then((data) => {
             if (data === 'Unauthorized') {
@@ -90,6 +97,29 @@ const Orders = observer(() => {
             console.log(err);
         })
     }
+    useEffect(() => {
+        fetchOrders(basket.ordersLimit);
+    }, [basket, fetchOrders]);
+    useEffect(() => {
+        setTimeout(() => {
+            setFixedWidth((width - standardValues.smallPageMargin *
+                2 - (window.innerWidth - document.body.clientWidth) + 'px'));
+        }, 0)
+        if (intersectionObservable.current && width < breakpoints.rawSmall) {
+            intersectionObserver.current && intersectionObserver.current.disconnect();
+            const callback = function (entries, observer) {
+                if (entries[0].isIntersecting && basket.ordersCount > basket.ordersLimit && basket.ordersLimit === basket.getOrders.length) {
+                    basket.setOrdersLimit(basket.ordersLimit * 2);
+                    fetchOrders(basket.ordersLimit);
+                }
+            };
+            intersectionObserver.current = new IntersectionObserver(callback);
+            intersectionObserver.current.observe(intersectionObservable.current);
+        }
+    });
+    const clearOrdersButton = <Button  className={'clear-orders'} variant={"secondary"} disabled={basket.getOrders?.length === 0}
+                                        onClick={() => setShowAlert(true)}
+                                       style={{width : (width < breakpoints.rawSmall) ? fixedWidth : ''}}>Очистить историю</Button>
     return (
         <>
             {basket.getOrders ? <Styled $showMore={basket.ordersCount > basket.ordersLimit}>
@@ -99,17 +129,19 @@ const Orders = observer(() => {
                             {basket.getOrders.map(order => {
                                 return <OrderCard order={order} months={months} key={order.id}/>
                             })}
+                            {width < breakpoints.rawSmall && clearOrdersButton}
                     </div>}
                 </>
-                <div className={'buttons-block'}>
-                    <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
-                        scroll.setScroll()
-                        basket.setOrdersLimit(basket.ordersLimit * 2);
-                        basket.setOrders(0);
-                        fetchOrders(basket.ordersLimit);
-                    }}>Показывать больше</Button>
-                    <Button className={'clear-orders'} variant={"secondary"} disabled={basket.getOrders.length === 0}
-                            onClick={() => setShowAlert(true)}>Очистить историю</Button>
+                <div ref={intersectionObservable} className={'buttons-block'}>
+                    {width > breakpoints.rawFromSmall && <>
+                        <Button variant={theme.colors.bootstrapMainVariant} className={'show-more'}  onClick={() => {
+                            scroll.setScroll()
+                            basket.setOrdersLimit(basket.ordersLimit * 2);
+                            basket.setOrders(0);
+                            fetchOrders(basket.ordersLimit);
+                        }}>Показывать больше</Button>
+                        {clearOrdersButton}
+                    </>}
                 </div>
                 <AlertClearHistory showAlert={showAlert} setShowAlert={setShowAlert}
                                    clearOrdersHandler={clearOrdersHandler}/>

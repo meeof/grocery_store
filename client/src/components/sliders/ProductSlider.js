@@ -16,7 +16,7 @@ const Styled = styled.div`
   }
 `
 
-const ProductSlider = ({...props}) => {
+const ProductSlider = (props) => {
     const width = useWindowSize();
     return (
         <Styled $previews={props.previews}>

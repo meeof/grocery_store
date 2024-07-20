@@ -14,6 +14,8 @@ import {
     standardValues
 } from "../StyledGlobal";
 import Load from "../components/Load";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
+import useWindowSize from "../hooks/useWindowSize";
 
 const Styled = styled.div`
   ${flexColumn};
@@ -27,12 +29,28 @@ const Styled = styled.div`
       width: 100%;
     }
   }
-  .card_container {
+  .card-container {
     ${customGrid};
+  }
+  .category-transition-enter {
+    opacity: 0;
+  }
+  .category-transition-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+  }
+  .category-transition-exit {
+    transform: translate(0);
+  }
+  .category-transition-exit-active {
+    transform: translate(${props => -props.$width + 'px'}, ${props => -props.$width + 'px'});
+    transition-duration: 800ms;
+    transition-timing-function: ease-in;
   }
 `
 
 const Catalog = observer( () => {
+    const width = useWindowSize();
     const theme = useTheme();
     const {item, category, user} = useContext(Context);
     const navigate = useNavigate();
@@ -71,16 +89,22 @@ const Catalog = observer( () => {
     }, [category, user]);
     return (
         <>
-            {category.categories ? <Styled>
+            {category.categories ? <Styled $width={width}>
                 {!categoryId && <Button variant={theme.colors.bootstrapMainVariant} className={'view-all-button'}
                                         onClick={handlerShowAll}
                 >Показать все</Button>}
-                <div className={'card_container'}>
-                    {category.categories.map(category => {
-                        return <CategoryCard key={category.id} delCategory={delCategory} img={category.image}
+                    <TransitionGroup className={'card-container'}>
+                        {category.categories.map(category => {
+                            return <CSSTransition
+                                key={category.id}
+                                timeout={500}
+                                classNames="category-transition"
+                            >
+                                <CategoryCard delCategory={delCategory} img={category.image}
                                               creator={category.userId} name={category.name} id={category.id} isAuth={user.isAuth}/>
-                    })}
-                </div>
+                            </CSSTransition>
+                        })}
+                    </TransitionGroup>
             </Styled> : <Load/>}
         </>
     );

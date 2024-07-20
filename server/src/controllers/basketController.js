@@ -2,7 +2,7 @@ import * as models from '../models.js';
 import ErrorTemp from '../errors/errorsTemplate.js';
 import {Op} from "sequelize";
 import {sequelize} from "../db.js";
-import {checkBoughtReviewed, getWasBought} from "../usefulFunctions.js";
+import {checkBoughtReviewed} from "../usefulFunctions.js";
 
 const getAllBasketItems = async (userId) => {
     return await models.BasketItem.findAll({
